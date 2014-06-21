@@ -1,0 +1,557 @@
+conference: JSConfUS
+title: "#dadt (Dojo already did that)"
+speaker: Peter Higgins
+year: 2013
+source: https://www.youtube.com/watch?v=BY0-AI1Sxy0
+automatic: true
+duration: 1952
+text: |
+  0:19I'm Peter Higgins um I have the
+  0:22to pleasure love having my own little checkbox on one of the chase card for
+  0:26speaker submission
+  0:27forms yeah all over maybe I don't know what it is
+  0:31that is compelling about me a in particular that they want to hear
+  0:35but I have this is doj already did that it's a it's a catch phrase I've been
+  0:39saying for
+  0:40years and years and years now it's not very funny
+  0:45it's actually kinda depressing so we're going to get to get into that some
+  0:48about me jazz cough alumni and former Dodger project lead I'm no longer
+  0:53actively
+  0:54contributing to go Joe on I probably sell right permissions but I don't
+  0:58actually do anything
+  0:59that's problematic
+  1:04um I'm a generic code monkey my time as
+  1:08a to project leave is much like
+  1:11this picture the pics I'm a professional cat herder actually was this on my
+  1:16various LinkedIn and my resume and and what not its
+  1:19true any open source leave a few own
+  1:22a project that more than 10 people are involved in your cat herder
+  1:27um doesn't matter what it is it's it's a lot of
+  1:30lot of work has cancer very agreeable I've been busy
+  1:34I left Ojo and kinda disappeared into being just code monkey because of my
+  1:39princess fluffy but
+  1:40this is a I'm a new father and entirely elated about
+  1:44that so that's where I've been
+  1:47and welcome the JS cuff this is and epic
+  1:51thing that we've been doing here for some years now
+  1:54if you see this guy anywhere around
+  1:57thank him um given pat on the back kick in the shins are or whatever it is he's
+  2:02lot workers in this I like to think I've
+  2:05this block as your digestive track
+  2:08here we are finishing up your meals are gonna sit and contemplate numb
+  2:13I'm not really gonna do anything really really technical this is not gonna blow
+  2:16your mind is just gonna
+  2:17food for thought like light food for thoughts
+  2:20and a hopefully you will that the Justin
+  2:24innovating continue on the the spirit of discomfort love
+  2:27amazing mind blowing things so the real talk here is called history the world
+  2:32certainly don't already do those kind of history love my world in javascript and
+  2:36what not
+  2:37II this year I'm celebrating 20 years I've interwebs
+  2:40I got my first I love connection in 1993
+  2:44as a young young lad author
+  2:48right age of 13 it was I subsequently got kicked off the internet by the same
+  2:52ISP
+  2:53in 1994 on but that's a whole
+  2:57long after track story I regained my internet so
+  3:01what we have we have 1993 1998 is a kind of a dark age of the Internet it was
+  3:06who got dial-up we don't have anything this is this is awful as a
+  3:11not serve the best when viewed in started on I was still be BSing I was a
+  3:15heavy heavy BBS ur
+  3:16from the aged ten on on so
+  3:20that was more interesting to me than the internet at the time but it kinda
+  3:24progress on an people started using it then when the y2k thing happened it's
+  3:28that's one kinda like this whole
+  3:30pivotal thing happened it seem like the BBS offered time renegade
+  3:35just didn't wanna fix their y2k bug so they quit developing
+  3:38renegade so its kinda went on into
+  3:42me focusing more on the internet seeing what was going on um
+  3:46is 1999 right so we got Ajax we've got
+  3:50the the beginnings of the browser's um the the majors
+  3:55or whatever links was awesome because that was still a viable option
+  3:59unfortunately it's not so viable these days and then of course have the
+  4:03granddaddy
+  4:03above most I've modern the web hits in the groans and everything that's
+  4:07derivative that
+  4:09conquer which was pretty awesome in itself and
+  4:122001-2005 a kinda went through like a renaissance rape
+  4:16like flash was everywhere was we'd already had as its on the web RTC
+  4:21a rainy made a comment that they already had access to the camera they already
+  4:25had access to the microphone and softens all its kinda
+  4:28thats disheartening right because flashes everywhere
+  4:31but in this time the jobs for people are doing that's the the tail into the DHTML
+  4:37amazingness we've got the snowflakes and they're all the love
+  4:40cool stuff coming down on the screen and then that's when the job survivors
+  4:44started for me it's like there's a
+  4:45there's a thing here in we can form whole libraries to make
+  4:50everything awesome got script Akula Sanford's effort I was probably one of
+  4:53the first
+  4:54real library solid arm there is a river all these things
+  4:59up then we get into the 2006-2008 is where my major contribution to
+  5:04dosier really happened I was a little bit before in a little bit after but
+  5:08this is where the
+  5:09the sweet spot is in this is where there was a lot of fighting
+  5:12um this is a.m. Angus
+  5:16scroll did a great talk arm the politics a javascript and he covered this
+  5:21really well see should go find that talk and watch this
+  5:24number will double back here this is where does it was doing things but
+  5:26there's a lot of fighting I i
+  5:27its seeing intrude upon here now a makes me think I've a particularly funny thing
+  5:31where
+  5:32Alex Russell was ranting he is another former perjure
+  5:36for those a project leaving his ranting prototype hiking socks you shouldn't use
+  5:39this whatever into Canada
+  5:41created this rift rate and then hear that a lender This 2009
+  5:45Chris comes in and says I'm gonna publicly shame you if you start
+  5:49arguing with people if you don't offer meaningful solutions and you feel
+  5:53don't help you know Europe are the problem rather than a solution
+  5:57so where the modern era now rate starts about 2010
+  6:01it's going forward this is where all the amazing stuff this is a
+  6:05a link tang's is talk that stole the slide completely is like I don't want to
+  6:08have to go find my own logos
+  6:10but he left off a lot of people and a lot of
+  6:13little projects and stuff but this is like an agent lines great we've got
+  6:18all of this great technology right here at our fingertips but where did it come
+  6:21from
+  6:21right so what did dodo do
+  6:24during all this time is the question
+  6:28this one I spent four years of my life defending
+  6:33this to the standards the to the to the zealots or whatever this was
+  6:38this is a fate worse than death it was like I i you know I'd
+  6:41shot at you on your grave or whatever it's like
+  6:44one attribute does type
+  6:48always doing under the covers was look at the atria find the string given
+  6:52object based on that new it up
+  6:54and the props are other node attributes that were there
+  6:58so okay cool a simple 5 comes along
+  7:02and paid
+  7:05the data prop it's been it vindicated
+  7:09everything that is going to do so let's just go change that to date order type
+  7:14problem solved no one's not gonna complain same stuff new class
+  7:17new prop no but when I used a Taser
+  7:20break because it's this is a scene 05 this is the future
+  7:24this is amazing but in order to use data set
+  7:28we have to test for dataset because we support browsers that
+  7:32dole have the ascent so we do
+  7:35we do a quick feature test that's four lines code at door thing
+  7:40um oh and then we have to rest him around it because
+  7:43if you using props it does this makes case thing
+  7:46where the the prop is actually when is on the data said it comes as
+  7:50like the CSS CSS to javascript css
+  7:53in so we end up with this and we've got our native
+  7:57branch which is here is pretty cool just return the stuff in and you've got all
+  8:00this
+  8:01transforming so we got like 123 depp's the
+  8:04function calling just to do something for a dataset
+  8:08but why not in the end
+  8:11it's all just get out for you it that's how it worked
+  8:14like it works with the Dodgers have worked with whatever i three was there
+  8:17the spec never said explicitly ignore
+  8:21it just said don't do anything with attributes we don't know so it wasn't
+  8:24really invalid
+  8:25the older type thing but
+  8:29in the end back to just get attribute this is
+  8:33way too much for just
+  8:36looking up an attribute on and so
+  8:39we also the backwards compatibility a which was always very important to do Jo
+  8:44the the donor type would still keep working
+  8:47so in the end why have the rapper
+  8:51for something that was just gonna go back to I get attribute when
+  8:54all you had to do was attacked if the data does your type was there
+  8:57use this new way book still use the get attributes
+  9:01um and if you're familiar with what the doctor
+  9:04Taipei after he does in the first place it's very
+  9:08a diffuse backbone just passing the
+  9:11the note to the element in creating a new instance everything right there
+  9:14in the place in the dark so using the DOM to store the data
+  9:18and the definition of things dosier did
+  9:23um early early on and then of course you know bootstrap with its
+  9:26but I i actually honestly I find
+  9:30two things wrong with us with the beach for everyone the spec recommends
+  9:33I guess it's not set in stone the prefix
+  9:37your data attributes if you are a library or doing anything so
+  9:41the data total type was
+  9:44intentionally added the dodo in there
+  9:47because I've that right or the I guess the example in the spec was Duke
+  9:51wearying
+  9:53joe joe I forget but they think schools
+  9:56reference those libraries specifically but it's just a way of accessing
+  10:00data upon the note so that's that's cool right
+  10:04we did something right but we did it wrong to begin with and
+  10:08we did this wrong to begin with two and this is a really really
+  10:11he did heated argument um
+  10:14module loading does anyone has anyone ever written a modular
+  10:20nice do you still use a now
+  10:23okay so really is a modular says the that we we've determined through
+  10:28through years I've up trying that it's really just singer
+  10:31injecting scripts right so
+  10:34these are a lot of injected scripts this is actually of love
+  10:38my airline website I just happened to salio apps
+  10:41random page US air's up this is a nightmare
+  10:45and this has got to be generated because I don't know why it has to be generated
+  10:50actually because I
+  10:51there might be someone that actually take all this stuff out
+  10:54but you notice they're using jQuery 15 which is
+  10:58for orders old technically um
+  11:02but I bet it's because the 17th one down here doesn't support whatever the next
+  11:06though the 170 PS
+  11:08trick or so this is a nightmare we need mantra loading
+  11:12in javascript for anything bigger than just your
+  11:15your little demo page that has some hasn't flying
+  11:18so weak we created it early dodo
+  11:22supported the concept of packages on
+  11:26where you can pass on a wild card
+  11:29but it wasn't really magical our way it wasn't anything special rate faster just
+  11:33met load up package
+  11:34underscore underscore heard under package um
+  11:38because we didn't have a way to do to our index is we can't like
+  11:41look into the file system and see hey what files are in this
+  11:44we can't do import from so we decide this is a great idea
+  11:48but the fact that it was just under package was like 11 direction that just
+  11:53made it stupid why not just
+  11:54have it an explicit package like name it
+  11:58so we did you go to require fewer about us
+  12:01and then the out on the road is kind of document ready but it
+  12:06wrapped around the the model system right so
+  12:09name get the global object thats you know that's amazing but what's really
+  12:13happening
+  12:15is ugly it was
+  12:18they would just we just didn't know right so it starts out
+  12:23to our bass synchronous XHR we you do path lookup figure out where this
+  12:28is configured to live sink xXR and then develop
+  12:31right there in place and then so far as here
+  12:35all them had to do provide which creates the global object to that place
+  12:39ok we got another requires we gotta go back to the second as I started doing
+  12:42this for her simply until we at the end of our thing
+  12:45fire at all nodes and we've got a bunch of there was no way to avoid
+  12:50blocking the UI with this it was no matter
+  12:53if it was one feiler 4 files or or whatever even
+  12:56even with the bill you still have that blocking
+  12:59during the during the transfer dove seconds I sit or even if you put it
+  13:03for the page so
+  13:06Singh X's are also had or same same origin policy limitations which is
+  13:10absurd because the script I doesn't so we were kinda enforcer
+  13:14like imposing this the short sided thing on everybody
+  13:18and of course Crawford tells us you fellows evil so
+  13:22we shouldn't do that either
+  13:25but this guy at a team's workers out here somewhere
+  13:29um he there
+  13:32you got for my liking for friends
+  13:36um he was the core
+  13:40total project lead at the time he did all over the world
+  13:43lotta work and he kinda got burned out on the the politics
+  13:47love trying to herd the cats
+  13:50and keep everything in line to keep everything normal and backwards
+  13:53compatible and
+  13:54so we kinda left us and decided to
+  13:57start this project are required yes I don't know if you've heard of that
+  14:01its its cool it's actually directly its
+  14:05it's a copy paste Aveda Jo X two main loader which
+  14:09on james also wrote
+  14:12as part of his work at AOL for and with dodo
+  14:16so we came up with this all here's a solution
+  14:20will create some kinda global object that
+  14:23when we inject the script is just wrapped in this we get it's wrapped in
+  14:25this function
+  14:26and will tell will define the model wrapped inside this one
+  14:31so no matter what the original code was it gets wrapped around this other thing
+  14:35and then the hell has resource checked the
+  14:37prevent duplicate execution at the same same model and what not but
+  14:42this is really not pretty but this was generated this is the build system
+  14:46generated this
+  14:47for the extra main case which um
+  14:51was what allowed us to put it on the CBN's it was one other
+  14:55unless you are a single fire library there was really no need to be on a CD
+  14:58and if you're single file library but once you get bigger or more than one
+  15:02part
+  15:03you need to be able to communicate or two to load different resources
+  15:06so this is the solution we came up with which actually
+  15:10ended up being the foundation have AMD
+  15:13the concept I love single function to register to find and do everything
+  15:18and in the written the the function body
+  15:21up whatever was is is the module so
+  15:24um he took the next step created anonymous modules
+  15:29and took the return value up whatever it is that function
+  15:32database was a sight dependencies so you get this
+  15:35no longer you foo bar Baz your whatever your path mapping comes out to be
+  15:41and then you get back whatever single object it is that you intended to get
+  15:45so you can work with that um
+  15:48independently in nicely so in is also a synchronous
+  15:52it did it didn't block the US 30 workers it was just sending these things off
+  15:58and everything's compartmentalize so every part that
+  16:01comes back eventually when everything comes back it triggers
+  16:04so that's good know you are blocking superfast
+  16:09Ronn this is what it ended up looking like so
+  16:12I find it quite nice I I do have a problem when he gets into
+  16:18we have ten or fifteen or twenty year any more than 10 I guess
+  16:22um modules that you need to route to load
+  16:26you end up with a really really long opening line
+  16:29and it's not pretty so you can bring on a new lies you know this difference in
+  16:32tactics often
+  16:33whatever makes you happy um but the alternative is
+  16:37is a in the alternative that that node
+  16:40is presenting to the browser verses back in thing is
+  16:43I'll just go back to synchronous exits are in the Val like why not just
+  16:48tree are required I out or require whatever
+  16:52load that up in the browser a single as i fix are an evil because that's the
+  16:56only synchronous part about now
+  16:58is or minus the same functions so
+  17:02we came up with AMD hopefully and the sticks
+  17:06hopefully more and more people buy into it
+  17:10or find the utility in it
+  17:14in making anything more than just their the little demo ups
+  17:18so modules are coming to JavaScript
+  17:22um I don't know that it's been approved if anyone wants to yell and tell me that
+  17:26house
+  17:27like there's a final spec I don't believe there is i think they're still
+  17:30arguing
+  17:31um and then %um the makes me cringe
+  17:35every time I see it um thankfully you andy is
+  17:38a copy paste from a repository of 70 different options
+  17:42above type serve module use that I can use and
+  17:46nowadays my shop my work has been using a load jQuery backbone in
+  17:50and all those other great technology so I just
+  17:53fork whatever plugin it is at the %um the thing in Vegas are fixing their code
+  17:59so um not happy with you on D
+  18:03but I wish more people used it a
+  18:07if you not familiar with us you really should look at so it's a massive
+  18:11factory functions and tricking if he's into thinking something else is the
+  18:16global and
+  18:17we can can't agree on this but we need to
+  18:21we need to and really is a something does already did so a lot over
+  18:26a lot of the problems that AMD solves and solves very elegantly
+  18:30we're through years and years and years have dreams as work
+  18:33with Ojo and backwards compatible I think that's what finally
+  18:38was the straw that broke the camel's back was a backwards compatibility
+  18:41because we had a
+  18:42migrate our entire code based to MD while still maintaining support for
+  18:47require and order to require directly as a synchronous
+  18:51assumed loader another thing that has been doing
+  18:55for ever back and JavaScript
+  18:59everyone's 00 2009 ok came out this is great
+  19:02note is awesome we have JavaScript on the back and we've always had it
+  19:05by Waverider 0 and not to say the Rhinos good
+  19:10or anything we had it
+  19:13it was a the entire build system was written in JavaScript to
+  19:16think I need JavaScript with the exception of shrink safe
+  19:20which was also using our custom rightness or something around Java stuff
+  19:23in
+  19:23whatever it's nice to get away from up
+  19:26rhino which is horribly slow
+  19:30and also reactive job even just the
+  19:33the API's you still had
+  19:37write JavaScript as if it were Java when you wanted to go into the final AIO
+  19:41stuff and it was
+  19:42it was just very very own pretty even passing strings back and forth if it was
+  19:47a job originated string it was a special string and you had to cast it to a
+  19:50JavaScript string by using
+  19:53plus quote
+  19:56double-talk and then another thing that I I'd love
+  20:00to see really really take off we had something called the do XD TL
+  20:04which is a Django template language um Django was
+  20:08popular a way back before it's probably still very popular I don't use it now
+  20:13um but we had a full implementation of the DT language
+  20:18I love to have seen some kinda express after something that comes out in just
+  20:23straight up says you can use your templates in the back into the front
+  20:26its we can either using the exact same
+  20:30exact same temple is axing data models everything which is
+  20:33really really now possibility with no a its
+  20:37it's right there on the cusp happening um
+  20:40II did a a mustache things with proof of concept using so simple no web server
+  20:46but it
+  20:47I never really every fall sewing we've dropped Rhino
+  20:51Dodgers bill is using node um and detail was abandoned
+  20:57but there's no end and its potential and a likewise everyone should be very very
+  21:01excited about it
+  21:02I'm there's it's just doesn't
+  21:05it hasn't just savior's not to the pipe to the Python
+  21:09levels and a lot of the models that you get
+  21:12are you can be sure a.m. p.m. is
+  21:16hit-or-miss there's a lotta stuff there's a lot of germs but there's a
+  21:19lotta crap
+  21:21and that's just yeah I guess that the wave the world
+  21:24on would be nice if there was a a good clean solution
+  21:28to loading all that stuff
+  21:32UN divers which is 1 I've Dodgers biggest things that it was it was the
+  21:36monolithic
+  21:37core library plus the UN I very plus plugins
+  21:41so everyone kind as you ever this there several
+  21:44out there digit is does I could do
+  21:48a whole other hour talk based on the failures
+  21:52and the decisions behind various things that happened in digit
+  21:57um did it is a wonderful little UI library
+  22:00but um I can tell you what it does do
+  22:03it gives you instant space control you get the new up your thing in
+  22:08programmatic object-oriented access to everything
+  22:12and then the done base view is really just a wrapper around all of that
+  22:16um externalizing resources by wave
+  22:19now AMD text plugin keeping your templates out love
+  22:23out love the JavaScript code itself interestingly
+  22:28um the
+  22:31West the script for the jQuery Templates script
+  22:35type jQuery slash template interesting browser thing if it's not
+  22:38text/javascript go execute it so we could use these containers for
+  22:42completely arbitrary HTML that never never rendered whatsoever so that's a
+  22:45big
+  22:47um I don't like it I never liked it when did that
+  22:51but they didn't do it so much for the temple thing they did it for method so
+  22:54you can actually write script type Eagles go Joe on
+  22:57and that code inside if there would replace the
+  23:00instance method for for whatever it is you're doing so is really
+  23:04agree I don't like putting my job to replace them and one thing the digit
+  23:08does
+  23:09that nobody is done and it is done this for years and years I don't know how
+  23:13much money IBM has put into
+  23:15accessibility but accessibility is huge
+  23:19um and a lot of people just kinda disregarded um
+  23:23the outline on display outline on or whatever on
+  23:26anchors because they don't like that little dotted box around their anchor
+  23:29elements
+  23:30when you cook it somebody needs that
+  23:33localization internationalization both out of the box um
+  23:38alex has a great new solution internationalization it'll really like
+  23:42Dodgers internationalization
+  23:44but its built-in its all part of it it's something we learned in something that
+  23:48we needed so
+  23:49it's there it's been there for a long time
+  23:54nothing with digit too painful degrees it's backwards compatible
+  23:58um we started out with functions like set disabled in
+  24:03set left hand side something individual functions for everything is like us on a
+  24:07scale we're going to have millions and millions methods that are either center
+  24:10yet or whatever
+  24:11so let's go to a setter just a a straight-set outer
+  24:15and then that ended up being renamed to just set
+  24:18and now it's been replaced with observable watchable patterns and
+  24:22so but the benefit their
+  24:26is that you don't have to really think um back to my job
+  24:29earlier about trickery 15 and the the plugins that were listed there
+  24:34there's no way of knowing if if
+  24:37any of that stuff works I guess there is now with the
+  24:40modern plugin repository I don't actually look
+  24:43on that require very much but I I believe there's a
+  24:46versioning system in some kinda package that jQuery
+  24:50thing that they've got going on um but the
+  24:54there's a benefit unifying everything to normalizing
+  24:58sent to normalizing names and functions and styles of names a functions because
+  25:02once you get past like a threshold of
+  25:05understanding the terminology here the the workings
+  25:08its its all comes clear
+  25:11instead I've the the very the
+  25:15that's very sweet very plugins I go I have to do that this and sometimes I
+  25:19have to call and sometimes I need to
+  25:21re initialize it on a collection or whatever its
+  25:25there's no unification between any of the plugins are any the library's
+  25:29fit you piece together did to develop
+  25:33um and I'd like to see for standards they're
+  25:37on naming conventions and and API
+  25:42on the interface is right there's been
+  25:46a little bit work when you look at something like to try if you actually
+  25:48look at the
+  25:50the bootstrap JavaScript code some of its really really horrible but some
+  25:53ovett
+  25:54it up it all falls a very simple pattern love here's a simple class
+  25:59and then the plug inside ovett is do this do this do this do this
+  26:04reload our plugin so it's instantiation from an object or
+  26:07string bass commands from that and it's already
+  26:11saved on the object so that's cool above the sea
+  26:15more style guides for individual modules and I love to see more of them
+  26:19um AMD eyes so you can just taking
+  26:22pic so you don't need necessarily has leveled recruit plugins for instance
+  26:26don't even really need jQuery it's just a function stubbed of a dollar sign
+  26:31in the end um likewise with just having a function that works on a collection
+  26:35its
+  26:36really literally just having a function that works on a collection
+  26:39that iterates over itself did you could do a lot of stuff better
+  26:44um they don't have a concept event delegation
+  26:48which is odd I mean internally it has a
+  26:52a this connects so you can listen to events within the scope of yourself in
+  26:56it cleans up after itself but it never
+  26:58had like a straight up delegation API which
+  27:01would have been beautiful actually kind of like that about backbone
+  27:05um minus the fact that that events object
+  27:09if you're inheriting you have no control over the the parent events
+  27:12necessarily I may be mistaken um on that
+  27:16just an experience um an alternate employing
+  27:19I find the digit templates the very flat they're very nothing about them
+  27:24it's just variable substitution and I've got more complex data that may not need
+  27:28to write one of so
+  27:30it's it's two lines of code I implemented mustache which was fun at
+  27:33the time
+  27:34and so I learned that they don't support that notation
+  27:38always overlooking was tryna sorry
+  27:42um and then yet wound and then core JS which is
+  27:46which is all those who really started out to be um
+  27:49just a bunch of functions a bunch of hackers getting the other in like
+  27:53oh hey we need a normalized is a real word know its a bad example that slipped
+  27:58I if yeah so the israelis not a good example
+  28:02um what's a good example bind
+  28:07stuff you find an underscore that's a great example there's a lot of stuff
+  28:10that's an underscore that
+  28:12I took for granted because it's always has been attached to dodo
+  28:16um it's been there its this is the Tiger Woods decrease talks but
+  28:20only cuz decreased talks is missing a tie um
+  28:27its site my favorite my favorite IKr API is mapped
+  28:32because the dollar sign up in the dollar sign FN map
+  28:35are the same it's actually more of a map filter
+  28:39a and then Cody Linley you me may not be here
+  28:42called me otherwise I why would you ever need something that maps down to a
+  28:45sparse array Mosley well
+  28:47case you ever have 10 things you wanna make sure they line back up
+  28:50later um or bind
+  28:53it's an event handler and recruit confuse so many people's ago hey
+  28:58ECM a five-star doing this new fancy Bynes in that use that
+  29:02I'm very confused what does this have to do with event handlers you know it but
+  29:06it's impossible to even explain the concept a bind
+  29:09to the the average a per-user because there this is
+  29:14something completely different um then than the rest so far this is
+  29:19and this is the most important thing this literally this is the most
+  29:22important thing in javascript
+  29:24in my eyes is the the ability to control the contacts and
+  29:28and do whatever it is you want whatever it is you need to do
+  29:32on and having an understanding of this
+  29:35is good I the each
+  29:39it's just frustrating isn't so much of cash
+  29:43it but the fact that in order to iterate over shaker collection you have to
+  29:47reinstate like
+  29:48you and debris in San sitting at a this jQuery object within itself
+  29:52rather than working directly on the node um
+  29:55and then the key/value pairs are all is there's no way to get the original
+  30:00question just
+  30:00so angering so angry um
+  30:04actually running really short on time so I'm gonna go underscores not aim to you
+  30:08and be ready
+  30:09it doesn't even have you on the show em um
+  30:12plug for John Dalton load ash does I
+  30:16it's just a a matter vote quick building you get an actually faster than
+  30:20underscore
+  30:21underscore compliant underscore in your underscores
+  30:25um Yelp I heard you like underscores
+  30:29I actually hate using the underscore as an API
+  30:33because it makes it look like I've already obvious code my code its
+  30:37its at the Americana dynamic method of another so it's a
+  30:41that's a underscore bracket conditional question mark
+  30:45string Collins string and stressed its and then he has a jQuery collection at
+  30:49that and it's a dollar sign right after a parentheses it is just like what the
+  30:52fuck did I was right
+  30:55any setback you had a couple spaces around some things in
+  30:59you know it's okay I I can kinda series starting new lines after the parentheses
+  31:04let's and your the print this is the new school so
+  31:08lotsa stuff is a name be ready as I mentioned I'd love to see more
+  31:12but in the end again it's just JavaScript at
+  31:16does so did so much stuff and go to wrote so much JavaScript Thursday
+  31:20normalization there's
+  31:21deford's a which is the early onset promises which are now also in jQuery
+  31:26which everyone loves and like
+  31:28you should you would have been amazed at the time the
+  31:32when take very first announced support for deferred and they're like
+  31:35everybody was like this is amazing this is great we needn't
+  31:39promises are the things shipped and then
+  31:43I just can't IDZ one-handed clapping you know it's
+  31:46we've been doing it for efforts leon I'm proud of all our view
+  31:50for fern using that but
+  31:54it's nothing new um so understand what understand the language
+  31:59enjoy the nuance don't buy into any particular library other than
+  32:03the immediate goals that that library service
+  32:06um and just right
+  32:09code and continue learning and that's all
+  32:13I've got

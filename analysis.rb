@@ -49,6 +49,4 @@ def word_count(word)
   talks
 end
 
-tp word_count("ruby")
-
-
+tp word_count("fun")

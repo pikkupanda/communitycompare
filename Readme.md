@@ -1,4 +1,7 @@
+# CommunityCompare
 
+Experiment for comparing words used in different programming communities via
+transcripts of talks.
 
 ## Talks used
 

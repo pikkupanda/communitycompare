@@ -1,0 +1,387 @@
+conference: JSConfUS
+title:  JavaScript is Literature is JavaScript
+speaker: Angus Croll
+year: 2013
+source: https://www.youtube.com/watch?v=j_EfPW4G-L0
+automatic: true
+duration: 1465
+text: |
+  0:19so I actually went to task of 2012
+  0:23I attended a I'm it was my first
+  0:26conference ever as anything and i sat there
+  0:29totally shot I never talk to a person single person so
+  0:32you told me that this year I Beyonce's presenting than now
+  0:36I would be very surprised I'm
+  0:41I um centrist we sow visiting
+  0:45for horning I'm what have Jack character in Austin James Joyce Richard Feynman
+  0:50of kind of some Johnson I missed ernest hemingway got in common
+  0:54and I'll the reason I sent that is because I hope song we have a very
+  0:58clever answer for me
+  1:00so I could say on stage but I got this which is pretty good because
+  1:04a.m. fail my office good I have which
+  1:08we should actually as you'll see is natos
+  1:11far from the truth as you might think so
+  1:17I am NOT this talk I am started
+  1:20way back August 2012 a
+  1:24I was talking to fans on IRC and yes what I was doing
+  1:27and I said oh I just wrote a piece of JavaScript and thus far love
+  1:32above above earnest how hemingway
+  1:36and he was aiight great you should like to post
+  1:40and it was a I'm not that she hadn't written apiece jobs goodness on the
+  1:43Venice I was just thinking about
+  1:45how that would work hadn't done it all I thought ok right now I have to go I'm
+  1:49writer
+  1:49so I did and it became a blog posts and it became very successful
+  1:55post I'm on the fun to pack a month in bunch of other stuff
+  1:58so from that um
+  2:01came this talk and
+  2:05today I'm gonna present I'm gonna have come to you reviews
+  2:09from five of us the five authors in that talk
+  2:13am and
+  2:16plus especially for this talk I promise to buy another five
+  2:20doing another exercise um
+  2:23I got seven in the and I couldn't narrow it down so
+  2:27hopefully we have time arm so
+  2:32a here are his the mother a vocoder views
+  2:35a the office sent me back I heard set me back
+  2:39to from history the
+  2:42a their answers to two problems and we're going to do a code review
+  2:46on them so
+  2:49exercise 1 is given out your numbers return the Fibonacci sequence
+  2:54for the argument given argument which is the
+  2:57number for science of the sequence first up
+  3:02is ernest hemingway these are all close these all-natural
+  3:05actual quotes I think they with a MIDI I just
+  3:10change the earth inglewood
+  3:14is time sometimes it in even change anything anything and
+  3:19I think these quotes go a little bit what a little bit of the way towards
+  3:23explaining
+  3:24that approach to solving the problem so let's look at furnace
+  3:28arm attendance the sewing financing so it doesn't you know having way he's very
+  3:33spare
+  3:34I'm he a he
+  3:37he is very economical any tells you what you have to know
+  3:41for No comments: because he was a proponent of the iceberg theory
+  3:46which is that them minimum
+  3:50possible amount is on the surface the rest is for the Eve
+  3:54reader to discover hidden beneath the surface
+  3:59I am very straightforward
+  4:02he names his for tables exactly as you as you would expect for second
+  4:08not trying to be clever not trying to use any terminology
+  4:11and its technique called terminology it's a very nice solution
+  4:16if the size is less than two fibonacci
+  4:19I'm you know he could give you the answer but he feels
+  4:23you were an idiot for asking so that's what you gonna get back
+  4:27next up is shakespeare
+  4:31that is a natural that's a natural quote from
+  4:34shakespeare I'm
+  4:38so he kinda drags this this one out I was only safe pecan
+  4:42I am calculation to axe implying the hematological
+  4:46JavaScript and he introduces the cake
+  4:50characters he has the to not just assign a
+  4:53the main protagonists are the result which is in a way
+  4:58which is going to return to you an account on as he can so we can count
+  5:02through
+  5:02the fall open and as I miss a spirit with bowknot use only 6 p.m. but I
+  5:06suspended
+  5:08he and divided the center interacts
+  5:11sacked once it is Magic School Bus yes
+  5:15so night long I in with 20 2004
+  5:18say a initiation
+  5:21I resist a long way of saying his assigning 0 votes
+  5:25to the result and by the way um
+  5:28almost always come comments when I iambic
+  5:32penned time into which is the way shakespeare wrote
+  5:35I'm thank you
+  5:38we says ten syllables basically pearl I'm
+  5:41an stress every other syllable hands
+  5:45pentameter five syllables stressed
+  5:48he didn't always stick exactly tuna and he has in the comments the point is to
+  5:52emphasize certain words
+  5:54by by a switching the stress
+  5:57um clothes were so let's go by on tack to
+  6:02K in which um it
+  6:05every iteration ILU two numbers are queries
+  6:09and some ands by divination he sets
+  6:12at joining members as as he says
+  6:16and I am its it's pretty nice code I guess
+  6:20and as a bit above obfuscation going on I'm
+  6:23the reason he's doing this all from mathematics
+  6:270 down there is that um
+  6:30he doesn't want 0 all we've
+  6:34pope warm becomes a vast so
+  6:37that fast what he's doing that and then finally
+  6:40and that he returns the result to you
+  6:44and then there's a players exit
+  6:48and does the end
+  6:51now um
+  6:54his/her dove on on tape press on
+  6:58I he was a mid-century France
+  7:03surrealist I one of the family members of those
+  7:06servicemen movement and he believe dreams were more interesting them
+  7:11he movement payouts BR to a
+  7:16so will his pros have a very dream-like quality to them
+  7:20and you actually switches nouns for
+  7:23any other words you can think of
+  7:28so this is what we got so
+  7:31factor will he be named factorial tick
+  7:35colette which became the first 10 for time affairs
+  7:39and but the amazing thing is and why I really like his writing is there's a
+  7:43certain elegance to it
+  7:44I mean he chooses his nouns carefully
+  7:47am under the firm the whole politics logic to it you'll see how staircase
+  7:52for the iterator the thing the the you for you
+  7:56increase meant and I think only know he's done
+  8:00pretty nicely has a very nice answer
+  8:04um next I'm onto the terrain
+  8:08also rubber-stamp
+  8:14pearl onions one in my personal heifetz
+  8:18I am and Bologna a has a wonderful style he's
+  8:22charming naive on
+  8:26incredibly honest and every aspect a few month
+  8:30frailties included he'll tell you what he's thinking the whole the whole time
+  8:34the most personal um seemingly uninteresting took thought so
+  8:38Hill hello share with the SEC is comments are
+  8:41very much an invite and that kinda stuff also I
+  8:45he loved the open her it's the old roof
+  8:48right as any historical figure so is actually named his factorial after
+  8:53certainly in our tips on nope
+  9:02piccolo who was as you there person who credited with with
+  9:07identifying the have not you serious
+  9:11am so if elmo is less than 0 pping the size her
+  9:15Evo is less than 0 the he he doesn't want to answer that because he doesn't
+  9:19know how to answer
+  9:20although he admits that several
+  9:23responses probably have a nice response is a curse him
+  9:27and then he just tries to Cody doesn't really care about the code if you missus
+  9:30books like the plot is
+  9:32almost sidelines he just he just
+  9:36writes the code in short order I am and then
+  9:40I am says he doesn't really understand what's going on
+  9:43and then he he left heel heedless a lot of mathematicians
+  9:47which very interested I am
+  9:51and this is his kinda deal this this is how he works in it
+  9:54it in his book I he pays
+  9:58ha March 2 to these people and then he returns the answer
+  10:03is that I didn't really know what how many this thing work better anywhere has
+  10:06the answer cuz you're interested
+  10:08and he said damn honesty site he can help looking a bit further
+  10:12down the page even though actually at I think nothing happens in
+  10:15just points out for there was nothing happening and he would rather not talk
+  10:19about it even if it was
+  10:21as this is a very personal style offense
+  10:24so onto Charles child takings
+  10:28I'm Charles Dickens I don't really like his work that much he's very superficial
+  10:32Henry James called him the greatest subversive for superficial mmm
+  10:36novelists i think is like a substance of hotties make the building
+  10:41um characters has great great characters
+  10:44but he doesn't do anything with them to my mind and
+  10:48um the lack of honesty and I like I'm understanding I think somewhere that
+  10:53so we can see what he does here his he
+  10:56a ignores the principal up the have been out you serious if I
+  11:00adventure that he doesn't really understand their
+  11:03but he didn't notice that I am every number in the series
+  11:07is almost exactly 1.61 80 three times the previous number
+  11:12in the series so again very superficially just use that to build the
+  11:17series and there we have it so
+  11:21fact is that and now exercise too so there is among those above the 5 posts
+  11:26from the
+  11:26previous blog that I votes and these now are
+  11:297 code reviews that have just being sent to me
+  11:34for the next exercise so I have no idea what's on the Sony out
+  11:37I'll be seeing it for the first first time to exercise to
+  11:41is a factorial serve a given argument and
+  11:46return the factorial
+  11:50and let's start with cake
+  11:53Kovach the Jack
+  11:57karach am now co uk had a very
+  12:01a spontaneous
+  12:05stream of conscious style
+  12:08and he didn't think I have so if there isn't a function here
+  12:14like ok
+  12:18he thank you
+  12:21so from it looks like he has nicely prepared
+  12:26any other examples they would only work for any cause
+  12:2943
+  12:33and and he's put a whole other comments in here too
+  12:37and it's really hard to figure out what is code in White's comment
+  12:41but eventually sort of works
+  12:44the kinda stream that and and there is an answer yet she tells it the answer
+  12:49a before he gets here a
+  12:53so there we are that's a correct so yeah I i mean
+  12:56its okay so here is
+  13:00James Joyce I'm this is a particularly nice
+  13:05pro actually has I I don't know how many familiar with him
+  13:10with the vocal fight is a time so it's the one thing you like to do a lot with
+  13:14make up these poem anti words which is like two words combined
+  13:19and it looks like he's actually taken into its coding is using now
+  13:22and a lot of places so this is a hack on the
+  13:26factorial you 33 Korea a factorial
+  13:30and he wants you to pass a small in future is the argument is a BigInteger
+  13:34it's now it's just gonna blow the whole thing up so
+  13:37that's why is calling it an Inc said
+  13:40jet hen strongly that small engine should be passed
+  13:44I he's returning a South policies have to sign it's not so why is doing
+  13:49actually because it doesn't really help but
+  13:52whatever those thoughts the way things are he's got the we've
+  13:56Press ok to fusion which is fight the the amalgam of
+  13:59resultant ok computation
+  14:03and now if you pass fairer and no one really understands
+  14:08to be honest the wind factor in 2002
+  14:12ponies in with just one of those things says behold the stranger with
+  14:17heroin psych the strains in dangerous
+  14:20cerro but no one really understands that I'm just kinda hard coat that
+  14:24and then connected I by multi cables I'm no one is saying that
+  14:30but I guess what he's doing is insisting I am straightforward
+  14:34a for loop I counting down and multiplying up
+  14:38for everything that he finds I'm
+  14:42and that's the answer really but it looks like he's done something else here
+  14:45I'm procedures okay is some
+  14:50yeah Cup his cover theater
+  14:53shillings and pens which is the the currency that was around at the time he
+  14:58was actually writing
+  15:00now actually when you think about this this makes no sense because every factor
+  15:04I before i think is divisible by 12
+  15:07and the twelve shillings in at 12 pennies and shelling
+  15:10so he realizes the settings is a pretty good way to express
+  15:14results for fact oil I am he's doing a lot of
+  15:19arm crazy shit you see he doesn't actually
+  15:22use functions in the as functions decorations he is a constructor he is a
+  15:27function construct a hacer
+  15:29and I'm god only knows why
+  15:33a but it seems it seems to work and and then he I'm
+  15:37and then he he passes all the nah now for characters out there
+  15:42and then guess the answer own he always likes to throw in these
+  15:45superb momentos light at the end which is like a buncha stuff combined all that
+  15:50ok hickok like a staff a
+  15:53fastest Harry Reid's in answer there then we have some some
+  15:59examples I'm and it's actually a its okay
+  16:02soaking and now we have a Richard Feynman
+  16:06have whose not a
+  16:09novelist or up poet but a very interesting I have a great respect for
+  16:15in specially
+  16:16the way I and this quote sums it up a
+  16:19things are going to sum up his post the answer is never pays attention to
+  16:23anything by X
+  16:24butts programs everything himself
+  16:27and soda and and
+  16:31he is this approximation to calculate
+  16:34factorial and has got a fact lol or as chief
+  16:38factor Ryo I am because
+  16:41its doesn't just work for interest shows it works for
+  16:44of actions to and i think is pretty damn
+  16:49clever from very scientific approach and so that we can see we can see and that
+  16:55the any promises sorry information
+  16:57so I'm so we're all kinda familiar with this
+  17:01for 36 points there is there is there were five but now he can
+  17:05cover the two I'm photos love above
+  17:08in known into just two which is really great
+  17:11um now we have of the kinds of oil
+  17:15who I am the author of the
+  17:19solar comes stories and I think
+  17:23um he's done something a little bit ours here he's here I so problems he likes to
+  17:28work
+  17:29pack with food problems so factorial doesn't in just 10
+  17:33he wants give me the answer sir fitzroy and I will give you the un factor I will
+  17:37work
+  17:38pop backwards to determine what was the number that actually
+  17:42see that this fact oil and
+  17:45he uses a couple things that beginning just as well
+  17:49you won't understand his first tooth I'm just gonna put them in a hot cousin
+  17:52house
+  17:53and then and he goes to the real I'm facto function
+  17:57and he was a humble guy basically well
+  18:00I'm you know he was somewhere and and
+  18:03if test the number one
+  18:08is the argument then he doesn't know what it could be cuz it could be 0a like
+  18:13could be Wong sorry this has to Watson he is also lost and then
+  18:19um second his second from parts his methodology
+  18:25was to look from ha jiggle president so we have a case like this
+  18:30go back to the case history we haven't had one like this before
+  18:33because he's catching on to the old answers he straightway looks in the in
+  18:36the case history
+  18:37fine salt solutions I'm and then he eliminates the impossible
+  18:43so a actually any fight so over
+  18:46for which is all we're left with now is divisible by 24
+  18:50so and this is if it if it's our 0 not visible by 24
+  18:55then he's a shower since this is not the answer to
+  18:59of a factorial finally
+  19:02a he knows it's a real factorial and he will work backwards and
+  19:06to choose the answer I am
+  19:10but even then if it doesn't come up to a whole number
+  19:13or say if some the the nominee Mitt the numerator and denominator do not match
+  19:19by continued dividing the right to buy domains than he knows
+  19:22your an imposter to and that wasn't a real fitzroy and many adds it to the
+  19:27case history and then he returns the answer
+  19:28that's figures okay
+  19:32now and his some examples for him now
+  19:38home Johnson Simon Johnson was a seventeenth-century
+  19:44Vita some you may have heard event he
+  19:47compose a dictionary he wrote the first section one of the first
+  19:50first section is back in seventeen hundred's and had a very famous quote
+  19:54when one is how I have JavaScript one is
+  19:56tired of life and
+  20:00thing about summer Johnson is a hung around Inc
+  20:05coffee shops a lot of do is work in coffee shops
+  20:09and also he I am he really did not like the
+  20:14in lab what languages contemporaries were using the tender to use
+  20:17I am lab with some historical language and he liked very clean
+  20:22very clipped kinda language so CoffeeScript was
+  20:25perfect for him so he sees office could solve a problem
+  20:29the irony is he like very simple language when we look back now on how we
+  20:33use to write it looks kinda if
+  20:35old-fashioned and and and inches am
+  20:38he's a bit sarcastic I ingenious of a three to prove the palpably
+  20:42of PS I'm if the number is
+  20:46it would born is the argument then that's the answer
+  20:50he also took an entry for his dictionary in that put in the comments 0
+  20:54because in he defined that from his diction
+  21:00and a and you can see a little bit if like
+  21:04site is scathing wit bad to worse we custom he's not totally solve the net
+  21:08but I'm
+  21:11it solves this problem
+  21:16so now at chain all said nothing about Jane Austen
+  21:19and wells because she will be
+  21:28pose in the mail dominated world
+  21:31um she felt she had to hide her cleverness from the world
+  21:35but she she did it in a very
+  21:38I'm I this is almost Odrick
+  21:42cuz this time in here because program misperceived shows most
+  21:46misfortune knowing anything to consider as well as you can
+  21:49which is not merely saying that she's considering the fact that that
+  21:53she knows you shouldn't do that and we can see losses
+  21:56examples and and she'd should cover days a lot cheaper it is the conventions of
+  22:02the
+  22:02time and so you see she parodies
+  22:05um that peasantry
+  22:09love JavaScript community
+  22:13I am the fact the usual some people say you should use triple equals for
+  22:17everything
+  22:18I'm she's pretending she thinks that's actually true she knows probably what's
+  22:22known she doesn't have
+  22:23to do that I am she even text to see where the argument is an
+  22:27is an actual number or not knowing that it could not be number
+  22:33I am yeah
+  22:37and so there's a certain mister crawford
+  22:42I'm who says whenever we have a we have an a4
+  22:45for it we should check for I'm in case was inherited from
+  22:49the party sites so a mmm
+  22:52she's pretending that she thinks she should password you should do here
+  22:57and then she carries on the cussing until the answer comes out
+  23:02and it's a very nice we just go back one
+  23:05I'm as with a rising it's very well is very well-crafted
+  23:09um she's yes South invoking function take as a kind ok
+  23:13closure so even the um
+  23:16click cashing in everything is completely
+  23:21it enclosed are put in this is a very
+  23:25tidy function
+  23:29and then finally I am back to Ernest
+  23:34Kong keeping now he wants to send began I didn't actually asking buddy some semi
+  23:37and other responses 1
+  23:39so I am and again
+  23:43ernest Hemingway's very spur very economical
+  23:46I that's how we did it not have you ever
+  23:51a extra staff a he doesn't have any might be slightly slower
+  23:56because this nation he wants it to be clean wanted to despair
+  24:00and that's why we have
+  24:03and fan said and his some resources you might want to look at
