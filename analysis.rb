@@ -1,9 +1,15 @@
 require 'yaml'
+require 'stopwords'
 
 # Takes: "My name is Andy.""
 # Return: ["My", "name", "is", "Andy"]
 def tokenize(text)
-    text.split(" ");
+    text.split(" ")
+end
+
+def remove_stopwords(tokens)
+  stopwords = Stopwords::Snowball::Filter.new "en"
+  stopwords.filter(tokens)
 end
 
 # Takes: "0:16My name is Andy."
@@ -17,15 +23,15 @@ def sanitize(text)
   new_text.downcase
 end
 
-def percentage(word, tokens)
-  tokens.count(word).to_f / tokens.length * 100
+def promille(word, tokens)
+  tokens.count(word).to_f / tokens.length * 1000
 end
 
 Dir.glob("./data/ruby/*.yml") do |file|
   talk = YAML.load_file(file)
-  tokens = tokenize(sanitize(talk['text']))
+  tokens = remove_stopwords(tokenize(sanitize(talk['text'])))
   print talk['speaker']
   print "\t\t"
-  print percentage("fun", tokens)
+  print promille("fun", tokens)
   print "\n"
 end
