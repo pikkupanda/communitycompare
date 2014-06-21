@@ -1,0 +1,802 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=RkTtyo2kydg
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:17LOREN SEGAL: I&#39;m actually really happy tobe like the
+  0:19first technical talk, because that means
+  0:21I get to relax for the rest of the conference.
+  0:23It also means you guys are probably
+  0:25not skipping out on the talks yet,
+  0:26so you&#39;re all here. It&#39;s a full room.
+  0:29So that&#39;s good.
+  0:30Welcome to RubyConf, guys. I&#39;m really excitedto be
+  0:32in Miami.
+  0:35I want to start my talk with a question.
+  0:37And that question is, are Rubyists good attesting
+  0:40because they have good tools, or do Rubyistshave
+  0:44good tools because they&#39;re good at testing?
+  0:48It seems to me like this one is sort
+  0:50of the wrong question to ask, because there&#39;s,there&#39;s
+  0:54nothing, to me there&#39;s nothing innate aboutRubyists that
+  0:57make us good at testing. First of all, a
+  1:0lot of Rubyists are also Java programmers,Python programmers,
+  1:4Go programmers, and you know, when we&#39;re programmingGo,
+  1:9we&#39;re not all of a sudden bad testers. And
+  1:11when we switch back to Ruby, we don&#39;t become
+  1:13magically good testers again.
+  1:15Clearly there&#39;s something about the toolsthat we have
+  1:17as Rubyists that make it efficient for usto
+  1:20be good at testing.
+  1:23You can also look at, sort of the ways
+  1:25we&#39;ve advanced our civilization as humans.So the way
+  1:30we&#39;ve been able to survive as humans, so for
+  1:32the centuries and millennia, has been throughthe advancements
+  1:37of technology and tooling.
+  1:40Humans are actually kind of weak creatures.We&#39;re not
+  1:42very good at physical, you know, dominance.So we&#39;ve
+  1:47always used our ability to advance technologyas our
+  1:51survival mechanism. And I think the advancementsof, the
+  1:56advancement of tooling has always sort ofbeen central
+  1:58to the advancement of technology, which hassort of
+  2:0given us better tools. And then we&#39;ve finallygotten
+  2:4mastery over our crafts.
+  2:6So clearly tools are important. And I think,just
+  2:14because tools are important we should talkabout what
+  2:16tools are available to us, and, and, figureout
+  2:18how we can use the tools that we have.
+  2:20And figure out how we can make better tools.
+  2:23So, in the Ruby community, we have, we do
+  2:27have good tools available to us. And there&#39;splenty
+  2:30to talk about. But sometimes we don&#39;t reallyhave
+  2:34such great tools, and I want to focus this
+  2:36talk, even though there&#39;s a lot of great things
+  2:38to say, I want to focus the talk on
+  2:40the not so good tools that are available to
+  2:42us, and the things that we need to improve.
+  2:45So the couple of goals in this talk. The
+  2:47first one is to introduce the different setof
+  2:50tools that you might not be aware of. Look
+  2:54at, let&#39;s look at other languages, see what,what
+  2:56other languages provide to developers as tools- Java,
+  3:1C#, Go.
+  3:3After we look at different tools we can figure
+  3:6out sort of what tools we are missing from
+  3:9our languages, and sort of reflect on thatand
+  3:11figure out why we&#39;re missing those tools.Are there
+  3:14any problems with the fact that we don&#39;t have
+  3:16those tools? And should we be improving ourselves?
+  3:21And the third one is, I kind of want
+  3:23this talk to be, hopefully, an inspirationto you
+  3:25guys to actually go out there, find a problem
+  3:29that hasn&#39;t been solved yet, and write a tool
+  3:32for our community. Write something that canmake us
+  3:34better. Become a garbage collector, as Matzsaid earlier.
+  3:41So I&#39;m gonna be naming a bunch of different
+  3:43tools, and I&#39;m gonna be glossing over a lot
+  3:45of different things in this talk. And I didn&#39;t
+  3:48have time to actually give URLs to everything,and
+  3:50you probably wouldn&#39;t be able to read them,cause
+  3:52usually some of them are long.
+  3:53So if you Google just the tool name and
+  3:55the language, you should be able to find most
+  3:56of the things I&#39;m referencing in a talk. If
+  3:58you don&#39;t, come and find me. I will gladly
+  4:0point you in the right direction.
+  4:3So let&#39;s jump into the kinds of tools that
+  4:6are available to developers.
+  4:9There&#39;s tons of kinds of tools, and I&#39;m not
+  4:11gonna be able to cover everything. And thisisn&#39;t
+  4:13even a complete list. But there are tool types
+  4:16like deployment operation tools, documentationtools, testing tools, visualization
+  4:21tools, debugging, linting, static analysistools.
+  4:26I&#39;m going to focus on sort of the bottom
+  4:28half of this, starting from visualizationdown. We pretty
+  4:32much have deployment and operations down pat.We are
+  4:35very good at this in the Ruby community. We
+  4:37have pretty good documentation tools. We havevery good
+  4:40testing tools. We&#39;re sort of like the kingsof
+  4:42testing, as it were.
+  4:44Visualization, debugging, linting, and staticanalysis, I think are
+  4:48areas where we have a lot of room to
+  4:49grow and improve. So I&#39;m gonna talk aboutthose
+  4:53four areas.
+  4:57So let&#39;s jump into visualization.
+  5:0I think that some of the most important tools
+  5:2that are out there are visualization tools.Visualization tools
+  5:7kind of encompass, for me, encompass debugging,refactoring tools,
+  5:13general actual visualization tools that youcan like, see
+  5:16how your code works and stuff like that. Profiling
+  5:18tools I think are also visualization.
+  5:19So there&#39;s a lot, it&#39;s a kind of a
+  5:21broad spectrum, but anything that lets yousee what
+  5:24your code does is useful.
+  5:28Visualization tools effectively let you knowwhat you&#39;re code
+  5:30is doing. So without any visibility into yourcode,
+  5:34you kind of have no idea what you&#39;re doing.
+  5:37Imagine that you have a thread in a sealed
+  5:39box. Is it dead or is it alive?
+  5:45So visibility let&#39;s us answer that question.Peek into
+  5:49that box and actually see what our code is
+  5:51doing.
+  5:54This is a screen shot of visual studio, the
+  5:56lightest build of visual studio. And thisis a
+  5:59new feature that they added called a diagnosticshub,
+  6:1and it&#39;s sort of this profiling tool thatgives
+  6:3you some pretty cool input into sort of very
+  6:8detailed parts of your code, like how longit
+  6:11takes to load things, what the actual CPUutilization
+  6:15is of different components of your code. Verygranular
+  6:19stuff.
+  6:20You also get FPS through, through, for, GUIapplication,
+  6:24if you have a GUI running. You get FPS
+  6:27going up, which I think is kind of cool.
+  6:28So you get a lot of visualization stuff from
+  6:31a tool like this.
+  6:35Visual Studio also has a debugger in additionto
+  6:38the profiling stuff, and Visual Studios debuggerhas always
+  6:41been pretty good. I&#39;m really excited aboutthis, the
+  6:44feature on the right there that shows younot
+  6:46only the list of call, the call graph as
+  6:49a two dimensional list, but you also get the
+  6:52call graph as this tree of things where you,
+  6:56you know, where you are in your code.
+  6:57And the useful thing about that is, you not
+  7:0only see where you are and where you came
+  7:1from, but you also see where that thing that
+  7:3came from was as well. So you see that
+  7:6the item, item view on click up there also
+  7:9came from activating, or called activate instanceand then
+  7:12called on navigate from, and now is callingon
+  7:15navigated to.
+  7:17And you, and you get this, you get this
+  7:18very cool tree of, of where you are in
+  7:21your code, and how that effects the components.And
+  7:24I think that&#39;s pretty useful if you&#39;re doingvery
+  7:27large, working on very large systems thatinteract with
+  7:31one another.
+  7:33This is XCode, and this is XCode&#39;s profiler,and
+  7:35it&#39;s not very language specific. It can prettymuch
+  7:37run any, profile any binary. But what I like
+  7:41about this is the user interface view at the
+  7:45top, where you can actually see what userinterface
+  7:46portions have been activated. I think that&#39;sa pretty
+  7:49cool kind of functionality to have for a UI
+  7:57profiler.
+  7:57This is VisualVM, and this comes standardwith the
+  8:1JVM oracles, JVM, you can pretty much usethis
+  8:3out of the box on any JVM code. And
+  8:5there&#39;s nothing really special about thisprofiler. It gives
+  8:8you the standard stuff that you&#39;d expect,except this
+  8:11one kind of comes with the JVM, so it
+  8:13shows you how, how integral this is to the
+  8:15actual, you know, programming cycle.
+  8:22So visualization is really about discoverability.Knowing what your
+  8:28code is doing is one thing, but being able
+  8:30to kind of find out what you didn&#39;t know
+  8:32about your code is also extremely useful.Probably even
+  8:34more useful than knowing what you alreadyknow about
+  8:36your code.
+  8:38So discoverability is a really important featureof good
+  8:42visualization tools. And if you found Waldo,by the
+  8:44way, just, has anyone, has anyone found Waldo?OK.
+  8:51Good.
+  8:51So this is Eclipse. A couple of views that
+  8:55you get from Eclipse. The first one is the
+  8:59implementors, kind of, view that you get.You get
+  9:2to see what classes implement a specific methodin
+  9:5your code. That&#39;s kind of useful for seeing,like,
+  9:9I implemented this method, set, redraw, wherewho&#39;s using
+  9:14it, and if I refactor this method, who will
+  9:16I break? And that&#39;s kind of useful, especiallyif
+  9:19you&#39;re doing a lot of refactoring.
+  9:21There&#39;s also a call references graph thatyou get
+  9:24to see, which shows you all things from the
+  9:28other side. All things that are calling aspecific
+  9:30method in your, at your, in your code.
+  9:33So if I call this is_running method, I know
+  9:36that, if I have this is_running method I have
+  9:39defined, I know who&#39;s actually using thisis_running method.
+  9:42The cool thing about having staticly typedlanguages is
+  9:45that you not only get the actual - it&#39;s
+  9:46not just like a search over your code base
+  9:48for the is_running string. You&#39;re actuallyfinding things that
+  9:52are finding that specific implementation ofis_running. So if
+  9:55you were to search for to_s on your Ruby
+  9:57code, you wouldn&#39;t actually get interestingdata. But if
+  10:1you were looking for to_string on a specificJava
+  10:4class, you&#39;d be able to actually find thethings
+  10:6that are actually calling that specific to_stringmethod.
+  10:10So that&#39;s pretty useful if you&#39;re actuallyrefactoring code
+  10:13and moving stuff around.
+  10:17You don&#39;t just need to have an IDE to
+  10:19have visualization tools. A lot of the thingsI
+  10:20showed were part of IDEs. But it&#39;s not necessary
+  10:25that you have full-fledged IDE just to havethis
+  10:27visualization stuff. There&#39;s nothing specificabout IDEs here.
+  10:31And I can, I can prove it because of
+  10:34this tool right here. And this tool is not
+  10:37an IDE by any means. It&#39;s the FireBug web
+  10:40inspector. If you were fortunate enough touse it
+  10:43when it was, like, the thing to use, a
+  10:46couple years back, you know that this sortof
+  10:48saved you, saved your life a billion times.
+  10:51Nowadays we use stuff like the Chrome webinspector
+  10:55and other web inspectors, and they&#39;re awesome,and Firebug,
+  10:59Firebug&#39;s still around and it&#39;s awesome too,but.
+  11:4The real question is, do you remember whatweb
+  11:5development like, was like before Firebug?
+  11:10And if you don&#39;t remember, it&#39;s probably becauseyou
+  11:12blacked it out. Because it was really horrible.And
+  11:17the reason why it was so horrible is because
+  11:19you had no visibility into what your codewas
+  11:22doing.
+  11:23The, the, when Firebug came around, it sortof
+  11:27changed web development. I, I actually attributethe HTML5
+  11:32adoption, a lot of the social media adoption,social
+  11:35websites, to the existence of Firebug andbetter tooling
+  11:40around HTML on JavaScript development.
+  11:44The fact that we&#39;re able to iterate so much
+  11:45more quickly with these tools, I think hada
+  11:48huge impact on how we&#39;re able to actuallyput
+  11:50code out there.
+  11:52So I think it&#39;s really import- I think Firebug
+  11:54is a great example of how visualization canactually
+  11:58effect development, and how it can be a really
+  12:1powerful tool.
+  12:5So this is the Ember web inspec- Ember Inspector.
+  12:7It&#39;s part of the Chrome Web Inspector. It&#39;ssort
+  12:10of this, like, component that you can addin.
+  12:12And this is similar to a standard web inspector
+  12:16that you would see inside of Chrome, exceptit
+  12:18adds extra functionality, high-level functionalityspecific to your application.
+  12:22Like you can see your routes that you&#39;ve assigned,
+  12:25you can see your Ember date that you&#39;ve pulled
+  12:27in from your data sources.
+  12:30You can see, another application, you cansee the
+  12:33view tree and see what things are sort of
+  12:36nested hierarchically.
+  12:37I think it&#39;s really useful if you&#39;re doingEmber
+  12:40stuff. And having this high level stuff wouldbe
+  12:43really cool. Having something similar forRails, where you
+  12:46can actually see your client&#39;s side of stuffwould
+  12:48be similarly cool.
+  12:52And finally I want to talk about one last
+  12:54thing and that&#39;s Smalltalk. So this is a screenshot
+  12:57of Smalltalk. One of the earlier versionsof Smalltalk.
+  13:2And Smalltalk was, is interesting becauseit was designed
+  13:5as a language that was meant to be inherently
+  13:7visual.
+  13:8It was always meant to be attached to an
+  13:10IDE. The design goal was that you were able
+  13:14to see everything that you were touching,and you
+  13:16would be able to touch stuff and play with
+  13:19it and modify it. The concept of visualizingyour
+  13:24development environment was sort of pioneeredfrom Smalltalk.
+  13:28And I think we have a lot to owe
+  13:30to this language and, you know, the peoplewho
+  13:33developed it to, to a lot of the visualization
+  13:36tools that we have today.
+  13:38So yeah, it was, it was an inherently visual
+  13:40language, and I think, I think it worked out
+  13:43pretty well.
+  13:46So where do we stand with visualization inthe
+  13:48Ruby community?
+  13:50So we have, you know, the standard IDEs, I
+  13:52mean, we have RubyMine. We don&#39;t have verymany
+  13:55IDEs. We have RubyMine and RubyMine is yourstandard
+  14:0run of the mill IDE. It provides you your
+  14:2basic set of visualization. You can see yourRails
+  14:5routes. You can have a basic debugger, UI.
+  14:10But we don&#39;t get, we don&#39;t get too, we
+  14:12don&#39;t get too in depth on visualization tools.And
+  14:14we don&#39;t have very many visualization toolswhen it
+  14:17comes to refactoring, when it comes to seeingwhere
+  14:22what implements what, where your code, howyour code
+  14:25is structured. We don&#39;t have a lot of that,
+  14:27and there&#39;s a lot of room for us to
+  14:28actually improve on that, catch up with, toother
+  14:31languages.
+  14:34What about profilers?
+  14:36So a couple years back there was a library
+  14:40called Memprof and it was really awesome.It kind
+  14:44of went away. It doesn&#39;t really support Ruby1.9.
+  14:47If someone wants to resurrect this tool, it&#39;sreally
+  14:49cool. I would like to see that.
+  14:52In the meantime we have a tool called Perftools
+  14:54dot rb. This one can generate, can run through
+  14:59your code and generate this graph, this diagramof
+  15:3how your code is running through everything,including percentage,
+  15:7CPU time and stuff like that.
+  15:9So you can see there for instance, your garbage
+  15:10collector took twelve percent of your, ofyour running
+  15:13time. This is a pretty useful tool if you&#39;re
+  15:16doing performance, and I think the fact thatit
+  15:19does, generates a graph, this diagram is extremelyuseful.
+  15:26If you&#39;re running JRuby, then you kind ofget
+  15:29the advantage of having the JVM, and onceyou
+  15:31have the JVM, you can use things like VisualVM,
+  15:34and you can use NetBeans to do your visualization.
+  15:38You get all the power of, most of, a
+  15:40lot of the power, not all the power, a
+  15:42lot of the power of the profiling tool that
+  15:43are available in NetBeans and other tools.
+  15:46So this is not an endorsement, but if you&#39;re
+  15:50using the JVM you get some of the powers.
+  15:54So that&#39;s visualization. I want to jump overnow
+  15:57to sort of linting tools and how we can,
+  16:0where we are in that kind of area.
+  16:7So Lint is this tool that was developed in
+  16:13sort of the seventies for the C programminglanguage.
+  16:17And Lint was a tool that was meant to
+  16:19sort of find these common errors in our code
+  16:21bases. It was meant to catch things like divide
+  16:24by zeros, uninitialized variables, and other,like, very common,
+  16:30easy to find bugs.
+  16:32But it also did some basic style checking,like
+  16:34you&#39;re using this kind of tab with your formatting
+  16:37is this sort of direc- way, and it looks
+  16:40good.
+  16:43So that&#39;s, that&#39;s sort of, when we say linting,
+  16:45we&#39;re sort of saying, are you really, do you
+  16:47have this kind of sort of basic bug checking
+  16:50tool.
+  16:52So where do we stand with Ruby when it
+  16:54comes to linting tools?
+  16:58In the Ruby community we have three toolsthat
+  17:0are kind of use together in some way. It&#39;s
+  17:3called, they&#39;re called Reek, Flog, and Flay.And they
+  17:6basically detect code smells in your code.The thing
+  17:10that they don&#39;t do, and I&#39;ll touch on this
+  17:11in a bit, is they don&#39;t, they don&#39;t find
+  17:13semantic errors in your code. They basicallyjust find
+  17:17syntactic kind of weirdnesses.
+  17:21The assumption that these tools make is thatpretty
+  17:23code is correct code, so if you have code
+  17:25that looks good it&#39;s really good.
+  17:29If you&#39;re using, if you&#39;re using Code Climate,you
+  17:32probably already used these tools, cause CodeClimate kind
+  17:35of uses these under the hood, and you get
+  17:38a grade point average for whether your reekoutputs
+  17:41tells you that your code is good or whatever.
+  17:45The important point here is that these toolsare
+  17:48telling you whether your code is ugly, notwhether
+  17:50your code is correct. And I wanted to figure
+  17:53out a way to like show this the best
+  17:55way I could, and I decided that I would
+  17:58write a really large Ruby application thatlooked really
+  18:0nice but didn&#39;t actually do anything.
+  18:3And then I realized that writing a reallylarge
+  18:5Ruby application would take me a really longtime,
+  18:7so I wrote a program to write Ruby programs.
+  18:10And I wrote a Ruby program, I generate a
+  18:13Ruby program with 134 classes and pass itthrough
+  18:17Code Climate, and Code Climate seems to thinkit&#39;s
+  18:19awesome.
+  18:22But I&#39;m just gonna pop it up here. This
+  18:25is my, this is part of the Ruby code
+  18:27that I wrote.
+  18:33So it doesn&#39;t, it doesn&#39;t do anything.
+  18:37So yeah. Code correct, not necessarily true.
+  18:46By the way, I love Code Climate. I think
+  18:49it&#39;s a really awesome tool. I think you guys
+  18:50should probably be using it. The importantpoint here
+  18:54is that you really need to understand whatyour
+  18:56tools are doing, and to realize that CodeClimate
+  18:59does not replace testing. So you can&#39;t justbe
+  19:0like, oh, Code Climate says my code is correct.
+  19:2It&#39;s not, that&#39;s not what it&#39;s saying. It&#39;ssaying
+  19:4your code is maintainable, effectively.
+  19:8So you guys should continue testing, whichwe already
+  19:11do, so. Non-statement right there.
+  19:15There&#39;s a tool called Ruby-lint. It&#39;s prettynew and
+  19:19I haven&#39;t really had a chance to check it
+  19:20out. If you&#39;re interesting in writing a lintingtool
+  19:23or helping out with a linting tool, this is
+  19:25a good place to start.
+  19:26I think you just google ruby dash lint, you&#39;ll
+  19:29find the project on GitHub.
+  19:32I haven&#39;t really looked at, I think I tried
+  19:33to run Ruby-lint against this, the code basethat
+  19:37I just showed and it kind of crashed, so.
+  19:39There&#39;s, there&#39;s work there to make it better.
+  19:44The point I was, I want to make is
+  19:46that nothing really comes standard in theRuby community
+  19:49when it comes to linting tools. We don&#39;t really
+  19:50have a linting tool that we go to and
+  19:52say, you know, why aren&#39;t you using this linting
+  19:55tool.
+  19:55So we could certainly benefit from havingone.
+  19:59How do other languages fare when it comesto
+  20:4lint tools?
+  20:6So these are some examples of pretty standardlint
+  20:11tools in other languages. JavaScript has JSHint,it used
+  20:15to be JSLint, and that sort of fell out
+  20:18of favor. Python has PyLint, which is widelyadopted.
+  20:22Java has FindBugs, which you&#39;ll pretty muchsee everywhere
+  20:25where people are doing linting in Java. C#has
+  20:28FxCop, and I think it has some others as
+  20:30well.
+  20:30But FxCop is pretty standard.
+  20:33All these are widely used and sort of widely
+  20:35adopted and accepted as the thing that youshould
+  20:38be using. Why don&#39;t we have something likethis
+  20:42in Ruby? We should at least have some kind
+  20:44of sanity checking tool for us to use and
+  20:47sort of define what our good standards are.
+  20:50If we&#39;re gonna be having these goods, if we&#39;re
+  20:52gonna have these good standards, we shouldhave a
+  20:54tool that sort of verifies that we have, that
+  20:57we&#39;re meeting-
+  20:57So I&#39;m gonna jump down the rabbit hole here,
+  21:2a little bit, and talk a little bit about
+  21:5some more technical stuff. And talk aboutstatic analysis.
+  21:10So static analysis is sort of like a lint
+  21:12plus plus. It&#39;s, you&#39;re doing bug checking,but you&#39;re
+  21:15doing much more in depth bug checking. Staticanalysis
+  21:19however is kind of a huge field, so very
+  21:21vague term for a lot of different things.
+  21:24And if you actually Google static analysisor a
+  21:28scholar dot google search for static analysis,look for
+  21:31papers on this subject, you&#39;ll find that thereis
+  21:33over two and a half million to two point
+  21:36two million papers on the subject. That&#39;sa lot
+  21:39of papers on a subject.
+  21:41If you kind of average two to three papers
+  21:43per researcher, you&#39;re talking, like, 500,000to a million
+  21:48researchers with different research topics.
+  21:50So there&#39;s a lot of fields of static analysis
+  21:53and there&#39;s a lot of things to talk about
+  21:55in this, on this subject.
+  21:59There&#39;s a lot of different types of staticanalysis.
+  22:2There&#39;s defect finding. There&#39;s memory checkingand fuzz testing.
+  22:5There&#39;s extended static checking and modelchecking, data flow
+  22:8analysis and symbolic execution.
+  22:10I&#39;m gonna cover some of these and sort of
+  22:12gloss over some of these as well. And so
+  22:15let&#39;s jump into static analysis.
+  22:18So first I&#39;m gonna talk about defect finding.Defect
+  22:22finding is basically like lint. It sort ofhas
+  22:25a little less emphasis on syntax, so there&#39;sless
+  22:28of the, does your code have proper white spacing
+  22:31stuff, and more of the, does your code have
+  22:33initialized variables stuff.
+  22:36So because most of the tools that I mentioned
+  22:38before have sort of those capabilities, wherethey can
+  22:42check divide by zeros or whatever you needin
+  22:45those languages, most of those other languagesalready have
+  22:47those linting tools. So PyLint will do somekind
+  22:51of defect finding, FindBugs in Java is namedspecifically
+  22:56for the ability to find bugs, so it&#39;s kind
+  22:58of a defect-finding tool.
+  23:1In Ruby, we have a tool called Brakeman, which
+  23:4is specific to Ruby on Rails, but this is
+  23:7sort of a defect finding tool, and if you
+  23:10haven&#39;t heard of it or checked it out I
+  23:11would suggest looking at this tool. I thinkit&#39;s
+  23:13a pretty good tool. I ran it on a
+  23:15couple of Rails projects and had some prettygood
+  23:18success with it.
+  23:20It basically finds common flaws in Rails code,so
+  23:24it&#39;ll look for cross site scripting, SQL injection,mass
+  23:27assignment issues. This is what a report lookslike,
+  23:32and it&#39;ll tell you that you know you have
+  23:33a potential SQL injection, missed method - itdoes
+  23:36some static analysis to find these, usingheuristics it
+  23:41does static analysis to find, oh, he didn&#39;tdo
+  23:43any sanity checking on his prims, hash, andstuff
+  23:47like that.
+  23:47So it&#39;s kind of a useful tool to look
+  23:49at. It does have false positives, but I think
+  23:55even if, even if it did have a couple
+  23:56false positives in this list, just for thatone
+  24:0product controller SQL injection statement,I think it&#39;s worth
+  24:3it.
+  24:5So yeah, it&#39;s a useful tool to look at.
+  24:10So this is a paper that was written on
+  24:12static analysis, static detection of securityvulnerabilities in scripting
+  24:17languages.
+  24:18I bring this up because it was a, it
+  24:20was a pretty cool paper to read through. The
+  24:25interesting part about this paper is theyfound a
+  24:27way to, using data flower analysis, to actuallyfigure
+  24:30out through code paths where code was beingused
+  24:34that wasn&#39;t sanity checked coming from userinput.
+  24:37And the interesting thing about this is thatthey
+  24:39actually ran, they actually wrote a proofof concept
+  24:42of this tool that they defined in their paper,
+  24:45and they ran it against existing real-worldcode. They
+  24:48targeted PHP in their talk, but PHP is a
+  24:52dynamic language, it&#39;s dynamically typed,it&#39;s actually looser typed
+  24:54than Ruby is. So you could, you could very
+  24:58easily take that concept and move it overto
+  25:3Ruby.
+  25:3The really interesting part is that they,they, they
+  25:6actually test this on sizeable code bases,we&#39;re talking
+  25:9thirty thousand lines of code, six thousandlines of
+  25:13code, you know, large code bases. And theywere
+  25:15able to find, on versions of these code bases
+  25:19with existing known bugs, they were able tofind
+  25:22all of those bugs with zero false positives.
+  25:25So, it, they were able to prove that it&#39;s
+  25:27a very effective way to actually find bugs.So
+  25:30if you are interested in some of that defect
+  25:32finding stuff, this is a really interestingpaper to
+  25:35read through. It&#39;s not that hard to read through.
+  25:39So I would look at it if you want
+  25:41to implement something like this, I wouldstart here.
+  25:46So that was defect finding. Let&#39;s talk aboutfuzz
+  25:48testing. Fuzz testing is interesting to usas sort
+  25:52of web developers because it&#39;s very releventto us.
+  25:59Basically the idea is that fuzz testers testthe
+  26:2fact that when you get user input you can
+  26:5potentially get invalid or malicious userinput, so fuzz
+  26:8testers will throw a bunch of garbage intoyour
+  26:10application and see what breaks it.
+  26:12Hopefully nothing breaks it.
+  26:15There&#39;s a lot of existing fuzz testing toolsout
+  26:17there. For C, Java, JavaScript, Python. There&#39;sa lot.
+  26:21You can go Google fuzz tester for JavaScriptor
+  26:25whatever, and you&#39;ll find lots of tools.
+  26:28There are also lots of papers on the subject,
+  26:30so if you&#39;re interested in sort of implementingone
+  26:31there&#39;s a lot of resources out there. Thisis
+  26:34one of the papers that I&#39;ve found on the
+  26:36subject that I thought was interesting. SoMicrosoft, internally
+  26:40they have this tool called Sage, and theyimplement,
+  26:44this tool actually runs across all, a lotof
+  26:46their code bases that they release to thepublic,
+  26:49and they implemented this thing called automatedwhitebox fuzz
+  26:53testing in Sage. And they were able to find
+  26:56a lot of defects with this methodology ofserve
+  26:59- fuzz testing typically you have a hard coded
+  27:2set of data that you want to pass through
+  27:4so you know a log in form can do
+  27:7SQL injections, so you&#39;ll have this like whereone
+  27:10equals one string that you always pass throughto
+  27:12a log-in form so that you have a bunch
+  27:14of hard-coded values.
+  27:16But, I think what they did here is they
+  27:18had some heuristics to say, oh, maybe if I
+  27:21fiddle this bit based on the code path here,
+  27:24I can actually make something work. And makesomething
+  27:28break.
+  27:29So this is an interesting paper, and theysort
+  27:31of describe how they do fuzz testing in Microsoft.
+  27:33It&#39;s interesting. It just, if you&#39;re interestedabout, like
+  27:35how Microsoft does development, and how theydo static
+  27:37analysis. It&#39;s kind of interesting to readanyway.
+  27:42So where do we stand as Rubyists when it
+  27:43comes to fuzz testing?
+  27:46We have a tool called Heckle, which is kind
+  27:50of a little older now. It was written by
+  27:53Ryan Davis and Kevin Clark, Seattle RB stuff.And
+  27:58basically what it does is it finds your if
+  28:1statements, your numbers, your conditionsand everything, and it
+  28:4just twiddles the bits, basically. It just,it turns
+  28:7that if into an unless. It turns the greater
+  28:10than to like a less than. It turns a
+  28:12number into like some other number that wasn&#39;t-
+  28:14and it tries to see if your tests fail.
+  28:15And if your tests fail it means that you
+  28:17didn&#39;t have a test that can cover that piece
+  28:20case.
+  28:20So it&#39;s very kind of basic, and it doesn&#39;t
+  28:22really, it&#39;s not really a fuzz testing tool.But
+  28:24it is, it is an interesting look at how
+  28:26we could do stuff like that. There&#39;s anothertool,
+  28:28and this is more relev- newer, it&#39;s maintainedand
+  28:33it&#39;s still actively maintained. It&#39;s calledMutant, and it&#39;s
+  28:35basically inspired by Heckle so it&#39;s the samething.
+  28:38I would take a look at this tool and,
+  28:40and play with it and see if you like
+  28:42it. But we could really use a, like a
+  28:45real fuzz testing tool. Something that worksmore similarly
+  28:48to other fuzz testing tools that are out there.
+  28:51Something that takes user input, throws itinto your
+  28:52code.
+  28:54So there&#39;s definitely room to improve there.There&#39;s a
+  28:57tool called FuzzBert, written by Martin Bosslet.It&#39;s available
+  29:2there. I hadn&#39;t actually had a chance to play
+  29:3with it, so I&#39;m not really sure like how
+  29:5well it works or if it works at all.
+  29:7But if you&#39;re interested in doing fuzz testingstuff,
+  29:10take a look at that, submit some requests,play
+  29:12around with it.
+  29:15Yeah.
+  29:17As I mentioned, fuzz testing kind of getsa
+  29:20lot of papers written about it, because it&#39;s,it&#39;s
+  29:22security stuff, and security stuff usuallygets a lot
+  29:25of papers on the subject, so. A lot of
+  29:28resources about fuzz testing out there.
+  29:32So let&#39;s get mathematical, let&#39;s get a littlemore
+  29:35technical, and let&#39;s go down into symbolicexecution.
+  29:40So we talked about, about defect finding,and, and
+  29:44fuzz testing and all that high level stuff.SYmbolic
+  29:47execution is interesting because it&#39;s a lotmore, it&#39;s
+  29:50sort of this underlying thing that sort ofguides
+  29:52a lot of these other tools.
+  29:56Basically what symbolic execution does isit runs your
+  29:58code with no immediate values. It sort of,so,
+  30:2you sort of have this algorithm that doesmath
+  30:6power, like, two to the power of eight or
+  30:9something. It will run it without actuallyusing any
+  30:11of the numbers, and so it&#39;ll get this mathematical
+  30:14formula at the end. And that mathematicalformula at
+  30:16the end is just basically your, a bunch of
+  30:18your code path just like concadded together,and then
+  30:21it just runs, it throws numbers and valuesinto
+  30:24that, that mathematical equation, and it getsvalues out
+  30:28on the other end.
+  30:31It&#39;s similar to extended static checking,which I didn&#39;t
+  30:32talk about. But so, the cool thing about symbolic
+  30:39execution is you don&#39;t need to tell your code
+  30:41what you&#39;re doing. And you will see what the
+  30:45means in a bit.
+  30:47But the other thing is you can tell which
+  30:48inputs generate what output, because I passin, I
+  30:52have this big mathematical formula, and Ipass it
+  30:54in a two here and I get an eight
+  30:56out there. I can control the input and output
+  30:59states, all right. I know what they are.
+  31:2So think automatic test case generation. Ican automatically
+  31:7generate input values that will generate thisoutput value
+  31:9that I know, that I want to hit. Or
+  31:11the other way around.
+  31:14So this is a bunch of C code that
+  31:16implements the power, although it&#39;s very convolutedand I
+  31:19wouldn&#39;t recommend implementing math powerthis way. But just
+  31:22for example, you might have this complex codethat
+  31:26implements some function, and if you readthrough this
+  31:31code, if you had a chance to read through
+  31:32it, you&#39;ll see that there is a potential bug
+  31:34there if you kind of do math two to
+  31:36the power of three will index out of bounds
+  31:38on that array.
+  31:42So a symbolic execution engine can actuallyfigure out
+  31:45that we&#39;re hitting an array out of boundsthere,
+  31:48and using its magic and all this math theory
+  31:50stuff, it&#39;s able to actually generate a reportfor
+  31:52you saying, hey if I pass one in five
+  31:55and I get one out of this function. If
+  31:57I pass two and eight I get two fifty
+  31:59six. But if I try to pass one and
+  32:1zero, I get an array out of bounds error.
+  32:4And then if I try one and thirty-three I
+  32:6also get an array out of bounds error. And
+  32:8the way it picks numbers is sort of based
+  32:9on heuristics. It&#39;ll look at your array sizeand
+  32:12it&#39;ll say, oh, thirty-two so I&#39;m gonna trythirty-three
+  32:15and I&#39;m gonna try negative one or something.
+  32:17So it, the symbolic execution engine is sortof
+  32:19based on a bunch of heuristics, but it&#39;s able
+  32:22to sort of intelligently figure out what valuesit
+  32:25needs to throw into a function, and so you
+  32:27can find these errors very quickly, and thenwe
+  32:30can generate test cases based on this automatically.
+  32:34So if my power function wants to accept, or
+  32:38doesn&#39;t really, I could say like hey, don&#39;tpass
+  32:40thirty-three in cause my function doesn&#39;taccept that. I
+  32:42can also tell my symbolic execution engine,hey, don&#39;t
+  32:46try that number, and it can intelligentlysay, OK,
+  32:49fine, I won&#39;t try thirty-three, I won&#39;t trynegative
+  32:51one, because that&#39;s, those are the contracts.
+  32:56So, what tools are out there for symbolicexecution
+  33:1and stuff like that?
+  33:5If you use LLVM or LLVM based languages, there&#39;s
+  33:8a symbolic execution engine called KLEE, whichcan basically
+  33:11execute LLVM code, and turn those into, like,symbolically
+  33:15execute that. If you&#39;re using JavaScript thereis a
+  33:18tool called Kudzu - I haven&#39;t, I haven&#39;t tried
+  33:21Kudzu so I don&#39;t really know how well it
+  33:22works, but it could do the same thing in
+  33:25JavaScript.
+  33:26And in Java and this other language calledSPARK
+  33:29there&#39;s a tool called Kiasan, which is a symbolic
+  33:32execution engine for those languages.
+  33:36We don&#39;t have anything for Ruby in this space.
+  33:39I know this because I actually did my Master&#39;s
+  33:43on this subject, and that, that&#39;s my Mastersthere
+  33:47where I wrote a proof of concept for symbolic
+  33:49execution in Ruby, but it&#39;s very basic andI
+  33:51wouldn&#39;t recommend using it in any sense.
+  33:54But, but it, I mean, the, there is some
+  33:59work there, and it definitely needs more work.
+  34:4A lot of the reason that we don&#39;t have
+  34:6these kinds of low level linting and staticanalysis
+  34:10tools is because Ruby doesn&#39;t really havea scientific
+  34:13community. And I think that&#39;s kind of a really
+  34:16sad thing for us to like not really have
+  34:19the scientific community that Python has,or other languages
+  34:22have. Because we get things like those toolswhen
+  34:26we, when we have a scientific community. Whenwe
+  34:28have these people who are interested in thosethings.
+  34:32And it&#39;s really a chicken and egg problem,because
+  34:35we don&#39;t have the tools that are availablefor
+  34:37scientists and then we sort of wonder whywe
+  34:39don&#39;t have scientists that are using our language.So
+  34:42we really need to start developing these tools.
+  34:49So Bryan Liles is actually speaking today.He, he
+  34:53spoke about this at [00:34:54]?? RubyConf,and he&#39;s actually
+  34:56giving a talk on scientific Ruby code, youknow,
+  35:1using Ruby code with, in scientific applications.And he&#39;s
+  35:5probably gonna mention this, this Python versusRuby thing,
+  35:8and basically, yeah, we definitely need more,we, it,
+  35:14we don&#39;t really have enough scientific toolsin our
+  35:18community, and we could definitely use more.
+  35:20So I&#39;m just gonna sort of jump over what
+  35:23I talked about here. We are really good at
+  35:30testing, deployment tools, web frameworks.We have really awesome
+  35:33tools for those subjects. We have RSpec, wehave
+  35:37mini tasks, we have like literally hundredsof gems
+  35:39when it comes to testing.
+  35:41WE do really good at those subjects, but we
+  35:46sort of get really focused on those subjectsand
+  35:49we don&#39;t really do well on other subjects.So
+  35:52we&#39;re not very good at visualization, refactoringtools, profiling
+  35:56tools - we don&#39;t really have very many. And
+  35:58when we do they don&#39;t really work well, so
+  36:0Ruby, Ruby debug 1.9, this Ruby debug 1.9gem,
+  36:5that took three years after Ruby 1.9 cameout
+  36:6to actually exist, is an example of that kind
+  36:10of thing that we&#39;re missing.
+  36:17We attract, we tend to attract web developersbecause
+  36:19we have the tools for web developers. We have
+  36:21good testing tools, we have good web frameworks,we
+  36:24have good deployment tools. So we attractweb developers.
+  36:29Should we not try to attract a different set
+  36:33of developers to our language, by developingtools for
+  36:37those people?
+  36:40Having a broader audience is, when you havea
+  36:44language, is important, and it&#39;s importantbecause when a
+  36:49broader audience comes to your language, theycome in
+  36:52with a broader set of priorities. So a scientific,
+  36:57a science, someone who&#39;s doing science withRuby is
+  37:0going to be much more interested in the performance
+  37:2of your interpreter than someone who&#39;s doingweb development.
+  37:5Doesn&#39;t really have a CPU ?? [00:37:08]
+  37:8And so if we had more of these, of
+  37:10the people in the scientific community, inthe Ruby
+  37:12community, we would probably have a largerpriority on
+  37:15improving performance of our interpreter.
+  37:18And then we might end up with a much
+  37:19faster interpreter in the end. SO having thisbroader
+  37:22audience definitely improves the languagein the end.
+  37:28We have to take responsibility of the factthat
+  37:29we don&#39;t have a scinetific community. They&#39;renot here,
+  37:33it&#39;s not, we can&#39;t just say, oh why aren&#39;t
+  37:34scientific, why isn&#39;t the scientific communityhere, or why
+  37:37isn&#39;t the engineering community here. It&#39;ssort of our
+  37:40fault because we don&#39;t have the tools availablefor
+  37:42them. SO I think it&#39;s important to actuallysay,
+  37:45like, if you actually are interested in thiskind
+  37:47of thing, that you go out there and you
+  37:48do become a garbage collector and write thesetools.
+  37:53The good thing is that there are great tool
+  37:56ideas just waiting to be implemented. Thereare literally
+  38:1tons of research papers in the fields I mentioned.
+  38:4If you go trolling on scholar dot google dot
+  38:7com, you will, and just type in some field
+  38:9that you&#39;re interested in, there are literallytons of
+  38:11papers on this stuff.
+  38:14I had a whole section on some of my
+  38:16favorite research papers on, in this talk,and I
+  38:19had to cut it out cause there&#39;s not enough
+  38:21time, but if you want to talk about this
+  38:23stuff, you can come find me and I can
+  38:25list off some titles of some really cool talks,
+  38:27some really cool papers. Reading papers mightseem daunting
+  38:31if you&#39;ve never done it before, and it was
+  38:32to me before I had, and once you read
+  38:35a couple, and you sort of, like, ingest it
+  38:38slowly, it becomes much more natural, andit&#39;s really
+  38:41not as scary as it seems. So I would
+  38:43recommend not being scared by research papers.
+  38:47Some of them actually read very nicely. Andwith
+  38:51that, I want to thank you guys for letting
+  38:54me speak. If there are any questions, feelfree
+  38:59to ask.

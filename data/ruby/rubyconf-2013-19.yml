@@ -1,0 +1,560 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=HTVoQ6_iVuc
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16STEPHEN HENRIE: Hi. So my name is StephenHenrie,
+  0:18and I&#39;m the manager of application development
+  0:20over at Sony Computer Entertainment of America.
+  0:24And one of the things I wanted to discussat this conference
+  0:27is something that I went through, going througha project myself recently.
+  0:31Evaluating some different technologies,
+  0:34and what we came up with uses as a base architecture.
+  0:37A lightweight SOA framework, we just say,
+  0:42using Ruby, Apache Thrift, and AMQP.
+  0:45But before we get started, I knew that my
+  0:48talk here was right after lunch, so a lot
+  0:50of us are probably in a food coma or
+  0:51whatnot. So I wanted to make my graphics a
+  0:54little visually stimulating. And I also justwanted to
+  0:57let everyone know who Sony Computer Entertainmentof America
+  0:59is, in case you just weren&#39;t sure.
+  1:2So hopefully this&#39;ll wake everybody up.
+  1:9VIDEO
+  1:12V.O.: Hello world.
+  1:23[song lyrics]
+  1:30CRITTER: Oh, dude. Totally freaked me out.You scared
+  2:2the crap out of me, man.
+  2:24VIDEO
+  2:28S.H.: So we are the Playstation people. Andas
+  2:36you can imagine, we have a pretty big week,
+  2:37some of you might know, coming up is our
+  2:38Playstation 4 console coming out this week.So what
+  2:43I want to do is cover a little bit
+  2:44of background on what it is we do.
+  2:46So I manage a group of software developers,which,
+  2:50we all use Ruby, and we work on internal
+  2:53applications that support the developmentand the hosting of
+  2:56the titles. And so the, of the game titles.
+  2:58And so this can be internal tools that manage
+  3:1the Q-A process, for example, when we getsoftware,
+  3:3or games from both internal Sony Studios aswell
+  3:7as external companies, to doing business intelligence,business mapping,
+  3:13data mapping, and also hosting.
+  3:16And so one of the things that I always
+  3:18have to do is, I&#39;m a fairly new-to-Ruby over
+  3:20in the last year here, and one of my
+  3:24recent tasks has been to come up and work
+  3:26with some of the other hosting engineers todevelop
+  3:28a new architecture for doing some, you know,cloud
+  3:31management software. The titles can be a littlebit
+  3:35tricky, the games themselves, cause they&#39;renot standard, out
+  3:37of the box applications, as you might imagine.So
+  3:40they have a lot of intricacies involved.
+  3:41And so I was evaluating with others and different
+  3:45technologies, and I just kind of wanted toshare
+  3:48with the group here what some of those technologies
+  3:51were and what we ended up coming up with
+  3:53as the basis for what we&#39;re doing.
+  3:56So what I&#39;m going to cover today, just to
+  3:57make sure everybody&#39;s kind of, we&#39;re on thesame
+  3:59page, if you will, what service-oriented architectureis. A
+  4:2very high-level background. What remote procedurecalls are, just
+  4:6so we&#39;re on the same terminology. What messagingmeans.
+  4:11What advanced messaging queueing protocolis - AMQP, if
+  4:14you&#39;re not familiar with that, and then ApacheThrift.
+  4:17And then we&#39;re gonna bring all that togetherto,
+  4:21to do what it is that, as an application.
+  4:23So, so what is service-oriented architecture?It&#39;s an evolution
+  4:29of distributed computing. Most of you know,or are
+  4:31familiar with that from the internet and whatthat
+  4:34all means. The, it&#39;s a collection of looselycoupled,
+  4:39independent system components. And what thatmeans is, all
+  4:42of these components should be able to operateindependently,
+  4:45without having to know what each other isdoing.
+  4:49Each op- each component should, itself, encapsulatesome business
+  4:53logic, and the communication between thoseis typically using
+  4:58RPC. I don&#39;t know if that&#39;s gonna mean anything
+  4:59to anybody else.
+  5:0And one of my favorite quotes about SOA is
+  5:5right here, what it says. If we build our
+  5:6systems as components, we can build and maintainthem
+  5:9independently. SOA is a set of design patterns,effectively,
+  5:13that guide us in building and integratingthese mini-application.
+  5:16So rather than sitting around and buildinga giant,
+  5:18monolithic, old-school application, we canbuild these things as
+  5:21components, and then over time, as the systemevolves
+  5:24and the needs of the business evolve, we can,
+  5:27you know, work on individual pieces.
+  5:30Where it gets a little tricky, of course,is
+  5:32when you&#39;re talking about, well how do thesethings
+  5:33communicate with one another? And that&#39;s wheremessaging comes
+  5:36in. It, and, as you&#39;ll see, it forms a
+  5:38nice abstraction layer between how you communicatebetween these
+  5:41components.
+  5:44So what are, exactly, service components?They should be
+  5:47single-purpose. They should be encapsulated,in terms of, I
+  5:52shouldn&#39;t care what, how this service doesits work.
+  5:55There should be a publicly defined contractthat we
+  5:58both agree to - that&#39;s the protocol, if you
+  6:1will. With the API and the message types,the
+  6:4data that gets passed back and forth is agreed
+  6:6upon.
+  6:7It should be context free, in terms of, when
+  6:11I&#39;m ready to pass something off to you to
+  6:12do as another service, you should be ableto
+  6:14handle that on your own without needing anythingextra
+  6:17from me. And of course these things shouldbe
+  6:19independently deployable and testable, sothat they can follow
+  6:21standard development practices of test-drivendevelopment and things like
+  6:25that.
+  6:28Communication between SOA components shouldjust be, like, as
+  6:31I was saying, support both things before,so they
+  6:33should be decoupled and have contracts thatcan communicate
+  6:37between them to find the end points.
+  6:39The end points themselves should be decoupled,in terms
+  6:41of, I shouldn&#39;t have to know exactly wheremy
+  6:44message is going if I&#39;m sending it. The underlying
+  6:47system can do some of that work for us
+  6:49through routing. The, it should support temporaldecoupling, in
+  6:52that, I can be able to bring up and
+  6:54bring down services, and the system as a whole
+  6:56should continue to function, if you will.
+  6:59And the messaging between components shouldbe low-latency and,
+  7:3of course, follow open standards.
+  7:7So, as I said, most SOA systems depend upon
+  7:12something called remote procedure calls, whichare, of course,
+  7:14should be, like, function calls from the businesslogic&#39;s
+  7:17point of view. What typically happens in RPCprocess
+  7:22is that you have a caller on one machine
+  7:24that is, is unaware of where the actual service
+  7:28is being fulfilled, so there&#39;s a representativeof, representation
+  7:32of that code in the form of a stub
+  7:33that exists on the same machine.
+  7:35So the local business logic is calling thatstub.
+  7:38The stub itself is going to marshal that data
+  7:40onto the network using the infrastructurethat we&#39;re talking
+  7:43about later. And then that data&#39;s sent across,sent
+  7:48to a skeleton, which is the API interface,if
+  7:51you will, to the underlying framework, whichthen, itself,
+  7:54is going to call the business logic handlingon
+  7:56the second machine.
+  7:58The functionality is gonna occur. The data&#39;sgonna be
+  8:1sent back, following the same pathway. Thisis typically
+  8:4how most RPCs work.
+  8:8So messaging to the rescue, right. So messagingprovides
+  8:11an easy way to communicate between distributedand loosely-coupled
+  8:14components. It also allows, with the framework,for developers
+  8:18to focus on the business logic, whatever itis
+  8:21that they&#39;re trying to do in each service,and
+  8:23not on the underlying infrastructure, as longas the
+  8:24framework is the same, then, and, and setout
+  8:27there and common across the infrastructure,it will do
+  8:31all the messaging for you.
+  8:32You can also move services around and messageswill
+  8:36follow. The business logic itself doesn&#39;thave to care
+  8:38about things like that. It doesn&#39;t have tocare
+  8:40about, typically, governance and, and howyou do security,
+  8:43because hopefully your infrastructure is goingto handle all
+  8:45that for it. This also allows for messageformats
+  8:48can evolve over time with the business logic.So
+  8:50as you decide, three months later, you needto
+  8:53add a new parameter to a function in some
+  8:56business logic function, you message formatitself can change
+  8:59along with it, and the underlying infrastructureshould be
+  9:2able to marshal that data and handle all the
+  9:5conversions as well in the versioning.
+  9:8Messaging is secure and scalable, and, ofcourse, it
+  9:10supports the RPC pattern amongst many others.
+  9:16So this is an example of an SOA architecture
+  9:18that I&#39;m putting together with some othersat Playstation
+  9:21that we&#39;re using for some hosting operations.And, really,
+  9:23I&#39;m not gonna get into the details of that,
+  9:26but what I wanted to kind of showcase here
+  9:28is that, the boxes in the light blue represent
+  9:32kind of services themselves, that are operatingindependently as
+  9:35the loosely-coupled components, and they allcommunicate with each
+  9:39other through the AMQP messaging broker.
+  9:41Now of course they&#39;re doing routing, is happeninginside
+  9:44that broker, so if I&#39;m calling, if servicea
+  9:47is calling service b, it&#39;s passing that offto
+  9:50the broker and the broker&#39;s doing that transfer.But
+  9:53it also allows for service, for service messagingas
+  9:55well, so if I&#39;m sitting on GUI and I
+  9:58say I want to provision the new VM in
+  10:1the cloud, there&#39;s gonna be a message that&#39;sgonna
+  10:3come through the API gateway down throughthe broker,
+  10:6maybe goes to the environment service to getsome
+  10:8information from the database. Then it&#39;s gonnago ahead
+  10:10and send a message over to the provisioningservice,
+  10:13and we have a workflow service in there which
+  10:14is, of course, delegating out all kinds ofmessages
+  10:17and doing orchestration.
+  10:18But the idea here is that all of these
+  10:20components work independently and there&#39;smessaging going on between
+  10:23all of them. The other thing I like to
+  10:25point out is, we have services over here,which,
+  10:28as you can see, are like Amazon, OpenStack,whatnot,
+  10:32and you can put a facade service followingthe
+  10:33facade design pattern, just on top of anythingexternally,
+  10:36and then, and be able to invoke that using
+  10:39your internal messaging.
+  10:40It&#39;s, it&#39;s, it&#39;s an easy way to bring other
+  10:43functionality into the system over time asthe needs
+  10:46of your, your business evolve.
+  10:54So what is AMQP? The advanced message queueingprotocol.
+  10:58It&#39;s an open standard for doing messaging.Just a
+  11:2quick background here.
+  11:2The message in AMQP is very simple. It basically
+  11:4has a header and a body. The header contains,
+  11:7basically, like a dictionary of name-valuepair keys, and
+  11:11it&#39;s used for contextual information to describethe message
+  11:15or whatnot. And it&#39;s also used for routingand
+  11:17other things that the broker itself can use.
+  11:20AMQP in particular, what I like about it,is
+  11:24it&#39;s, it&#39;s got a nice abstraction to it with
+  11:26the concept of the exchange of where you send
+  11:28messages to is kind of broken away from the
+  11:31actual queues, by a binding mechanism. Andso it
+  11:34allows for a lot of different flexible configurations.And
+  11:37you could do a whole talk just on AMQP
+  11:38and the benefits of that as well.
+  11:40But, at its very simple core, what you see
+  11:44is a publishing process. It sends a, or publishes
+  11:47a message to exchange, and based upon therouting
+  11:50that&#39;s put into the message, the exchangewill route
+  11:54it into the appropriate queue, and there&#39;sgonna be
+  11:57a process sitting on the other end, hopefully,that
+  11:59is subscribed to that queue, and it&#39;s gonnabe
+  12:1receiving messages. And in a nutshell, that&#39;sbasically how
+  12:4it works.
+  12:6It supports basic pub sub messaging, RPC andcontent-based
+  12:9writing. It&#39;s secure, reliable, and, quoteon quote, transactual
+  12:14in nature, in terms of how the transfer of
+  12:16data happens. Because it&#39;s a binary wire protocoland
+  12:20it allows for that, it&#39;s, it can even operate
+  12:22across languages and platforms, because ultimatelyit&#39;s just a
+  12:25bucket of bits, and it&#39;s up to the application
+  12:27how you want to use those bits.
+  12:30Centralized broker is also scalable, clusterable,and easy to
+  12:34configure, and, of course, open standardsand all that.
+  12:39So how does the RPC over AMQP work? Well
+  12:42it&#39;s quite simple. A client sends a messageto
+  12:46an exchange and it sends a routing key of
+  12:49what service, for example, that it wants tosend
+  12:52to. On the other side, there&#39;s a service process
+  12:56running somewhere off in the cloud, let&#39;ssay, we
+  12:58don&#39;t know where. And it&#39;s going to subscribeto
+  13:1the queue, named OPQ, here, for operationqueue. So
+  13:5when the client sends a message and it&#39;s,let&#39;s
+  13:7say, we&#39;ll assume it&#39;s a blocking call, itwill
+  13:9also create its own queue for receiving responses,and
+  13:13then sit and wait and block.
+  13:15Meanwhile, the service is just sitting there,waiting to
+  13:18hear for messages. When the broker receivesthe message
+  13:22and is routed to that queue, it will notify
+  13:23the subscription process that there&#39;s a queuewaiting, and
+  13:27it&#39;ll push the data out to it. The service
+  13:29can do its business logic or whatever, comeup
+  13:31with a response, and then, in the keys, in
+  13:35the header section of the message, there&#39;sa reply
+  13:36to that it&#39;s set to the response queue. So
+  13:39it&#39;ll send and publish the message back intothe
+  13:41exchange. It will get routed the responsequeue, and
+  13:44then the broker will once again notify theclient
+  13:46process that, hey, you have a response. Andthere&#39;s
+  13:49RPC.
+  13:49Of course we build timeouts into all thisstuff,
+  13:52so that, you know, make sure that processesdon&#39;t
+  13:56stick around.
+  13:56The other nice thing about it is there&#39;s automatic
+  13:58load balancing can be built in by, you can
+  14:1scale out, by just having more subscriberssitting on
+  14:4your queue. And in that case you&#39;ll have additional
+  14:6worker processes that&#39;ll handle the load asyou need
+  14:12to.
+  14:13So I&#39;ve used the term wire protocol - what
+  14:14does that mean? Well, you&#39;re sitting arounda bucket
+  14:18of bits, and one side is writing- is written
+  14:21in Python, and another side is written inRuby,
+  14:23how are you gonna know how to communicate?
+  14:25So the wire protocol is just that - it
+  14:27defines what data&#39;s being sent in what format.Typically
+  14:32it&#39;s built around, you know, base data types,ints,
+  14:35strings, things like that, that are commonacross most
+  14:39programming languages. And so then it allowsfor me,
+  14:43as a service or client, to communicate withanother
+  14:46service, and I don&#39;t care what language it&#39;swritten
+  14:48in. And this is where thrift comes into play.
+  14:53So where Apache Thrift comes in is a project
+  14:55that was, I believe, it&#39;s an evolution ofthe
+  14:57Google protocol buffers, and it was startedby the
+  15:0Facebook people and made into an opensourceproject. It&#39;s
+  15:4got some benefits that it&#39;s language independent.It&#39;s a
+  15:7binary communication protocol. It allows youcre- it comes
+  15:11with an interface definition language, whichallows you to
+  15:14define those contracts that we talked aboutearlier between
+  15:17components.
+  15:18It also includes a code generator and a service
+  15:21framework, so it&#39;s a lot of stuff for free.
+  15:24If you assume that, in a networking stack,you&#39;ve
+  15:27got the raw transport of TCP or whatnot underneath
+  15:31it, where Apache Thrift comes in is it allows
+  15:33you define a protocol, whether it be in binary,
+  15:35JSON, whatever. It&#39;s, how that data is beingstructured
+  15:39and used across the underlying transport.
+  15:41It, it generates out a processor, which ofthose
+  15:45skeleton stubs that we talked about earlier,and then
+  15:49it provides for a ability to have a server
+  15:52mechanism built on top that can handle requestsas
+  15:54they come in and be able to marshal the
+  15:58data, decrypt it, whatever is involved.
+  16:3And so just a cover, make sure we&#39;re still
+  16:4covering a lot of backgrounds here cause we&#39;rebuilt
+  16:6on the shoulders of giants, is the power of
+  16:8an interface definition language. And so thisis the
+  16:11language that is typically, even though it&#39;sa language
+  16:14in itself, is the programming language independent.It allows
+  16:18you to specify your APIs, message specification,validation. Of
+  16:23course, like I said, it&#39;s strongly typed,because you
+  16:25have to know what data is being sent and
+  16:28what type it is.
+  16:29And, this is what is used to generate those
+  16:32stubs and skeletons as I showed in that previous
+  16:35slide.
+  16:36And so here&#39;s a, kind of a, like a
+  16:38high-level example of the tutorial. The ApacheThrift comes
+  16:42with a calculator tutorial, so I&#39;ve just kindof
+  16:45extended that with an AMQP transport to showus,
+  16:48to demo this, but what you can see here
+  16:51is that the service that is in the calculate
+  16:53service, basically has a few operations, suchas add,
+  16:58calculate - and I&#39;ve added one for updatingJSON,
+  17:1because we found that the strongly typed transportbecomes
+  17:6a little bit restricting sometimes, and it&#39;snice to
+  17:8be able to send back flexible amounts of data.
+  17:9And of course JSON can be string-i-fied, soit
+  17:11makes it really easy for things like that.
+  17:13But this is an example of an IDL, where
+  17:17you specify the contract, if you will. Sothis
+  17:19service says, these operations are what Isupport, and
+  17:23these are the messages, if you will, these,the
+  17:25parameters and the return types become themessages of
+  17:29the operations that gets passed back and forth.And
+  17:31it can also throw exceptions, if you will.
+  17:33So Thrift supports the ability to define aexception,
+  17:38so when things get back, it can be sent
+  17:39back in itself and it becomes a message. You
+  17:42can also do non-blocking, using like a one-waymodifier,
+  17:46which says basically I&#39;m gonna fire the messageoff
+  17:48and then move on with my life.
+  17:56So just to make sure that we&#39;re all on
+  17:57the same page of what I&#39;m gonna demonstratehere
+  17:59in a minute. This is the Apache Thrift tutorial,
+  18:2if you will, kind of broken out. The area,
+  18:6the boxes in blue are what the developer would
+  18:8write. So they would write the client-side,how they&#39;re
+  18:10gonna call the operation, what they&#39;re gonnado with
+  18:13it. They wold oper- they would write thatthrift,
+  18:15like I showed you, the thrift IDL, and then
+  18:18they would write the handler on the back,and
+  18:20that would show the, the code that would handle
+  18:22the messages when they&#39;re actually being received.
+  18:25And then they&#39;d write the surrounding servercode, to
+  18:28run it as a service. The boxes in yellow
+  18:30represent the generated code. So when youwrite the
+  18:33IDL, you&#39;ll see, if you run the Apache Thrift
+  18:36tutorial itself, you generate - there&#39;s acompiler that
+  18:39comes with it. That&#39;s the biggest part ofthe
+  18:41installation is generating and creating thecompiler.
+  18:44And it will generate these stub files thatare
+  18:46used to transfer the data around. And thenthe
+  18:49underlying pink are what would come normallywith Thrift.
+  18:53Now Thrift doesn&#39;t come with AMQP out of the
+  18:55box. This is something I wrote and I&#39;m putting
+  18:57out there for anyone to use if they want.
+  19:0But the idea is that you can choose the
+  19:4binary protocols or JSON protocols or whateverthat come
+  19:6with thrift, and the AMQP transport just becomesyet
+  19:10another transport you can use along with anythingelse.
+  19:13But the idea behind the, the calculator tutorialis
+  19:16if I&#39;m a client application and I&#39;m gonnacall
+  19:18one of those operations, like add or calculateor
+  19:21whatnot, I make those calls, the data flowsdown
+  19:26through the generated client code, gets putinto the
+  19:30protocol binary as the end of the message.Put
+  19:33on the AMQP transport, which writes the messageout
+  19:37to the service queue. The server is over there
+  19:39listening on the other end, it receives themessage,
+  19:41goes up the stack, comes up with the result,
+  19:44writes another message back out to the responsequeue,
+  19:47and then it&#39;s, it&#39;s heard from the clientreturn,
+  19:51so.
+  19:52So, now I want to look at some code
+  19:55here.
+  19:58So basically, this would be the Thrift IDL,if
+  20:1you will, as I kind of already showed. Get
+  20:6rid of this guy.
+  20:8And, it&#39;s pretty much like I showed earlier.You
+  20:11have operations, and you define pretty muchwhat the
+  20:14base types are. Integer thirty-twos if youwill. Or
+  20:17you can also do structures, which are nice.An
+  20:20example of a work structure I think is above.
+  20:23Yeah. So you can pass in, this is, their
+  20:27IDL is in C format, of course. But you
+  20:29can do optional parameters as well. And thatcode
+  20:34you would normally just generate, and it wouldcome
+  20:37up with, this would be generated code, whichrepresents
+  20:40the calculator class. And you&#39;ll see in theway
+  20:43they&#39;re doing it, both sides of the skeletonsand
+  20:45stubs are generated, so on the client side,you&#39;d
+  20:48have a class, which is called, there, callclient,
+  20:50and it&#39;s, and it includes all the Thrift client
+  20:53base stuff, but then you&#39;ll see for everyoperation
+  20:56there&#39;s a send and receive function that comesalong.
+  20:59So from the client&#39;s point of view, the developer
+  21:2client&#39;s point of view, you call the pingoperation,
+  21:4for example, it internally then generatesall this stuff
+  21:7to do a send-receive of the ping, and then
+  21:9you get your data back. And there&#39;s one of
+  21:12those generators for every single operation,on this, on
+  21:15the service side there&#39;s the same thing. There&#39;sa
+  21:17process ping, thrift does everything in turnsof streams.
+  21:21So you got a protocol for your inter, for
+  21:23your incoming stream and your outgoing stream.
+  21:25So it kind of follows the same pattern. You
+  21:28read the arguments out of the string whichis
+  21:29your message format. And it calls the handler,it
+  21:34calls a function in the handler that willultimately
+  21:36delegate out to the business logic that thedeveloper&#39;s
+  21:40responsible for writing. And then it writesthe results
+  21:43back that it receives onto the stream thatgets
+  21:46sent back.
+  21:46And it includes all kinds of other built-inarguments,
+  21:49checking, validation, the fields and all thatstuff. And
+  21:54this is, like I said, all generated. Ultimately,the
+  21:58developer&#39;s responsible for writing the handler.So in the
+  22:1calculator handler, what do I do when I get
+  22:4a ping. What do I do when I receive
+  22:7an add. What do I do when I receive
+  22:9a calculate.
+  22:9And so what happens when it, when that message
+  22:11comes into the, the generated code, ultimatelyit&#39;s going
+  22:14to be passed out through here. And then on
+  22:18the, when you start up the service objectitself,
+  22:20I haven&#39;t, have examples for doing socketsfor HTTP
+  22:23in here, as well. But effectively all you&#39;redoing
+  22:26is starting the server, and then it just sits
+  22:27there and runs.
+  22:29And so what&#39;s happening under the surfacein the
+  22:31AMQP code is, when the service starts up it&#39;s
+  22:34obviously making connections to the, to thebroker. Then
+  22:39it&#39;s gonna come down here in the serve and
+  22:40it&#39;s gonna just basically hit this queue subscribemethod,
+  22:46and it&#39;s gonna just block. And only when a
+  22:49message is received from the broker then isit
+  22:51gonna enter into this block, and then proceedto
+  22:54do something.
+  22:54In this case, if it, if it, can handle
+  22:58it, it&#39;s gonna spawn up a new thread, and
+  23:0then from there it&#39;s going to, down here at
+  23:2the very bottom here, you can see, it&#39;s gonna
+  23:4delegate off to the processor, which was generated.The
+  23:8data that was received in the message.
+  23:12One thing that&#39;s interesting about, this isusing the
+  23:14bunny gem, is that, with AMQP, is you cannot
+  23:17share conn- you can share connections acrosschi, threads,
+  23:20but you can&#39;t share channels. So the ideais
+  23:23that every time you spawn up a new thread,
+  23:25you create a new channel and then you&#39;ll be
+  23:30fine. Once the process is done with its thing,
+  23:35it, we rewind the stream and pull the response
+  23:38back, and then you go ahead and write and
+  23:40publish out a message back under the queue,or
+  23:43onto the exchange, and it gets forwarded onto
+  23:46the client.
+  23:47So the same thing is happening on the other
+  23:49side. So the caller basically starts up andit&#39;s
+  23:54gonna just simply, this is where it gets real
+  23:57easy for a, for a developer, is you&#39;re creating
+  24:1- if I can find it right here -
+  24:2you&#39;re creating the client, the calculatorclient, and then
+  24:7you&#39;re just calling functions on it, as ifyou&#39;re
+  24:8doing anything else, and you&#39;re passing yourparameters, and
+  24:11you&#39;re gonna get your results back.
+  24:12So the logic is very simple. You don&#39;t even
+  24:14know that messaging is happening under thecovers. And
+  24:17that&#39;s pretty much what&#39;s going on with theclient.
+  24:20And so you&#39;re dealing with it like normalfunction
+  24:22programming.
+  24:23On the AMQP side of things, what&#39;s happeningis
+  24:27Thrift is ultimately boiling all this downto this
+  24:30flush operation. And it&#39;s publishing a messageout onto
+  24:34the exchange, sending the appropriate data,saying what queue
+  24:37does it want to go to for the service
+  24:39in general. And then the reply-to is whatqueue
+  24:43am I going to be listening to on the
+  24:44way back, and so then, if it&#39;s a blocking
+  24:46call, it&#39;ll go ahead and do the same thing.
+  24:48It&#39;ll subscribe to that reply queue, and it&#39;lljust
+  24:50wait for the response to come back.
+  24:52Of course we&#39;ve got timeout stuff built intoall
+  24:55this so that things, you know, key threadsand
+  24:57processes aren&#39;t stuck. And then that&#39;s prettymuch it.
+  25:0So what does that look like in real time,
+  25:3is that I can just basically start up my
+  25:6Ruby server, that Ruby calculator server,and I run
+  25:9the Ruby client, and so what you&#39;re seeinghere
+  25:12is the operations are going off the simplecalculator
+  25:17operations. And I have debugging on to helpsee
+  25:18this, but what you can see here is that
+  25:21a message gets received, these are the headersthat
+  25:23come across in it. And the data&#39;s in binary
+  25:25form so you can&#39;t really see it too well.
+  25:27But you can see that for ping it&#39;s, it&#39;s
+  25:29just doing basically a ping. For adding, it&#39;staking
+  25:32the 101 and then its response will be -
+  25:34I guess I didn&#39;t print that part out. But
+  25:40that&#39;s pretty much what&#39;s going on there.And so
+  25:42if you wanted to do then load balancing, you&#39;d
+  25:44basically just start up a second version ofthe
+  25:48software and so running it again just meansboth
+  25:53of them are now handling messages.
+  25:58So it&#39;s a pretty simple, straightforward.
+  26:7So one of the nice things about Thrift is
+  26:8that it does allow for handling versioningand compatibility
+  26:12issues as you&#39;re business logics evolves overtime, because
+  26:15functionality evolves over time. Your protocolsneed to evolve
+  26:18over time. And again, protocols here meanthe wired
+  26:21protocol. So Thrift supports the ability toadd additional
+  26:25parameters to your messages, and it will handlesituations
+  26:28where if you have older code still running,it&#39;ll
+  26:32still handle that data.
+  26:33Your old code obviously won&#39;t do anythingwith it,
+  26:35but then when you start up new code, it&#39;ll,
+  26:36it&#39;ll handle it as well. And if you follow
+  26:39some of the key things that they point out
+  26:41in their documentation, there&#39;s some bestpractices. You can
+  26:45handle versioning pretty straightforward.
+  26:46And as I always- already pointed out, youcan
+  26:49do server-load balancing by having multipleworker processes that
+  26:53sit there and subscribe to the same queueso
+  26:55those messages come onto the queue. It&#39;lldistribute them
+  26:58across workers and you get some load balancingbased
+  27:3in. The, this does require your services tobe
+  27:6built stateless so that you can handle messages,but
+  27:11that&#39;s pretty much it.
+  27:13So I&#39;m gonna end up with just showing some
+  27:15references. If you download these slides,I&#39;ll put them
+  27:17up and post it somewhere. There&#39;s some interestingdocumentation
+  27:23online that kind of helps backup some of the
+  27:26things I&#39;ve been talking about, if you canget
+  27:28into that.
+  27:29And that&#39;s pretty much it. If you have any
+  27:31questions I&#39;d be glad to take them. I did
+  27:33bring some Playstation swag to encourage questions,so. That&#39;s
+  27:38it then. That&#39;s it for me. Thanks.

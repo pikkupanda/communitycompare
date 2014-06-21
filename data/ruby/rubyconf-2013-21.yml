@@ -1,0 +1,715 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=3XdVLv5nqvk
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16JIM GAY: Thanks for coming. I&#39;m gonna be talking
+  0:20about what we have in the standard libraryof Ruby,
+  0:23and what I found as I was learning Ruby
+  0:26is that there was a lot there that I didn&#39;tknow about,
+  0:28and I was doing Ruby professionally for awhile
+  0:31before I even discovered some of these things.
+  0:34So, when I pitched this proposal for RubyConf,I
+  0:38said that I was gonna be talking about this
+  0:40stuff for beginners to intermediates, so I&#39;mcurious how
+  0:44many people here consider themselves beginner/intermediateRuby developers. A
+  0:49decent number. And some liars.
+  0:53But, also what I found was there are a
+  0:56lot of experienced developers who don&#39;t knowabout these
+  0:59libraries, as well, and some of the tricksthat
+  1:2are inside them. So what I&#39;m gonna be doing
+  1:3is walking through, talking about what thelibraries do,
+  1:6talking about the concepts inside them, showingsome of
+  1:9the tricks of the code that they do, and
+  1:11hopefully - what I want you to be able
+  1:13to do is look at them, learn from them,
+  1:16try them out. Try building some things onyour
+  1:18own and not just going to look through RubyGems
+  1:21for solving some problem that you might have.
+  1:25So I encourage you to, if you like, open
+  1:28up your laptops and clone Ruby, or just look
+  1:31at it on GitHub and, and, walk through some
+  1:34of this stuff with me.
+  1:35So I&#39;m Jim Gay. I&#39;m @saturnflyer on Twitter,on
+  1:41BitBucket and GitHub and GitTorious, whichyou should check
+  1:45out as well.
+  1:47So one of the things that, as I was
+  1:50learning programming in general, I would hearabout the
+  1:54standard library of Ruby versus the standardlibrary of
+  1:58another programming language, and I thinkthere&#39;s two concepts
+  2:1here that, you know, there&#39;s the standardthings that
+  2:4are in an array, for example, and that&#39;s your
+  2:7standard library - or hash, and all the stuff
+  2:10that you can do with those things.
+  2:11But then there&#39;s also the extras that comealong
+  2:13with it, and what I&#39;m gonna be talking about
+  2:15is the extras, right. I, at a certain point,
+  2:20I, I realized, I needed to get to know
+  2:23Ruby better so I decided to look at the
+  2:25code. And not knowing C, I saw this and
+  2:28- ahh! my eyes! What is that?
+  2:31Yeah, I look at that, and I had no
+  2:35idea what it was. And this is actually the
+  2:38marshalling code. But, so I would put it aside
+  2:43and decide, well, I have to learn some C
+  2:45before I can really get to know Ruby. Or,
+  2:48you could, you could, Pat Shaughnessy&#39;s RubyUnder a
+  2:53Microscope, which is a fantastic resourcefor learning how
+  2:55this stuff works.
+  2:57But what I was shocked to find was this.
+  3:1You know, I was learning about gems and how
+  3:3to properly build gems, and you have yourRails
+  3:6apps and they have this lib directory. AndI
+  3:8looked in the Ruby source and I saw this
+  3:9lib folder there, and I couldn&#39;t believe it.Like,
+  3:12wow, there&#39;s a, there&#39;s a lib folder. AndI
+  3:14opened it up and it was just plain old
+  3:16Ruby code. There was no C in sight.
+  3:19So I want to encourage everyone here to just
+  3:21go and look through there. There&#39;s all kindsof
+  3:24fascinating things in there. Useful thingsthat you don&#39;t
+  3:29have to go out to RubyGems and, you know,
+  3:32rely on Bundler to pull it in and figure
+  3:33out dependencies and all that. It might justbe,
+  3:36the tool that you need might be right there.
+  3:38So the first library I want to talk about
+  3:40is delegate. And if you&#39;re using Rubinius,you have
+  3:46to install, what is it, what is the name
+  3:49of the gem?
+  3:50AUDIENCE: RubySL.
+  3:50J.G.: RubySL, that has the standard libraryand it&#39;s
+  3:53all gems, right. If you have MRI it&#39;s just
+  3:56right there in the lib directory. So thisis
+  4:0all you have to do to get this library
+  4:1available. You don&#39;t have to add it to your
+  4:3gem file and do bundle install and, and all
+  4:6that stuff. It&#39;s right there.
+  4:7So when I think about how code works, I
+  4:10try to visualize it. So I&#39;m gonna walk you
+  4:13through that a little bit and then we&#39;ll get
+  4:16into some code.
+  4:17I forgot to start my timer. We&#39;ll be an
+  4:22extra few minutes.
+  4:23So let&#39;s say we have this user object, right.
+  4:27It has some information on it, and we can
+  4:29send a message to it. Tell me user, when,
+  4:33when were you born? And I get back this
+  4:35date object, right.
+  4:39But in my program, maybe I don&#39;t really want
+  4:41all of that stuff. I just want to display
+  4:44the year. I ask you when you&#39;re born. You
+  4:45say, oh well, this is, this is it. And
+  4:48I don&#39;t necessarily want to go and changethat
+  4:50born method that handles the message thatI sent
+  4:54to it. I&#39;m only using this in a particular
+  4:57place. Maybe in a presenter or some sort of
+  4:59display area. So this is what you can do
+  5:2with the delegate library.
+  5:3You can wrap it in this decorator and it&#39;s
+  5:6the decorator&#39;s responsibility to handle thismessage. So you
+  5:8send the same message and this object is acting
+  5:12as if it is the user, right. You&#39;re just
+  5:14kind of pretending, for now you just be the
+  5:16user but you&#39;ll have some extra behavior.So, internally
+  5:20what it does is it says, user, when were
+  5:22you born? I&#39;m gonna translate that and giveme
+  5:25the year and that&#39;s actually what we wantto
+  5:28say, right.
+  5:29So delegate library gives you these threethings. Delegator,
+  5:32SimpleDelegator, and DelegateClass(). I&#39;llwalk through them. And I
+  5:36thought it would be interesting to try toimplement
+  5:38this stuff, the bare bones of, of these libraries,
+  5:42into something that fit into a Tweet. So this
+  5:45is the smallest implementation I could dofor the
+  5:49delegator library.
+  5:52So if you want to Tweet that real quick.
+  5:55That&#39;s enough time.
+  5:56So I&#39;ll expand it for you. This is, this
+  5:58is what it&#39;s doing. Let&#39;s say we called it
+  6:1Delegator. You initialize with an object andyou store
+  6:4a reference to it. And then you use method_missing.
+  6:8Any messages it doesn&#39;t understand it willsend to
+  6:11that object.
+  6:14So if you&#39;re not familiar with method_missing,it is
+  6:17so awesome when you learn it and then you
+  6:19start using it and realize what a mess you&#39;ve
+  6:22made. But it&#39;s still good to know. And this
+  6:25is how delegate library works.
+  6:28When you send a message to this delegator,it&#39;s
+  6:30gonna initialize this Delegator class. Yousend a message
+  6:32to it. If it doesn&#39;t have a method defined
+  6:36that responds, it will say, OK, well I, none
+  6:39of my ancestors have a method with born or
+  6:43whatever it is. So I&#39;m just go to this
+  6:45method_missing hook. And so you can definehow you
+  6:48want to handle this.
+  6:50And what this does is say, all right, I&#39;ve
+  6:51got a reference to a separate object, andI&#39;m
+  6:53expecting that object to know what to do with
+  6:55this. So I&#39;m just gonna take the name of
+  6:58the method that came in, any arguments inthe
+  7:0block, and just pass it along that way. Whatever
+  7:3happens, happens.
+  7:3So that&#39;s my simple, dumb implementation ofthis, right.
+  7:9So let&#39;s just take a look at the user
+  7:12that we initialize. This is actually in thedocumentation.
+  7:16I changed it a little bit, but if you
+  7:18go and look at the delegate library, thisis
+  7:20the sample that&#39;s in there.
+  7:23So I want to know when the user was
+  7:26born. And I could add another method to the
+  7:30class and say, well, give me your birth year.
+  7:32But I don&#39;t want to pollute my, you know,
+  7:34representation of the user, of what it iswith
+  7:36extra stuff just for our particular case.
+  7:42So what I can do is that, instead I
+  7:43can make this user decorator. So I can use
+  7:45this delegator class that we created before,and say,
+  7:48all right, I&#39;m gonna initialize and I&#39;m gonnahave
+  7:51reference to that user, and when I call born,
+  7:54it&#39;s just gonna call super, which will goall
+  7:56the way through, hit method_missing, ask theuser for
+  8:0born, and then call year on that, right.
+  8:6So what we end up with this. Same exact
+  8:9thing, decorated_user.born is the same asuser.born.year. And this,
+  8:13this allows you to have this decorated usertake
+  8:18the place of the user. And you just give
+  8:20it a little extra behavior for this particularcase
+  8:22and just swap it in there.
+  8:27So the problem is that in the implementationthat
+  8:32we have, decorated_user is not the same asthe
+  8:37user. They&#39;re different objects. But we wantthem, we
+  8:42want this decorated_user to just sit in placeand
+  8:44act like it is the user that we care
+  8:46about. So we can do this. We can just
+  8:49define this double equals method, right.
+  8:53So just say, any time I compare you to
+  8:54another object, if that other object is thesame
+  8:57as the one that we have stored a reference
+  8:59to, then return true. Otherwise it&#39;ll be false.The
+  9:3problem is, what if we&#39;re looping throughand we&#39;re
+  9:5comparing something we&#39;ve already got wrapped?What will this
+  9:8be?
+  9:9False, right.
+  9:10All right. So that&#39;s fine. We can fix that.
+  9:15Not something I would have thought of initially.I
+  9:17probably would have written some code, startedusing it,
+  9:20ran into the problem and realized, oh, I&#39;vealready
+  9:23wrapped this thing.
+  9:25So we can just return true if the other
+  9:28object we&#39;re passing in is me. Like, if it&#39;s
+  9:31the same object, just return true. And thenit
+  9:35works. But this is already solved. All youhave
+  9:38to do is require delegate and inherit fromSimpleDelegator.
+  9:42And there&#39;s a whole lot of methods in there
+  9:44I&#39;ll show in a bit that are already defined
+  9:46like this. The problem has already been solvedfor
+  9:48you, so you don&#39;t have to bump into those
+  9:51errors, find out where the pain points are.You
+  9:54can just use SimpleDelegator.
+  9:58So here&#39;s the structure with a lot taken out.
+  10:2But SimpleDelegator inherits from this Delegatorclass. And even
+  10:7though this is the same name that I used
+  10:9earlier, this is the one that we&#39;re gonnabe
+  10:11looking at that is defined inside the delegatelibrary,
+  10:15right.
+  10:16It inherits rom BasicObject. It has this initializemethod,
+  10:19which you can see, all it does is it
+  10:21calls _setobj and it passes in this object.That&#39;s
+  10:25defined down here. And you see from this,it
+  10:28raises an error, right. So this is designedfor
+  10:31you to inherit from, and you define your own
+  10:34methods.
+  10:35Likewise, method_missing - just get the objectand send
+  10:38it. The same thing we did where we had
+  10:40an object reference, but this just had a method.
+  10:44But this also raises an error.
+  10:47So you wouldn&#39;t even initialize a Delegatorobject. You
+  10:52would make your own class, inherit from it,and
+  10:54then you&#39;d have to define that method. Sothat&#39;s
+  10:57exactly what SimpleDelegator does. It storesthis delegate_sd_obj method.
+  11:3But one other thing that it does that is
+  11:7very helpful is it, when you&#39;re setting theobjects,
+  11:13when you&#39;re initializing, it makes sure thatyou&#39;re not
+  11:16trying to initialize with yourself or setit to
+  11:20yourself. Cause you can call this method atany
+  11:22point, if you&#39;re wrapping an object and youwant
+  11:24to swap it out to another object, you don&#39;t
+  11:26want to accidentally swap in something that&#39;salready been
+  11:29wrapped.
+  11:30So if we were to do our own implementation
+  11:35of this, our user decorator, where we justinherit
+  11:37from Delegator, you might make the mistakeof doing
+  11:40this: saying, oh well I just need to set
+  11:41it to something and then get it.
+  11:44But the problem is, this is what you&#39;ll run
+  11:47into. So there&#39;s a lot to learn from just
+  11:50reading the code and seeing how this problemhas
+  11:52been solved for you, not going down the road
+  11:55of trying to implement your own, just sayI
+  11:57know enough method_missing, I&#39;m just gonnause that in
+  12:0a class that I create. Over here the problem
+  12:3is solved.
+  12:5So I&#39;ve done this. I&#39;ve made my own decorators
+  12:9or presenters. And the one thing that I don&#39;t
+  12:14like is these method names. They&#39;re reallyugly. It&#39;s
+  12:19great that there&#39;s a standard interface acrossall of
+  12:21them, so you can use polymorphism in yourapplication
+  12:26and swap different decorators in and out,and if
+  12:28you&#39;re gonna call mess- you know, call _getobj_or
+  12:31_setobj_, it&#39;s always the same. But when I&#39;mwriting
+  12:33my code inside my methods, I want it to
+  12:35look like this, right. I want it to map
+  12:37to the domain that I&#39;m using.
+  12:39If I&#39;m working with the user, I just want
+  12:40user or user equals or profile or profileequals.
+  12:45So one way of doing that is creating your
+  12:49own decorator class, inheriting from thatand then just
+  12:53aliasing these methods. That gets kind ofcumbersome. It&#39;s
+  12:59repeating code over and over again. And whenI
+  13:3know that I&#39;m doing this in my application,anybody
+  13:5in my team is doing this, we see this
+  13:7type of thing and there&#39;s a pattern happeninghere.
+  13:9So let&#39;s try to take this out. We know
+  13:10this is how this works. And let&#39;s just let
+  13:13the computer do the work for us, right. That&#39;s
+  13:15what it&#39;s good for.
+  13:20So you can learn about how Ruby class inheritance
+  13:24works just by reading this library as well.There&#39;s
+  13:26an inheritant hook that, when you inheritfrom a
+  13:29class, you can do things with the class that,
+  13:34that&#39;s becoming a subclass.
+  13:36So you have this self dot inherited methodthat
+  13:38we&#39;re defining on our decorator class. Andit has
+  13:41a reference to class, and what we can do
+  13:44here, what I&#39;m doing is I&#39;m saying, splitup
+  13:46the name, so if there&#39;s any name spacing,I
+  13:48want to get rid of that. You know, myApp
+  13:51double colon user_decorator. And I want totake user_decorator
+  13:54off so all I have is user.
+  13:56And then what this code does, not necessarythat
+  14:0you know exactly everything, but what it&#39;sdoing is
+  14:2it&#39;s saying, if you&#39;ve got user, just downcaseit,
+  14:6or if you have ShoppingCart, just downcaseit and
+  14:8underscore it. If you have ActiveSupport inyour app,
+  14:11if this is a Rails application, it&#39;s reallyeasy
+  14:13to just send those messages to the string.This
+  14:16is how you&#39;d do it if you didn&#39;t have
+  14:19ActiveSupport.
+  14:20And then this is exactly what we did before.
+  14:21So we have the class in hand, and we
+  14:24can call :alias_method, object_name, :_getobj_.So this is where
+  14:28user shows up, and user equals, right.
+  14:35So I like doing that, because then I end
+  14:36up with stuff. And I still have those _getobj_,
+  14:40_setobj_ methods. So the polymorphism in ourargument still
+  14:43applies. But when I&#39;m writing my code, I want
+  14:45to use a word that refers exactly to the
+  14:48concept I&#39;m writing.
+  14:51So let&#39;s take a look at the Delegator class.
+  14:54It inherits from BasicObject, and then itdoes all
+  14:57this weird stuff. Remember, the first timeI read
+  14:59this, I saw this and there were these magical
+  15:1methods up there. And I wasn&#39;t really surewhat
+  15:3it was.
+  15:6It&#39;s dup&#39;ing kernel, evaluating it, undefiningit, and then
+  15:12including that dupped module. Really strange.
+  15:17The reason for this is we want our SimpleDelegator
+  15:21objects, which inherit from this, to act sortof
+  15:27like objects, sort of like basic objects.If you&#39;re
+  15:30not familiar, BasicObject has some very, veryfew methods.
+  15:37Fewer than Object does. And the differencehere is
+  15:41that objects have this kernel module includedin them,
+  15:45and they also inherit from BasicObject. Sowhat we&#39;re
+  15:47saying here is Delegator class is saying,I want
+  15:51you to be like an object, but I don&#39;t
+  15:54want these methods.
+  15:55So all of these are being pulled off. You&#39;re
+  15:58saying undefine these from this module thatI have
+  16:0dupped, and then include it. And the reasonfor
+  16:3that is, we want to_s and inspect and all
+  16:6these other things to hit method_missing soit goes
+  16:9to our wrapped object.
+  16:11So that&#39;s what&#39;s happening here. The wholereason this
+  16:12exists is so that we can pass these through
+  16:15to the object that we&#39;ve got internally. Whichis
+  16:19great, because when you call user.inspect,you get this,
+  16:21and user.to_s you get that, and likewise youget
+  16:24the same thing from your decorated_user.
+  16:26So it, it really does look and feel like
+  16:29the object that you want, it&#39;s just got some
+  16:30extra behavior. The weird thing about it,though, is
+  16:34you run into this case, where it doesn&#39;t delegate,
+  16:39or it doesn&#39;t undefine these and send themout.
+  16:42You still know that you have a user or
+  16:43you have a user decorator.
+  16:45This can become troublesome for you if youuse
+  16:47something like that, maybe in a Rails application.Because
+  16:51if you ever build your own and you find
+  16:56that you&#39;re using this form_for method, whichlooks at
+  16:59the name of the class and then tries to
+  17:1figure out where it&#39;s supposed to go, youhave
+  17:3this odd action, user_decorators slash 1.Which is probably
+  17:7fine if you&#39;re building an app for costume-makersor
+  17:15something like that.
+  17:15But we really just want it to go to
+  17:22users.
+  17:24DisplayCase is a gem that helps solve thisproblem.
+  17:29This came from Avdi Grimm&#39;s Objects on Rails.And
+  17:35what he does, here, is he uses alias_methodand
+  17:40what this does internally in Ruby is it actually
+  17:42copies this method. So you&#39;re saying, givingme a
+  17:45method that&#39;s under under class and defineit exactly
+  17:50the same way as class is defined.
+  17:51So you have two methods that do exactly the
+  17:53same thing. Same procedures, whatever&#39;s definedin one is
+  17:55now in the other. And then it gives them
+  17:57the opportunity to then go and redefine classand
+  18:0say don&#39;t give me your class, give me the
+  18:3wrapped object&#39;s class.
+  18:7Draper&#39;s a little different. Draper is notSimpleDelegator. I
+  18:11think they, they have method_missing insidethere. And there&#39;s
+  18:14a lot more code done to figure that out.
+  18:18And they actually turn to ActiveModel hereby delegating
+  18:21model name to the object class, and they get
+  18:23their object class from the inferred object.
+  18:25So there&#39;s a lot going on inside of Draper,
+  18:28right. And that&#39;s all to solve problems liketurn
+  18:33user_decorators into users. So understandingthis concept will help
+  18:39you in developing simple little apps, whereyou just
+  18:42try to just do some method_missing magic tojust
+  18:45wrap an object, and you run into this type
+  18:47of thing.
+  18:50That&#39;s how those gems do it. So if you&#39;re
+  18:52gonna build your own, you need to know about
+  18:54that thing. Are you going to redefine classor
+  18:57are you going to try to figure out what
+  18:59ActiveModel&#39;s looking for and hook into itsimilar to
+  19:1the way that Draper did?
+  19:3So the other thing that blew my mind when
+  19:5I was reading delegate library was this thing.
+  19:13You can see, it&#39;s defining a method and it&#39;s
+  19:16a capital letter. Who makes, like, aren&#39;tconstants capitals?
+  19:21Isn&#39;t that one of the rules of Ruby? Like,
+  19:24everything that starts with a capital is aconstant?
+  19:29Apparently not.
+  19:31This comes with it, and in, in fact, in
+  19:34the documentation for it, it says, this isthe
+  19:39main interface for this library. I rarelysee this.
+  19:43I always see people user SimpleDelegator.I always use
+  19:47SimpleDelegator. But according to the documentation,this is what
+  19:50you should be using.
+  19:51So the way this works is kind of like
+  19:53this - that&#39;s really how I see it. But
+  19:57it&#39;s just making a new class, and if you
+  20:1have never done this before, you can callnew
+  20:3on class and pass in some other existing class,
+  20:6and that returns a class that then you can
+  20:9go and effect. It allows you to dynamicallycreate
+  20:13classes.
+  20:14So if you want to do something like this
+  20:15on the fly, you can do that.
+  20:19And I like the fact that it&#39;s capitalized,because
+  20:22it makes me think about the fact that I&#39;m
+  20:23creating constants. And then it returns theclass at
+  20:28the bottom.
+  20:30So this is what, what, you know, our structure
+  20:33is. And I want to talk about how the
+  20:35ancestry is built. The ancestors are, youknow, all
+  20:38the classes and modules when you hit method_missing,it&#39;s
+  20:44gonna go and look through all of these things
+  20:46to find a matching method, and then go into
+  20:48your - well, when you send a message to
+  20:51an object, it&#39;ll do that, then it&#39;ll go to
+  20:53your method_missing.
+  20:54This module is that kernel dup. It has no
+  21:0name. It&#39;s dynamically defined. It wasn&#39;tgiven a constant
+  21:2name. And so this can be kind of tricky
+  21:5when you&#39;re dynamically creating constants.If you don&#39;t give
+  21:8them names you can run into ancestry likethis,
+  21:10and you might actually look for the name of
+  21:12a class or call name on that class for
+  21:15module, and it&#39;ll blow up because it doesn&#39;tactually
+  21:17have one.
+  21:20But this is what you could do. Going back
+  21:22to our other example, you could make a user
+  21:24decorator to just, just uses delegate classand I
+  21:28pass in user. So I&#39;m saying this is how
+  21:31I&#39;m making an object that&#39;s gonna act on behalf
+  21:34of the user. But you can see what happens
+  21:36to the ancestry here. We have this dynamicallydefined
+  21:39class, and we lose reference for what it actually
+  21:42is.
+  21:47But I want to do all the awesome metaprogramming
+  21:49stuff that I did to alias_method so I can
+  21:51use them, so I can actually just assign a
+  21:57constant there, call class.new, pass in delegateclass and
+  22:1an instance of the user and get its class,
+  22:5do all the same stuff that I was doing
+  22:7before. This is all to alias the methods to
+  22:9user, user equal.
+  22:13So that would allow me, if I wanted to
+  22:14create something on the fly - didn&#39;t knowwhat
+  22:16kind of class or I wanted to be able
+  22:18to add classes to my application and havepresenters
+  22:23defined for me automatically, I could do this.And
+  22:26I&#39;d just get the class from my object and
+  22:28pass it along.
+  22:30And then, of course, I thought it would be
+  22:31awesome to make a really cool gem to do
+  22:35it. That doesn&#39;t exist. But Decoratificationizer.So you could
+  22:42do this. If you wanted to just pass in
+  22:44an object rather than a class, you pass in
+  22:46an object, do exactly the same thing. Youuse
+  22:48delegate class to define your class, and you&#39;vegot
+  22:52a reference to it here, and you can assign
+  22:53that to a constant and do whatever you need
+  22:55with it.
+  22:58All right. Forwardable.
+  23:2I&#39;ll talk a bit about how these two are
+  23:4different a little later. But this is theway
+  23:9I see forwardable working, right. I&#39;ve gota user
+  23:12and the user has an address - and address
+  23:18didn&#39;t fit in the little hexagon I had so
+  23:20I had to shorten it up.
+  23:23So if I send a message to address.user, I
+  23:26expect to get this address object. And thenI
+  23:31could send city to address and get Miami.But
+  23:36maybe in my application, what I really wantto
+  23:38do is just ask the user either what city
+  23:40are they in or what&#39;s their home city. And
+  23:42I just want it to return to me Miami.
+  23:45I don&#39;t want to spread knowledge throughoutthe system
+  23:47that the user has an address, that, whetherit&#39;s
+  23:50current or it&#39;s their home address or whateverit
+  23:53is. I just want to know that there&#39;s an
+  23:55address associated with this user and I wantto
+  23:57know the city that they&#39;re currently in.
+  24:0So this is how I see it happening. This
+  24:2address - this isn&#39;t a wrapper, but it&#39;s more
+  24:5like an internal reference to an object. AndI
+  24:7don&#39;t care from the outside. I just want to
+  24:8say give me your city, and internally it will
+  24:11say, I&#39;m gonna pass city along to address,and
+  24:14then we&#39;re gonna return that. Just forwardingit.
+  24:21So this is - the forwardable library givesus
+  24:24Forwardable and SingleForwardable. And thenthere&#39;s forwardable method, or,
+  24:30module that fits in a Tweet. So you can
+  24:32Tweet that.
+  24:35That&#39;s actually pretty faithful to what Forwardabledoes.
+  24:38But I&#39;ll expand it a bit and we can
+  24:39take a look at it. So the difference, of
+  24:43course, with this is it&#39;s a module. So you
+  24:45can create your own class hierarchy, not haveto
+  24:48inherit from this. You just kind of add it
+  24:50wherever you need it.
+  24:53And what it does is it would define a
+  24:55method on a class. You extend the class with
+  24:58forward - define this method, and you cansay,
+  25:1this is the reference that I want it to
+  25:3go to. So in this case it might be
+  25:5address, right.
+  25:5And then here&#39;s a method name. And one of
+  25:8the really cool tricks that I&#39;ve found inreading
+  25:10this library was I can give it three arguments,
+  25:14and that third argument, if I don&#39;t give it
+  25:16one, if I only give it two, it&#39;s just
+  25:18gonna say, well your third argument is yoursecond
+  25:19argument
+  25:20So it actually evaluates that, I can referencethe
+  25:23third one if I only give it two, it&#39;s
+  25:26gonna use the same exact name. So it just
+  25:28assigns it if, if you didn&#39;t give it a
+  25:30third one. That&#39;s really useful.
+  25:33And then what it does is it evaluates the
+  25:36code below in the context of the current class.
+  25:40So if you&#39;ve extended the forward class andyou&#39;re
+  25:42gonna forward to address, it&#39;ll say all right,I&#39;m
+  25:45going to define a method here, whatever alternativeis,
+  25:48so if it&#39;s city, if I pass in city,
+  25:53it&#39;s gonna define that. Whatever args thereare, and
+  25:56then it&#39;s going to take my reference, my address,
+  25:58and say send it city, pass along everythingthat
+  26:2comes with it.
+  26:7So let&#39;s say we have this address right, and
+  26:9a person, a person has a name and an
+  26:12address. This is just some structure to getyou
+  26:13to understand how this might work. Like, maybeyou
+  26:17have this in a database, but this is good
+  26:19enough.
+  26:20So I&#39;ve set home to be Main Street, Miami,
+  26:26Florida, whatever it is. And then I assignhome
+  26:29as the address for the user.
+  26:33So in my application, if I want to ask
+  26:35it what city, I could say, well, get the
+  26:39user&#39;s address and then ask that address forits
+  26:42city, right. But that means I&#39;m gonna be working
+  26:45with multiple objects, and if you do that,then
+  26:48the responsibilities of your code kind ofseep into
+  26:51the relationships that exist in your objects.And you
+  26:53should try to avoid that, because if I only
+  26:56rely on the, the user to know about where
+  26:59it is, then I can just ask the user,
+  27:1or tell the user to do something.
+  27:5So this is essentially what would, what washappening
+  27:7with forward. If I extend it, I can do
+  27:11this. I can just say forward city to address.
+  27:14It&#39;s the same exact thing. It didn&#39;t- it dynamically
+  27:17defines that method, so at load time whenI
+  27:19boot the application up, it&#39;s going to gothrough
+  27:21this class, define those methods. So thisis different
+  27:25from method_missing. It doesn&#39;t, it doesn&#39;tgo through looking
+  27:28through the ancestry to findthe method. It&#39;sright here
+  27:31on this class. So it&#39;s gonna be much faster.
+  27:34And then I can just have the user tell
+  27:36me what city is it. And we&#39;ll say Miami,
+  27:40right.
+  27:40Now the other thing that I can do, is
+  27:44there, here&#39;s the alternative. Before, whenI didn&#39;t give
+  27:48it an alternative, it just said alright I&#39;mgoing
+  27:49to assign it to the one that you gave
+  27:51me in second argument. But here I can say
+  27:52I, I want this to be home city. So
+  27:54this would be where you live or whatever the
+  27:56concept of home city is in the application.
+  27:59But wht happens here is, if I call city
+  28:0on it, no it&#39;s a NoMethodError. It doesn&#39;tdefine
+  28:3that. it only took the third argument.
+  28:6But it allows me to do this. I can
+  28:10very easily have this understanding of a relationshipwhere
+  28:14a person has an address and I can just
+  28:16say anytime these methods are called on theend,
+  28:19just send these other methods to that object.
+  28:23But here&#39;s how it works in forwardable. WhenI
+  28:31first saw this, I thought this was reallyweird
+  28:32syntax, and unRuby-like. This def_delegatorthing.
+  28:38But it&#39;s essentially the same thing that wehad
+  28:39in our forward module.
+  28:44It takes three arguments, first on is theobject,
+  28:48second one is the message that you&#39;re gonnapass
+  28:51to that object, and the third one is the
+  28:53message that you&#39;re going to receive to sendalong.
+  28:58So I want to talk a bit about how
+  29:1you can clean this up. If, if I&#39;m not
+  29:4going to do the home city thing and I
+  29:5just want to pass along city number, postalcode.
+  29:10You can do the plural version, right. def_delegators,the
+  29:15first one is, is the object you&#39;re gonna send
+  29:17to, and then any number of method names afterwards.
+  29:22And then this really weird syntax, that Iwas
+  29:26surprised worked - I don&#39;t know why - but
+  29:31you can use pretty much anything as a key
+  29:32in a hash. So this is just a hash
+  29:36argument, where I can say, I&#39;m gonna delegateall
+  29:38of these things to that.
+  29:40And I prefer to write it this way and
+  29:42I prefer to read it this way, cause this
+  29:43is how I think about it. Any of these
+  29:45arguments are just gonna go over to that thing,
+  29:48right
+  29:50But when it defines the method it defines,you
+  29:54know, it evaluates it in a string, and it
+  29:57will turn this into a string so you can
+  29:58actually use instance variables, so you don&#39;tactually have
+  30:0to have a method. You can have an internal
+  30:3reference to another object. It can be whateveryou
+  30:7want. And you just put that reference thereand
+  30:9that&#39;ll work as well. So it defines a method,
+  30:11it&#39;ll look for that instance variable.
+  30:15ActiveSupport, from Rails, has its own wayof doing
+  30:20this, which is nice in that it has this
+  30:25allow_nil flag which forwardable doesn&#39;t have.But what happens
+  30:29is, if address is nil, you can just say,
+  30:34give me the postal code and if the address
+  30:38is nil, just say nil. It won&#39;t throw an
+  30:40error. It won&#39;t say there&#39;s, there&#39;s someproblem where
+  30:43you called nil on, or you called a method
+  30:44on nilclass.
+  30:45But the other thing it does is it allows
+  30:48you to say prefix true. and it will automatically
+  30:53figure out what that is and define the method
+  30:55as address_city. So it helps you create theinterface
+  30:59that you want for this person class withoutrevealing
+  31:6that there actually is an address object andthat
+  31:9object has other things.
+  31:10So you can build a library for something and
+  31:12adhere to this interface that you design andchange
+  31:16the implementation later.
+  31:18The other thing you can do is define your
+  31:21own prefix. So ActiveSupport has this. Forwardabledoesn&#39;t. So
+  31:28there&#39;s really nothing preventing you fromwriting your own
+  31:32methods that do this. All you have to do
+  31:34is say, well I&#39;m gonna pass in an options
+  31:36hash, and I can do my own allow nil
+  31:38or allow blank or prefix, whatever you wantto
+  31:41do, and you can do the same exact stuff,
+  31:44with the same code that&#39;s in forwardable.you can
+  31:47create your own.
+  31:52I haven&#39;t used this much, but SingleForwardableis actually
+  31:54really nice. I only discovered it recently.So I
+  31:57don&#39;t know if any of you have code like
+  31:59this. Something goes wrong, you capture theerror, you
+  32:2send it off to some external system to keep
+  32:5track of it.
+  32:8I found a good thing to do in my
+  32:9code is to not reference that third partydirectly.
+  32:13I want to build a facade between me and
+  32:16it. Because maybe they&#39;ll go out of business.Maybe
+  32:22we&#39;ll decide that we need features from someother
+  32:25library. For example, let&#39;s say I want tomove
+  32:30to app_signal. I want better ties in withActiveSupport
+  32:34notifications or something like that.
+  32:37So I can start with my delegator sending stuff
+  32:43in this notify method to errorbreak, right.But this
+  32:45is the contract that I want to have, right.
+  32:47I want to say save for later. I want
+  32:48to look at this later.
+  32:49And so this is what I would use in
+  32:52my application. I&#39;m gonna say, this is howI&#39;m
+  32:54gonna handle it. I don&#39;t want to referencethis
+  32:56third party directly. And then later I canchange
+  32:59it and say, well, they used notify and they
+  33:2use send exception. That&#39;s OK, I can stilluse
+  33:5save for later.
+  33:6So I just designed my app so that I
+  33:8can swap out the third party.
+  33:12So the difference between these is that atruntime,
+  33:17you can wrap an object in SimpleDelegator.you can
+  33:19add behavior to it. You can have this object,
+  33:23your wrapper, act like it is the other object
+  33:26that you care about. And forwardable happensat boot
+  33:30time, because it&#39;s dynamically defining methods.So you&#39;re not
+  33:33gonna be changing things there. That&#39;s, so,I, I
+  33:37look at this in terms of, forwardable is great
+  33:39for when I know the relationships ahead oftime.
+  33:42When I know what methods I need to forward
+  33:43ahead of time.
+  33:45SimpleDelegator is great when I either don&#39;tcare what
+  33:48methods are gonna come in, because I&#39;m justswapping
+  33:51in another object and I want method_missingto pass
+  33:53it along, or I don&#39;t know. It allows me
+  33:56to build, for example, an interface where,if we&#39;re
+  34:0going to expose new information to the user,I
+  34:4can just swap this in and if there&#39;s nothing
+  34:8defined to override behavior, it will justpass it
+  34:12along.
+  34:13So there&#39;s a lot of similar projects out there
+  34:19that I encourage you to go check out. You
+  34:22can write your own stuff. You can use these
+  34:25libraries. You can explore them and figureout the
+  34:28concepts and the way they use them. I wrote
+  34:31one called casting. Nathan wrote one calledrep that
+  34:35uses a lot of forwardable, and doesn&#39;t useSimpleDelegator
+  34:38stuff.
+  34:39here are other examples of SimpleDelegatorstyle approaches. Definitely
+  34:47check those out. I send out tips on a
+  34:51weekly basis from my newsletter. You can signup
+  34:54there. And I&#39;m selling a book called CleanRuby,
+  34:56which talks about a lot of this stuff and
+  34:58how it applies to your application architecture.You can
+  35:0get twenty percent off on the book.
+  35:2All right. Thank you very much for coming.

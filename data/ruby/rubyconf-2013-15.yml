@@ -1,0 +1,1067 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=n_k6O50Nd-4
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16TOM STUART: Good morning everyone.
+  0:19Thanks for coming to this talk. I&#39;m Tom Stuart.
+  0:23I&#39;m gonna talk about, well,
+  0:24I&#39;m gonna talk about getting compilers forfree.
+  0:27Although, actually, my agenda today
+  0:30is that I&#39;m fascinated by programming,
+  0:33or, to be more specific, I&#39;m fascinated bymetaprogramming.
+  0:36It&#39;s something I&#39;m really interested in.
+  0:39So let&#39;s talk about metaprogramming.
+  0:42As Ruby programmers, we&#39;re already kind ofintuitively, we
+  0:45already intuitively understand the power ofmetaprogramming, right? Programs
+  0:49that write programs. So let&#39;s, in Ruby we&#39;vegot
+  0:52things like instance eval and define methodand method
+  0:54missing and all these kind of tools for making
+  0:56programs that grow new functionality at run-timethat wasn&#39;t,
+  0:58like, present in the static program that westarted
+  1:2out with.
+  1:3Now, there&#39;s another thing that I find evenmore
+  1:4interesting than that, which still kind ofcounts as
+  1:6metaprogramming, which is programs that manipulaterepresentations of other
+  1:10programs, right. Programs that operate ondata, which itself
+  1:13represents a program, and then does somethingwith that
+  1:16representation, like analyzes it, or evaluatesit, or translates
+  1:18it, or transforms it. So this is kind of
+  1:21the world of compilers and interpreters andstatic analyzers.
+  1:24And, and I think it&#39;s really fascinating.In a
+  1:27way, it&#39;s kind of the purest, or the most
+  1:29self-referential kind of software that youcan write. So
+  1:33in this talk today, I&#39;d like to make you
+  1:34look at programs differently. I don&#39;t havea complicated,
+  1:37technical point to make. I just want to tell
+  1:40you a cool story and hopefully convince youthat
+  1:42programs which manipulate other programs areinteresting, and hopefully
+  1:45kind of inspire you to find out some more
+  1:47about them.
+  1:48So I&#39;m gonna start out by just talking about
+  1:50something we&#39;re all familiar with, which isexecuting programs.
+  1:55So you write a program, right? You have a
+  1:57program written down that you want to run.And
+  1:59you have a machine that you can run that
+  2:2program on. So you put that program into the
+  2:4machine, and then you&#39;ve got some inputs forthat
+  2:7program. And those might be command line argumentsor
+  2:10configuration files or standard input or whatever.
+  2:13And you feed all of those inputs into the
+  2:14machine that&#39;s got the program inside it,and the
+  2:17program executes on the machine and it producessome
+  2:19output. I think we&#39;re all kind of familiarwith
+  2:21how computers work, right? But that only worksif
+  2:25the program that you wrote is written in a
+  2:26language that the machine kind of nativelyunderstands.
+  2:29So in terms of a real machine, that&#39;ll be,
+  2:31you know, the program has to be written in
+  2:32machine code, and if it&#39;s, if the program&#39;swritten
+  2:35in a higher-level language, then maybe youcan run
+  2:37it on some kind of, like, virtual machine,that
+  2:39understands that language specifically.
+  2:41But, if your program&#39;s written in a languagethat&#39;s
+  2:43unfamiliar to the machine, then you&#39;re gonnaneed an
+  2:46interpreter or a compiler to be able to execute
+  2:48it, right? So interpreters.
+  2:50How does an interpreter work? Well, very kindof
+  2:54roughly, the way it works is, it reads in
+  2:57some source code of the program you want to
+  2:58execute and then it builds an abstract syntaxtree
+  3:1by pausing that source code, and then it evaluates
+  3:3the program by walking over the abstract syntaxtree
+  3:6and performing the instructions that it findsinside the
+  3:9tree.
+  3:9And this is basically how, you know, MRI,pre
+  3:121 point 9, did its job, right. So I&#39;m
+  3:15gonna show you a little demo of how this
+  3:17works, by just introducing this, a languagethat I&#39;m
+  3:19gonna call simple. It&#39;s just a toy language--
+  3:21simple is like an abbreviation for simpleimperative language.
+  3:24This language is really straightforward. Itlooks a little
+  3:27bit like Ruby, but not exactly the same. State,
+  3:29statements look like this. So simple&#39;s gotexpressions and
+  3:33statements, unlike Ruby, it&#39;s got expressionslike nineteen plus
+  3:36twenty-three. Expressions just evaluate toa value.
+  3:39It&#39;s also got statements, like assignments.So a equals
+  3:41nineteen plus twenty-three is a statement,and that statement
+  3:45is gonna have a, is gonna modify the lexical
+  3:48environment. So when you evaluate a statement,it&#39;s gonna
+  3:50update the bindings between variable namesand their values.
+  3:53So the effect of executing that statement,is that
+  3:55after the statement is executed, a has gotthe
+  3:58value forty-two, right.
+  3:59Some other statements, you know it&#39;s got sequencingin
+  4:1it. It&#39;s got conditionals in it. It&#39;s gotwhile
+  4:5loops in it. Right, very basic language. It&#39;snot
+  4:7quite Ruby because it&#39;s got curly braces andstuff,
+  4:9but it&#39;s kind of close enough to Ruby that
+  4:11you recognize what it&#39;s trying to do.
+  4:13So given that you&#39;re at RubyConf, you probablyalready
+  4:14know about this gem called treetop, whichwe can
+  4:17use to pause languages, like build pauses,and I&#39;m
+  4:20just gonna very, very quickly show you howwe
+  4:22can build a grammar for that simple language.
+  4:25The grammar for this language looks like this.You
+  4:27just write the file, and you say, this is
+  4:29a grammar for the simple language, and thenyou
+  4:31just need to write rules that explain whatthe
+  4:32syntax for each of the different kind of statements
+  4:35and expressions in your language look like.
+  4:36So I can say, a sequence is two statements
+  4:38separated by a semi-colon. A while loop sayswhile
+  4:41bracket and then a condition and then, youknow,
+  4:43curly braces around the body of the whileloop.
+  4:45And assignment looks like a variable nameand an
+  4:46equal sign.
+  4:47There&#39;s some more rules there. A conditional,binary expressions
+  4:52here, less than, add and multiply, and thendown
+  4:55at the bottom you get to, kind of, the
+  4:56atomic things like numbers and Booleans andvariables, right.
+  5:0So I&#39;m just gonna scoot past that, but you,
+  5:1if you, if you write a file like that
+  5:3that explains what your programming languagelooks like, you
+  5:5can use the treetop gem to load that grammar
+  5:7file and it will generate you a parser file
+  5:10named after the grammar, and then I can extenuate
+  5:12that parser class, and say make me a new
+  5:14parser, and then parse this string.
+  5:15And what treetop will do is give you back
+  5:17this big data structure called a concretesyntax tree,
+  5:19or a parse tree. And this has got a
+  5:21lot of information in it about the exact sort
+  5:24of lexical structure of the string you gaveit,
+  5:26and how it breaks down and through all its
+  5:27component parts. There&#39;s a lot of informationin there
+  5:29that we&#39;re not very interested in. But that&#39;sa
+  5:31good start. We don&#39;t want a concrete syntaxtree,
+  5:33we want an abstract syntax tree, which islike
+  5:35a more useful representation of the structureof the,
+  5:37the statement we gave it.
+  5:39And we can make an abstract syntax tree by
+  5:41first, we can declare a bunch of classes that
+  5:43we&#39;re gonna use to instantiate to make theirnodes
+  5:44to make the abstract syntax tree, and I&#39;mjust
+  5:46gonna use struct to do that.
+  5:47So I&#39;m gonna define a new class for each
+  5:49kind of, each different kind of expressionand statement,
+  5:52and some of them, so all these binary expressions
+  5:54have got a left and a right sub-expression.Assignments
+  5:57have got the variable name and the expressionis
+  5:59being assigned to it, and so on.
+  6:2Now, going back to the grammar. In each of
+  6:4these rules that matches a particular kindof syntax,
+  6:6you can put some Ruby code in here and
+  6:8say, whenever I get one of these number nodes
+  6:10in the abstract, in the concrete syntax tree,I
+  6:12want to define a method on that called to_ast,
+  6:15which is arbitrary -- I&#39;ve made that up.
+  6:17And then when I call that, I want that
+  6:18to manufacture a new instance of the numberclass,
+  6:20in this case, and that just needs to contain
+  6:22the integer version of the text string thatwas
+  6:24inside, you know, that was the number.
+  6:26And I can define versions of those for, you
+  6:29know, the Booleans and variables, and eachof these
+  6:31is just building a new instance of my custom
+  6:32abstract syntax tree classes, right.
+  6:35So looking at those, these are just threedefinitions
+  6:38of the same method on different kinds of concrete
+  6:40syntax tree nodes that will help me createone
+  6:42of these abstract syntax tree nodes, you know,from
+  6:44it.
+  6:45And similarly for things like these statements,I can
+  6:46go in and put, you know, put more of
+  6:48these method definitions in. These are mostlyjust recursively
+  6:52converting their sub-expressions or sub-statementsinto abstract syntax trees
+  6:55and then gluing them together with the right,the
+  6:57right kind of node class.
+  6:59So once I&#39;ve done all of that work, I
+  7:0can get treetop to build me a concrete syntax
+  7:2tree and then I can call to_ast on the
+  7:4root node, and then that&#39;ll recursively convertthe whole
+  7:6thing into an abstract syntax tree, whichis a
+  7:8nice data structure that&#39;s made out of instancesof
+  7:10classes that I defined, right.
+  7:12So this is saying that this statement hereis,
+  7:15you know, a sequence of assignments, and actually,just
+  7:18to visualize that, you can see that this statement
+  7:19is a sequence of two assignments. The firstassignment
+  7:22is assigning the number two to x and the
+  7:24second assignment is assigning the resultof multiplying x
+  7:27and three to y, right.
+  7:30So now I&#39;ve got this abstract syntax tree,I
+  7:32can evaluate the abstract syntax tree by recursivelywalking
+  7:35over it. And the easiest way to do that
+  7:36is just to define a method on all of
+  7:38the different kinds of node, and then I can
+  7:40call the method on the root node, and it&#39;ll
+  7:41recursively -- I can define it so it recursively
+  7:44walks over the tree.
+  7:45So, again, just briefly, I&#39;m gonna run anevaluate
+  7:48method on each of those abstract syntax treeclasses
+  7:51and the evaluate method is gonna take an environment,
+  7:54which is the lexical environment -- it&#39;s ahash
+  7:56that says what the value of each variablecurrently
+  7:59is. So if you were evaluating a number or
+  8:1a Boolean, it doesn&#39;t care what&#39;s in the environment.
+  8:3You always just get out the value that you
+  8:5stored inside that node.
+  8:6If you are evaluating a variable then it looks
+  8:8in the environment and pulls out the variablewith
+  8:10that name, right. So that means that I can,
+  8:13if I make a new number instance and evaluate
+  8:15that in an empty environment, I just get the
+  8:17original number back. Same with Booleans.If I evaluate
+  8:20a variable y in this particular environment,it gives
+  8:23y the value of eleven, then I&#39;ll get eleven,
+  8:25whereas if I evaluate in a different environmentit
+  8:27gives y a different value, I get the different
+  8:29value out, right.
+  8:30So those are the simplest possible expressionsto evaluate.
+  8:33These are the definitions of evaluate forthose binary
+  8:35expressions, and these just recursively evaluatethe left and
+  8:38right sub-expressions and then they performthe operation that
+  8:40corresponds to the kind of node that we&#39;vegot.
+  8:42So if it&#39;s an add node, we add them.
+  8:44If it&#39;s multiply, we multiply them. If it&#39;sless
+  8:45than, we compare them with less than.
+  8:48So that means I can make something like a
+  8:49multiply expression, x times y, and evaluatethat inside
+  8:52this environment, and I get the result six.If
+  8:54I make a less than node instead that says
+  8:57is x less than y, the answer is true,
+  8:59in that particular environment.
+  9:0And I can do that again for statements. I&#39;m
+  9:3not gonna go into any detail out here, but,
+  9:4for example, you can see that the, for assignment
+  9:6statements -- oh, so statements don&#39;t returna value.
+  9:9They return the new environment. So when Ido
+  9:11an assignment, for example, I recursivelyevaluate the expression
+  9:14inside the assignment and then I update theenvironment
+  9:17to have a new mapping from the variable name
+  9:19to the new value of that sub-expression, andso
+  9:21on for all of these, the rest of these
+  9:22things.
+  9:23You know, sequence kind of evaluates the first,you
+  9:26know, the first statement first, to get anupdated
+  9:29environment, and then it evaluates the secondstatement in
+  9:31the updated environment to get the final environmentand
+  9:33so on.
+  9:35So what&#39;s I&#39;ve done all of that stuff, I
+  9:36can now do things like, when I evaluate an
+  9:38assignment that is x is assigned the valuey,
+  9:40and if I start with an empty environment and
+  9:42I evaluate it, I get a new environment where
+  9:43x has got the value one. If I do
+  9:45a sequence of assignments, x equals one andthen
+  9:47x equals two in an empty environment, I end
+  9:49up with x equals two, because that&#39;s kindof
+  9:51cobbled the first assignment.
+  9:52And the point of doing all this is so
+  9:54that I can chain things together and say use
+  9:55the parser to parse this, this program, andthen
+  9:59evaluate the abstract syntax tree in an emptyenvironment.
+  10:2So if I evaluate x equals two, y equals
+  10:3x times three in an empty environment, I get
+  10:6x is two, y is six. That&#39;s like the
+  10:7result of my program.
+  10:9And I can do that with the, you know,
+  10:10a more sophisticated program that&#39;s got awhile loop
+  10:12in it. This is just a little program that
+  10:13starts out x at one, and it keeps multiplying
+  10:16it by three until the value becomes greaterthan
+  10:18five, and then that finishes up with x being
+  10:20the value of nine.
+  10:21So that all works. It&#39;s all fairly straightforward.That&#39;s
+  10:23what an interpreter is, really. The pointof an
+  10:26interpreter is it provides what I&#39;m callingsingle-stage execution.
+  10:30And what I mean by that is, you&#39;ve got
+  10:32your interpreter, and you provide a sourceprogram into
+  10:36the interpreter, and then in general, thoughwe didn&#39;t
+  10:38do it in the case I just showed you,
+  10:40we&#39;ll also provide some input to the program.
+  10:42So if the interpreter is Ruby, you&#39;ll providea
+  10:45Ruby program as the source, and then the input
+  10:47will be whatever standard input or commandline arguments
+  10:50or whatever. So you provide all of that stuff
+  10:52to the interpreter, and then the interpreteris what
+  10:54runs on the machine, and then that producesthe
+  10:56output.
+  10:58And of course, here we&#39;re assuming that theinterpreter
+  11:0is already written in the language that canrun
+  11:2on the underlying, on the underlying machine.This doesn&#39;t
+  11:5need to be, because we&#39;re using the interpreterto
+  11:7run the source program on the underlying machine,right.
+  11:11And this all happens at the same time. This
+  11:13is the single stage of program execution.That&#39;s what
+  11:15I&#39;m calling run-time. That&#39;s what you wouldcall run-time.
+  11:18So what about compilers, how are they different?
+  11:20Well, they&#39;re pretty similar, really. Theywork in a
+  11:22similar kind of way. They read some sourcecode,
+  11:25and then they build an abstract syntax treeby
+  11:27parsing the source code. But then they doa
+  11:28different thing, which is, rather than performthe instructions
+  11:31they find in the abstract syntax tree, theygenerate
+  11:34some target code by walking over the abstractsyntax
+  11:36tree and emitting some instructions as theyfind them.
+  11:39So I&#39;m not gonna -- I don&#39;t have time
+  11:40to go into any detail of how to, how
+  11:42to do this properly, but I am gonna show
+  11:43you an example.
+  11:45So here&#39;s a version of, instead of havingtwo,
+  11:48instead of having evaluate defined on thoseabstract syntax
+  11:51tree nodes, I could define a method calledto_javascript,
+  11:53and this is just gonna return a string which
+  11:55contains some JavaScript code that does whateverthat node
+  11:58is supposed to do.
+  11:59And the, the JavaScript code I&#39;m generatinghere, rather
+  12:2than using real JavaScript variables and havingto deal
+  12:4with all of JavaScript&#39;s, like, weird variablescoping stuff,
+  12:7I&#39;m just turning every piece of, every simpleprogram
+  12:9into a JavaScript function that takes an objectthat&#39;s
+  12:13got mappings of variables names to valuesand then
+  12:15kind of updates the environment.
+  12:16So, or, in this case, when you have expressions,
+  12:20like a number is gonna turn into a function
+  12:22that just returns a constant number, and aBoolean
+  12:24is gonna return a constant Boolean, and avariable
+  12:26is gonna look up the variable in the environment.
+  12:29So this is a JavaScript variable, and thenit&#39;s
+  12:31gonna look up the right value in that, in
+  12:33that JavaScript object.
+  12:34Just very quickly, same for these kind ofbinary
+  12:37expressions, I just like recursively convertthe left and
+  12:39right sub-expressions to JavaScript and thenadd them together
+  12:42or multiply them together or whatever. Andthen, you
+  12:44know, don&#39;t try to read all this, but this
+  12:46is how, for all of the statements, I&#39;m really
+  12:48just generating the JavaScript syntax. Soan if turns
+  12:51into a JavaScript if, and a sequence turnsinto
+  12:54kind of JavaScript sequencing and a whileturns into
+  12:56a JavaScript while loop.
+  12:57So it&#39;s all pretty straightforward. And thepoint of
+  12:58doing that is so that I can take, like,
+  13:1this program that I showed you before, x equals
+  13:3one while x is less than five, turn that
+  13:4into JavaScript, and now that&#39;s kind of beingcompiled
+  13:7into an admittedly much longer JavaScriptprogram.
+  13:10And this is a JavaScript program that doesthe
+  13:11same thing as the program I started with that
+  13:13was written in a different language. And soI
+  13:16can take that big JavaScript program -- thisis
+  13:18the same program formatted more nicely, placeit on
+  13:20the nodes js console and say, look, here&#39;smy
+  13:24program, and then you can see on the bottom
+  13:26here, when I run this program in JavaScript,I
+  13:28get the result x is nine.
+  13:30So that compiler I just showed you is extremely
+  13:32stupid. It&#39;s not a good compiler. But it does
+  13:34let us execute those simple programs if ourmachine
+  13:38only understands JavaScript, right.
+  13:41So the difference between an interpreter anda compiler
+  13:43really is that a compiler provides two-stageexecution. When
+  13:47you&#39;ve got a compiler, you just give it the
+  13:49source program as input, and then the compilerruns
+  13:53and it generates some, and it&#39;s usually calleda
+  13:54target program. And then later on, at a different
+  13:58time, you can take the target program, whichis
+  14:0just data when the compiler emitted it, andput
+  14:3the target program inside a machine and runit.
+  14:6And that&#39;s when you provide the input to your
+  14:7program, and then your target program andyou get
+  14:10the output out.
+  14:11So we&#39;ve still achieved the same thing aswith
+  14:13an interpreter, but now it&#39;s been kind ofstaged
+  14:15in two pieces. And the first piece is what
+  14:17we call compile time and the second pieceis
+  14:19what we call run time.
+  14:22So the good news about compilers is that compiled
+  14:25programs run faster. Staging the computationlike this removes
+  14:29the interpretive overhead at runtime. Andby interpretive overhead,
+  14:32I mean all of that faff of parsing the
+  14:34program and walking over the ast and likedeciding
+  14:36what you&#39;re gonna do with it. That all gets
+  14:37done at compile time, and by the time the
+  14:39program runs, that work&#39;s already been done.
+  14:42So if you&#39;re gonna run the program a million
+  14:43times, it makes sense to do the interpretingstuff
+  14:45once and then just run the target code that
+  14:47doesn&#39;t have all of that kind of overhead.
+  14:49There are other kind of performance benefitsthat I&#39;m
+  14:52not talking about in this talk. But, for example,
+  14:54your compiler can use, like, clever data structureor
+  14:56clever optimizations to make the target programmore and
+  14:59more efficient, especially in those withoutthe underlying architecture
+  15:1of the machine and stuff like that.
+  15:3So that&#39;s the good news. The bad news is
+  15:4that compilation is just hard to, to do than
+  15:7interpretation. So there are a few reasonsfor that.
+  15:10The first is, you have to think about two
+  15:11times instead of one. You&#39;re not just, whenyou
+  15:14write an interpreter, you&#39;re just thinking,well I&#39;m running
+  15:16right now. I&#39;m the interpreter. I&#39;ve writtena program
+  15:18and I&#39;m gonna do what that program says to
+  15:20do, right now.
+  15:21When you&#39;re writing a compiler, you&#39;re thinkingabout compile
+  15:22time and run time. So in your head you
+  15:24have to have this model of like, well what
+  15:26am I doing now is the compiler. And then
+  15:28what&#39;s the target program gonna do later whenit
+  15:29actually gets executed? So that&#39;s harder.
+  15:31You also have to implement in two languagesinstead
+  15:34of one. With an interpreter, you&#39;re just implementingin
+  15:37the interpreter language. With that compilerI showed you,
+  15:39the compiler was implemented in Ruby, butwhat it
+  15:42did was generate some JavaScript code. Soto write
+  15:44the compiler, I was actually writing in twoprogramming
+  15:47languages kind of intertwined. And that&#39;sharder to kind
+  15:50of get your head around.
+  15:51And also, in a very vague hand-wavy sense,compiling
+  15:54dynamic languages is fundamentally challenging.If you want to
+  15:57compile a language like Ruby or JavaScriptor something,
+  15:59you can&#39;t, it&#39;s not enough to just look at
+  16:1the static program and then convert it intosome
+  16:3kind of target program, because the staticprogram doesn&#39;t
+  16:6tell you everything about what might happenat run
+  16:8time, right. If you&#39;ve got things like definemethod
+  16:9and you can create new classes and thingslike
+  16:11that, it&#39;s just hard to write a compiler for
+  16:14languages that kind of, where the programscan change
+  16:16dynamically as they execute.
+  16:18So long story short, writing an interpreteris easier
+  16:21than writing a compiler, but interpretersare slower than
+  16:24compilers, right. Interpreters only run atone time. They
+  16:27only use one language, and they can be as
+  16:29dynamic as you like. If the program changeswhen
+  16:31it runs, then that&#39;s fine, because you canjust
+  16:33change the abstract syntax tree as the programruns,
+  16:35and the interpreter will just keep working.
+  16:37So ideally, we would just write interpretersfor our
+  16:40programming languages, but unfortunately,they&#39;re slower, and so usually
+  16:44we end up writing compilers.
+  16:45So I want to tell you about a third
+  16:48kind of thing, which is like interpretersand compilers,
+  16:50and these are called partial evaluators.
+  16:53Now, a partial evaluator is like a cross between
+  16:55an interpreter and a compiler. An interpreterkind of
+  16:59does this job of executing a program rightnow
+  17:2and compilers do this job of generating aprogram
+  17:6now and then executing it later.
+  17:9Now, partial evaluators kind of live in themiddle.
+  17:13Now, like, a hybrid of these two things. They
+  17:15execute some of the code now, and then leave
+  17:18the rest of it for execution later. So what
+  17:22that means is you give a partial evaluatoryour
+  17:24subject program, it&#39;s called, you know, theprogram you
+  17:26want it to partially evaluate, and you giveit
+  17:28some of the inputs for that program, and it
+  17:30evaluates only the parts of the program thatdepend
+  17:32on the inputs that you&#39;ve provided, and thenwhatever&#39;s
+  17:35left afterward is called the residual program.It&#39;s like
+  17:37what you have left, you know, if you&#39;ve like
+  17:39boiled a liquid and you&#39;ve got a residue left
+  17:41over. This is kind of the residual programafter
+  17:42you&#39;ve done your partial evaluation.
+  17:46So what this looks like is instead of taking
+  17:49your subject program and running it directlyon a
+  17:52machine, and sort of providing an arbitrarynumber of
+  17:54inputs to your program -- again, like commandline
+  17:56arguments, or standard input or config filesor whatever
+  17:59-- and then executing it and getting an output
+  18:1-- again this is like a single-stage computation--
+  18:4what partial evaluation lets you do is kindof
+  18:6pick out part of this process, say like, the
+  18:8first input being fed into the subject program,and
+  18:11kind of do it earlier.
+  18:13You can kind of time shift it into the
+  18:14parse, and say, well, this is, this is the
+  18:17computation I ultimately want to do at somepoint
+  18:18in the future. But I want to do this
+  18:20part of it now. And save the rest for
+  18:22later. So by time shifting this stuff intothe
+  18:25parse, that means you take the program andthe
+  18:27input, and instead of running this program,you treat
+  18:29it as data, treat it as input to a
+  18:32partial evaluator.
+  18:33So this is like a compiler or interpreter.It
+  18:35will read in a program and it will read
+  18:37in some of the input for that program, and
+  18:39then when you execute the partial evaluatoror produce
+  18:41this residual program. And then later youcan take
+  18:44that residual program and run it on a machine,
+  18:47and feed in the rest of the input to
+  18:49the original program.
+  18:50That will run and give you the final output.
+  18:53So the idea of a partial evaluator is it
+  18:55lets you kind of split a single-stage executioninto
+  18:57two stages, by sort of time shifting the processing
+  19:0of some of the input from the future, where
+  19:2you&#39;re going to run the program, to the present.
+  19:4You can do some of the work earlier.
+  19:7So that&#39;s easy, easy enough to say, but, like,
+  19:9how, how do these partial evaluators work?Well, they
+  19:11work a lot like compilers and interpreters.They&#39;re just
+  19:13more complicated. And I don&#39;t have time toshow
+  19:15you how to build one in Ruby, but briefly
+  19:18what happens is you read in some source code,
+  19:21just like an interpreter or a compiler. Youbuild
+  19:23an abstract syntax tree just like an interpreteror
+  19:25a compiler, and- but then, you read some of
+  19:28the inputs to that program.
+  19:29And once you&#39;ve read some of the inputs to
+  19:31the program, you analyze the program. Youwalk over
+  19:33the abstract syntax tree. You do, usuallyjust a
+  19:35stacked analysis, to find all of the placeswhere
+  19:38the inputs have been provided are used inthe
+  19:40program.
+  19:41And once you&#39;ve found those places, you canpartially
+  19:43evaluate the program by going to all of those
+  19:45places where the inputs are being used, andevaluating
+  19:48them and then putting, like, new code in to
+  19:50replace them with the results of the evaluation.And
+  19:53then once you&#39;ve finished doing that, you&#39;vegot this
+  19:55residual program that you can emit.
+  19:58So I&#39;d, you know, I can&#39;t really give you
+  19:59a whole-program example in Ruby in the timeI&#39;ve
+  20:2got, but I just want to show you a
+  20:3really basic example to just kind of giveyou
+  20:5a feel of what&#39;s going on here.
+  20:6So just for demo purposes I&#39;m gonna show you
+  20:8this on the, on the, on the level of
+  20:10an individual method. So imagine we&#39;ve gota, imagine
+  20:12we&#39;ve got a partial evaluator for Ruby, andI&#39;ve
+  20:14got this Ruby method which is power. So this
+  20:16is raised x to the power of n. So
+  20:18if I, if I passed in three as the
+  20:20value as n here, it&#39;s gonna do x multiplied
+  20:23by power of two, x is gonna recursively multiply
+  20:26x by itself three times, right.
+  20:29So say that I&#39;ve my partial evaluator thatI
+  20:31know that this method is gonna be called with
+  20:33five as the first argument. So I know I&#39;m
+  20:34gonna be calling it with the value of n
+  20:36being five. So what the partial evaluator&#39;sgonna do
+  20:39is kind of start looking at this method and
+  20:41say, OK, so I know what the value of
+  20:43n is going to be, so I can find
+  20:45all of the other places where n is used
+  20:47and by doing that I can find all of
+  20:48the sub-expressions in this method that Ican, I
+  20:50can evaluate now.
+  20:51I don&#39;t have to wait to find out what
+  20:52the value of x is, because these expressionsare
+  20:54independent of the value of x. So once it&#39;s
+  20:57found those expressions it can start, like,evaluating them
+  21:0and replacing them.
+  21:1So what we&#39;re gonna do is, instead of having
+  21:2this power method that takes two arguments,we&#39;re gonna
+  21:5make a method called power_5, that only takesone
+  21:8argument, x, and the value of n is gonna
+  21:11be like fixed in this method. So all of
+  21:13those instances of n I&#39;m just gonna turn into
+  21:15five, and then we can start partially evaluatingthis
+  21:18and say, well, I can already tell you what
+  21:20the value of five dot zero is gonna be.
+  21:22That&#39;s gonna be false.
+  21:23And then once you&#39;ve done that, you&#39;ve nowgot
+  21:25a conditional here, which you are able, soby
+  21:27sort of propogating the information aboutwhat expressions are
+  21:30available, you can say, well I know that this
+  21:32thing is just gonna evaluate to this guy here,
+  21:34right. Because it was, it&#39;s false. And nowI&#39;ve
+  21:36got this five minus one, I can evaluate that
+  21:38to get four. And then I can do some
+  21:41kind of, I can inline the body of this
+  21:43method here. If I know that I&#39;m gonna be
+  21:45calling power with four and x, then I can
+  21:46just get this code in here with four substituted
+  21:49for the value of n. And then you can
+  21:51just keep doing the same thing -- you can
+  21:53say, well, four dot zero is gonna be false.
+  21:55So that means that bit of the program&#39;s gonna
+  21:56be x times power four minus one, and that&#39;s
+  21:58gonna be power three x and you can keep
+  22:0going, so you know, two, one, zero -- you
+  22:3keep generating more multiply by x&#39;s.
+  22:5When you get down to zero, you get into
+  22:7this situation where now you&#39;re saying, ifzero dot
+  22:9zero, which is gonna evaluate to true, whichmeans
+  22:11you&#39;re gonna end up with one there. So just
+  22:14to tidy that up a bit, you end up
+  22:15with a definition of power five that is just
+  22:17x multiplied by itself five times, then multipliedby
+  22:20one. And actually most partial evaluatorswill be smart
+  22:22enough to realize that if you&#39;ve got somethingwhich
+  22:24is a number, and you multiply it by one,
+  22:26then you can just get rid of that.
+  22:27So this is kind of the residual program that&#39;s
+  22:29left over after the partial evaluation. Andyou can
+  22:33see it&#39;s made of bits of the original program,
+  22:36just kind of like rearranged and stuck togetherin
+  22:38different ways. The partial evaluator hasn&#39;tmade any new
+  22:41Ruby. It&#39;s just used all of the existing Ruby
+  22:43and kind of moved bits of it around and
+  22:44figured out, like, what it should look like.
+  22:47And the point of doing this, of course, is
+  22:48that this version of power_5 should be faster,you
+  22:51know, this doesn&#39;t make any recursive methodcalls. It
+  22:54just multiplies x by itself five times, whereasthis
+  22:56thing has got, like a, every recursive call,you&#39;ve
+  22:59got a new stack frame, it does the conditional
+  23:0and then it does another multiplication andstuff like
+  23:3that.
+  23:3So this is like a better version of the
+  23:4original method if you, if you know that n
+  23:6is gonna be five.
+  23:9And just as a side note, this isn&#39;t the
+  23:10same thing as partial application, which youmight be
+  23:12thinking about, which what partial applicationis when you&#39;ve
+  23:15got a method like this, and you make a
+  23:16new method that just fixes one of the arguments
+  23:19to it. So I could define power_5 by just
+  23:21saying, well, call power with five as itsfirst
+  23:23argument, and if I run that on the console
+  23:25then that does work, you know, power fiveof
+  23:27two is thirty-two, cause that&#39;s two to thepower
+  23:28of five.
+  23:31But this new version of the method isn&#39;t any,
+  23:33isn&#39;t better than the original one. I mean,actually
+  23:35calling, this is gonna be slightly slower,because you
+  23:36get another stack frame. There&#39;s another methodexecution going
+  23:39on there.
+  23:40Another way of doing this in Ruby is, instead
+  23:41of defining a new method here, what I could
+  23:43do is turn this power method into a proc,
+  23:45and then I could use the curry method to
+  23:47turn it into a curry proc, and then I
+  23:49could call that with one argument, and that&#39;llreturn
+  23:52me a new proc, which when I call it
+  23:53with a second argument, it gives me a new
+  23:55value back.
+  23:56So partial application is a little bit similar,but
+  23:59partial application is a technique that youdo inside
+  24:1your program. You make new values, new functionvalues,
+  24:4in sort of functional programming terms, thatallow you
+  24:7to fix the arguments to some of your other
+  24:9functions. But partial evaluation is somethingthat happens from
+  24:12the outside of your program. It&#39;s like a source-level
+  24:14transformation of your program that hopefullymakes it sort
+  24:17of faster and more specialized to particularinput values.
+  24:21So I just wanted to note that there are
+  24:22a couple of, like, useful applications ofthis technology.
+  24:27The main point of this is that you can
+  24:29take a general program and a partial evaluatorcan
+  24:32specialize it for you for a fixed input. So
+  24:34this is kind of the best of both worlds.
+  24:36You can write a general program that is, you
+  24:39know, maximally general and can accept lotsof different
+  24:42kinds of input, but then you can use a
+  24:44partial evaluator to reach a specialized versionof it
+  24:47that has got all of the overhead involvedin
+  24:49choosing what kind of thing you&#39;re dealingwith kind
+  24:51of baked out of it. And you can run
+  24:53the specialized version of the program, which&#39;llhopefully be
+  24:55faster.
+  24:56So that&#39;s, that&#39;s pretty good. Some of thethings
+  24:58you could do with that, for example, if you&#39;ve
+  25:0got a web-server like Apache or, or EngineX,you
+  25:3know, that reads in a config file when it
+  25:5starts, after the config file controls theexecution of
+  25:8the web-server, and you have to imagine thatthe
+  25:10web-server is spending some of its executioncycles, like,
+  25:12checking stuff that it has been configuredto do.
+  25:15And so in principle what you could do is
+  25:17specialize the whole, you know, web-server,and give it
+  25:20just your config file as the input, and the
+  25:22partial evaluator will generate you a newversion of
+  25:24the web-server that&#39;s designed just to runyour config
+  25:27file, and hopefully all of the overhead ofreading
+  25:29the config file and checking config flagsis not
+  25:31gonna be part of the program anymore. It will
+  25:33have been partially evaluated.
+  25:35Similarly, this is the classic example inthe partial
+  25:37evaluation literature, is like a ray tracer.If you
+  25:40had a three dimensional scene and you wantedto
+  25:42fly a camera through it, then you might end
+  25:44up rendering a million frames with your arraytracer
+  25:46as your camera moves through the scene. Butthe
+  25:48scene&#39;s the same every time. So you couldtake
+  25:50a general ray tracer and specialize it witha
+  25:53respect to a particular scene file, and thepartial
+  25:56evaluator would generate you a new ray tracerthat
+  25:57can only ray trace that scene, and then if
+  26:0you run that a million times, and each time
+  26:2you move the camera slightly, all of the overhead
+  26:4of building all of the polygons and stuffin
+  26:6the scene and, you know, figuring out whatall
+  26:8the directives in the scene file mean andstuff
+  26:10like that, will have gone away.
+  26:12And a third sort slightly more practical butmore
+  26:15questionable example is, in, in Mac OS ten,the
+  26:20OpenGL pipline is bits of the OpenGL pipelineare
+  26:24written in LVM intermediate language, andit has implementations
+  26:29of stuff which is implemented in hardwareon some
+  26:33GPUs. So Apple ships all of the software implementation
+  26:37of all the stuff that your GPU may or
+  26:39may not do, in LLVM intermediate representation,and then
+  26:42when you actually run it on your machine,and
+  26:44it can see what your GPU is capable of,
+  26:47all of the stuff that your GPU already does
+  26:49kind of gets, gets partially evaluated away,and it
+  26:51just get runs on hardware, whereas all the,all
+  26:53the features that your GPU doesn&#39;t have isgonna
+  26:56stay in the OpenGL pipeline written as software,right.
+  26:59So, anyway, at the beginning, I promised youI
+  27:3was gonna tell you a cool story. So here&#39;s
+  27:4the cool story.
+  27:7In 1971, this guy, Yoshihiko Futamura, realizedsomething cool
+  27:12when he was working at Hitachi Central ResearchLaboratory.
+  27:15He was thinking about partial evaluation.He was thinking
+  27:18about how, with partial evaluation, you haveyour inputs
+  27:21and your subject program and you get youroutput,
+  27:23and you can use partial evaluation to timeshift
+  27:25that bit to do, to earlier, so that you
+  27:28get this residual program that you can runlater.
+  27:31And he was thinking about that in the context
+  27:32of interpreters and thinking, well, an interpreteris just
+  27:35a computer program, and it&#39;s just a programthat
+  27:38I provide inputs to, and then that programruns
+  27:41and then I get some output. I mean, one
+  27:42of the inputs happens to be a program, but
+  27:44it&#39;s basically just a box that takes two inputs
+  27:46and I get some output out.
+  27:49So what would happen if I used partial evaluation
+  27:51to time, to sort of time shift some of
+  27:53this work, if I did this part of the
+  27:56computation earlier, so that I could do therest
+  27:58of it later with the residual program. Sohere&#39;s
+  28:1what happens -- if you treat the interpreteras
+  28:3data rather than executing it as a program,you
+  28:5feed the interpreter into a partial evaluator,and you
+  28:9get this residual program out.
+  28:10So this is called, this is called kind of
+  28:12partially evaluating the interpreter withrespect to the source
+  28:15program, so this is an input to the interpreter,
+  28:17and you put both of them into the partial
+  28:19evaluator, you get a residual program out,right? Which
+  28:21has done half of the work of the interpreter.
+  28:24And then at some later time you can take
+  28:26that residual program, run it, we know, withthe
+  28:28original input to that program, and you getthe
+  28:30output.
+  28:33So he was looking at this and thinking about
+  28:36it, and sort of saying, well, this thing I&#39;ve
+  28:38got down here, that reads an input, and then
+  28:42produces output, like that&#39;s usually whatwe&#39;d call the
+  28:45target program. This is a version of the source
+  28:47program that will execute directly on theunderlying machine,
+  28:50so what I&#39;ve got myself there is a target
+  28:51program. So that means that what I got out
+  28:53of the partial evaluator was a target program.
+  28:56So there&#39;s something up here which is readin
+  28:59a source program, and it&#39;s generated a targetprogram,
+  29:1which I can run later. So what is this
+  29:4thing that I&#39;ve got in the green box, anyone?
+  29:7Right, that&#39;s a compiler, right. So there&#39;syour compiler
+  29:10for free -- no refunds.
+  29:14So that&#39;s, that&#39;s pretty cool. How does thatwork?
+  29:16Does that, I mean that seems like, too good
+  29:19to be true, right. Let&#39;s just go through a
+  29:22quick example.
+  29:23So here&#39;s my, here&#39;s my simple interpreterwritten in
+  29:27Ruby. I&#39;ve added some furniture, right. Sothe actual
+  29:29overall program that works as a simple interpreteris
+  29:32gonna read in the source and the startingenvironment
+  29:34by binding some variables to their values,from somewhere.
+  29:37It&#39;s gonna somehow acquire the source codein the
+  29:39environment, and just use treetop to loadthe grammar
+  29:42and then it&#39;s gonna, it&#39;s gonna make, instantiatethe
+  29:45parse and then turn it into an abstract syntax
+  29:47tree, and then let&#39;s say it&#39;s just gonna print
+  29:49out the result of evaluating the originalprogram in
+  29:51the environment that you provided, right.
+  29:53So if we&#39;re gonna, if we&#39;re gonna do what
+  29:55Futumura suggested, we&#39;re gonna take, we&#39;regonna feed this
+  29:58into a partial evaluator and we&#39;re gonna giveit
+  30:0the simple source program as like partialinput, and
+  30:3then we&#39;re gonna evaluate as much of the program
+  30:5as we can and see what&#39;s left over.
+  30:7So that means that we&#39;re gonna provide a particular
+  30:10source, so one way or another, we&#39;re gonnaarrange
+  30:12that when this thing tries to read its source
+  30:13it actually gets the string of a simple program,
+  30:15say so this x equals two, y equals x
+  30:17times three. It&#39;s just an arbitrary program.
+  30:20So, firstly our partial evaluator can do somestacked
+  30:22analysis of this program and can do some constant
+  30:24propagation and say well if source is gonnabe
+  30:26that guy, then actually this instance of sourcehere
+  30:28is gonna be that code, and we don&#39;t even
+  30:30need source anymore, it&#39;s not mentioned anywhere.And, and
+  30:33now it knows what the value of this string
+  30:36is, it can partial evaluate all of this stuff,
+  30:38so this treetop loading the grammar, and thenbuilding
+  30:41the, building the ast by parsing this stringand
+  30:44then calling to_ast on it, that&#39;s, we&#39;ve alreadygot
+  30:47all the code to do that, and now we&#39;ve
+  30:49got all of the inputs to do that. I
+  30:50mean, I guess we&#39;re also assuming that this,the,
+  30:52the grammar is available.
+  30:54So assuming we just do all of that work,
+  30:56we end up with a program that looks like
+  30:58this, which is just the abstract syntax treeshould
+  31:0be the result of parsing that program andturning
+  31:2it into an abstract syntax tree, which isthe
+  31:3stuff I showed you before.
+  31:5So it&#39;s able to do all of this work
+  31:7up front, because it knows what the sourceprogram&#39;s
+  31:9going to be. So all that this program does
+  31:11now is it reads in an environment from somewhere,
+  31:14and then it constructs the abstract syntaxtree, this
+  31:17literal one, and then it just calls evaluateon
+  31:19it, with whatever the environment is.
+  31:23So what does calling evaluate on this abstractsyntax
+  31:25tree do? Well, we&#39;ve already got all the code
+  31:26to do that as well -- that&#39;s already part
+  31:27of the interpreter. I haven&#39;t showed it allon
+  31:29this slide, but I&#39;m assuming that we&#39;ve gotall
+  31:31of that stuff built into the simple grammar,right.
+  31:34So this is the abstract syntax tree that we&#39;ve
+  31:37got, and each one of these nodes, each one
+  31:39of these instances of a syntax class has got
+  31:41a definition of evaluate on it. So if a
+  31:43sequence evaluate looks like evaluate thefirst statement in
+  31:47the environment and then use that as the input
+  31:49to evaluate and the second statement in theenvironment,
+  31:52these assignments have got definitions thatsay evaluate the
+  31:55expression and then update the environmentwith a mapping
+  31:58from the variable named to the, to the value
+  32:0of evaluate in that expression.
+  32:2That multiply just says evaluate the left-handexpression, evaluate
+  32:6the right-hand one, multiply them together,and all of
+  32:8these things, like number, number and variablejust have
+  32:10these simple definitions that either justreturn their value
+  32:13or in this case just pulls a value out
+  32:14of the environment.
+  32:16So we&#39;ve got all of the data in this
+  32:18abstract syntax tree and we&#39;ve got all ofthe
+  32:19code, and actually the partial evaluator canboil all
+  32:22of this down to just a couple of lines
+  32:24of Ruby code, right. So firstly, all of these
+  32:26places where, here we&#39;ve got value and nameand
+  32:29value, well we know that the value is two
+  32:30and we know that the name is x and
+  32:32we know that the value is three there, so
+  32:33all of those things can just be inlined in
+  32:35those definitions of those methods by thepartial evaluator.
+  32:38And then all of these places where we&#39;re saying
+  32:40evaluate the expression, evaluate the leftexpression, evaluate the
+  32:43right expression, we know that they&#39;re gonnabe two
+  32:45and environment x and three, so we can inline
+  32:48all of those things into these definitionshere. And
+  32:51then again here we can see that the name
+  32:53is gonna be x, the name here&#39;s gonna be
+  32:55y, and the result of evaluating this expressionis
+  32:57gonna be environment x times three, so wecan,
+  33:0like, inline all of that stuff, and then finally
+  33:2up here we can see, well, evaluate the first
+  33:4expression is just gonna be this environmentdot merge
+  33:7x maps to two, and this evaluate the second
+  33:9expression is, the second statement, sorry,is gonna be
+  33:13update the environment. It&#39;s a little bittricky because
+  33:15the environment gets mentioned twice here.
+  33:17So what I&#39;m gonna need to do is, you
+  33:19know, the partial evaluator will be able todo
+  33:21this just, evaluate that first expressionand assign it
+  33:23to a variable and then use that variable here.
+  33:26So I&#39;ve got to go out of scope, a
+  33:27lot of detail there, you can see that all
+  33:28of the code and data that you need is
+  33:30there for the taking, and it can all be
+  33:32filed down.
+  33:33So the code I&#39;ve ended up with, just tidied
+  33:34up slightly, is that, right. Calling evaluateon the
+  33:37root node of that abstract syntax tree isgonna
+  33:39do this. The environment is the result ofupdating
+  33:42the environment with x is mapped to two, and
+  33:44then we make a new environment where y is
+  33:45mapped to whatever the value of x is times
+  33:48three.
+  33:48So going back to this original thing here,when
+  33:50we call ast dot evaluate with environment,we can
+  33:52replace all of this stuff with just that code
+  33:55that we just generate, right. So this is what
+  33:57we end up with. Read in the environment, make
+  33:59a new one by making x equal to two,
+  34:1and then print out the result of merging in
+  34:4y is equal to whatever the value of x
+  34:6is times three.
+  34:8And so comparing that to the simple programthat
+  34:10we started with, that, in a, like, wave of
+  34:14my hand through all of that, but we can
+  34:16see that we&#39;ve sort of compiled this simpleprogram
+  34:19into Ruby now. We&#39;ve got a Ruby program that
+  34:21does what this thing does. I mean, there&#39;ssome
+  34:24machinery involving environments and stuff,but basically we&#39;ve turned
+  34:27it into Ruby.
+  34:28But in order to do that, I didn&#39;t have
+  34:29to write any new Ruby. This thing here is
+  34:32just bits of the interpreter stuck together,and the
+  34:35partial evaluator has stuck together bitsof source code
+  34:37from the interpreter in such a way that it&#39;s
+  34:39now a Ruby implementation of the program westarted
+  34:42with. So that&#39;s kind of how you can compile
+  34:44stuff with partial evaluation.
+  34:46So this is called the first Futamura Projection,right.
+  34:50If you partially evaluate an interpreter withrespect to
+  34:52some source code, you get a target program.
+  34:57So that&#39;s really good. Futamura was prettypleased with
+  34:59himself when he realized that. So this isthe
+  35:2picture I showed you before. When he was thinking
+  35:4about this, specifically he was thinking aboutthe first
+  35:6part of this, and he was thinking, well, when
+  35:9I&#39;m feeding an interpreter and a source programinto
+  35:11the partial evaluator and getting a targetprogram out
+  35:13later, I&#39;m really just passing inputs intoa program,
+  35:16so what would happen if I used partial evaluation
+  35:19to time shift some of this in, and do
+  35:22it earlier, if I, if I fed the interpreter
+  35:26into the partial evaluator first and got aresidual
+  35:28program out that I could then feed the source
+  35:30program into, would that work?
+  35:31So he tried that. Here&#39;s what happens. Sotreating
+  35:34the partial evaluator&#39;s input, you can feedthe partial
+  35:37evaluator and the interpreter into the partialevaluator, and
+  35:40when that runs, you get a residual programout.
+  35:41When you&#39;ve got the residual program thenlater on
+  35:44you can run that with the source program as
+  35:45input, and you get a target program out, and
+  35:47then later on, you can run the target program
+  35:50with the original input to the program asinput
+  35:52and get some output out, right.
+  35:54So that makes sense. That&#39;s just, we&#39;ve justsplit
+  35:56it apart with more, you know, with time again.
+  35:58But when he looked at this, he thought, well
+  36:0that&#39;s what I&#39;ve got here is that I&#39;ve got
+  36:1a source program going in, into the residualprogram,
+  36:4and I get out the target program, so what
+  36:6is this residual program that I&#39;ve got?
+  36:9Right. That&#39;s the compiler. So that meansthat what
+  36:12I got out of the thing here was the
+  36:14compiler, so that means that what I&#39;ve gotmyself
+  36:15here is a compiler generator. So if, thismeans
+  36:20that if you&#39;ve got any interpreter, you cangeed
+  36:22it in, you can specialize, you can partiallyevaluate
+  36:25a partial evaluator with respect to that interpreterand
+  36:28you can get a compiler for that language.
+  36:30So this is sort of a higher order version
+  36:32of what I showed you the first time. This
+  36:33gives you a mechanism for generating a compiler,and
+  36:35then you can feed any source program intoit.
+  36:37You don&#39;t need to involve the partial evaluatorat
+  36:39this point. You&#39;ve just got a bonified compilerthat
+  36:42you can run and it will compile your language.
+  36:44So that&#39;s really cool. That&#39;s called the SecondFutamura
+  36:46Projection. If you partially evaluate a partialevaluator with
+  36:49respect to an interpreter, you get a compiler.
+  36:52So Futamura was pretty pleased with himselfwhen he
+  36:55realized that. And he was thinking about this,and
+  36:58specifically he was thinking about this firstbit.
+  37:0And he was looking at this and thinking, well,
+  37:5really the parti- this is really just feedinginput
+  37:7into a program. So what would happen if, if
+  37:13I time shifted this part of the executionand
+  37:15did it earlier so that I could get a
+  37:16residual program out, and then I could feedthe
+  37:19interpreter into it later to do what I&#39;m doing
+  37:22here.
+  37:22So here&#39;s what happens if you do that. So
+  37:26you treat the partial evaluator as input,and so
+  37:28you feed the partial evaluator and the partialevaluator
+  37:31into the partial evaluator. And you get outis
+  37:35a residual program, and then later on youfeed
+  37:37the interpreter into the residual programand then that
+  37:39runs and then you get a compiler, and then
+  37:41later on you run the compiler with the source
+  37:43program as input and then you get a target
+  37:44program, and then later on, you run the target
+  37:47program with input as input and you get the
+  37:49output.
+  37:50But this thing here, the residual programthat takes
+  37:53an interpreter and turns it into a compiler,is
+  37:56a compiler generator. So that means that whatwe
+  37:59got out of the thing here was the compiler
+  38:0generator. So what&#39;s this thing we&#39;ve gotup top?
+  38:4It&#39;s a compiler generator generator.
+  38:10So this is the Third Futamura Projection,right. If
+  38:13you partially evaluate a partial evaluatorwith respect to
+  38:16a partial evaluator, you get a compiler generator,and
+  38:20thankfully, we can&#39;t take it any further thanthat,
+  38:22because if you did this again, you&#39;d justbe,
+  38:24you&#39;d still be partially evaluating a partialevaluator with
+  38:27respect to a partial evaluator. So there areonly
+  38:29three Futamura Projections.
+  38:31So this is really cool, and this is why
+  38:33I wanted to tell you about this. I think
+  38:34it&#39;s funny and interesting and like unusual.However, it
+  38:38doesn&#39;t mean that we don&#39;t need compiler writersanymore,
+  38:40right. Partial evaluation is a fully generaltechnique for
+  38:43evaluating bits of computer programs. SO itgets rid
+  38:46of the interpretive overhead of the com-=of the,
+  38:49of evaluating a program, but it doesn&#39;t doany
+  38:52of the clever stuff like inventing new datastructures
+  38:54or optimizations or doing anything kind ofplatform-specific. So
+  38:59we still need smart people to write compilersto
+  39:1make our programs go fast.
+  39:2But this technique does remove some of theoverhead
+  39:6of interpretation, right. It removes all ofthat stuff,
+  39:9that involves parsing and generating codeand all of
+  39:13that stuff. So if you&#39;re sufficiently interestedin this,
+  39:15that you&#39;d like to learn more, then there&#39;sa
+  39:18really interesting book called Partial Evaluationand Automatic Program
+  39:22Generation, which is res- which is now availablefor
+  39:24free, so I&#39;ve, if you go to that url
+  39:27there you can download a copy of that. It&#39;s
+  39:29a really good text book. I recommend it.
+  39:32Also, various bits of software that you mayor
+  39:34may not be familiar with, you use techniqueslike
+  39:36this, or like the git and LLVM, and the
+  39:38bits of the PyPy toolchains like Rpython andthe,
+  39:41the VM and the git that underlied that, used
+  39:43some of these program specialization techniques.
+  39:47Rubinius sits on top of LLVM, so when you
+  39:49use Rubinius, stuff that&#39;s a little bit likethis
+  39:51is happening, and, and there&#39;s a Ruby implementationcalled
+  39:54Topaz, that sits on top of the PyPy toolchain
+  39:57and is a Ruby implementation that&#39;s writtenin Python.
+  39:59So if you use Topax Ruby implementation thenit&#39;s
+  40:2kind of stuff like this is happening insideTopaz
+  40:4when you run your program. It happens at run
+  40:6time rather than compile time.
+  40:9And quite aside from the partial evaluationstuff, Rubinius
+  40:13and JRuby are great because they are compilersthat
+  40:16have got, like, interesting and accessibleimplementation. So if
+  40:19you feel like you could become interested,sort of
+  40:21in the spirit of Matz&#39;s keynote yesterday,if you
+  40:23feel like you want to get involved with stuff
+  40:25and you&#39;re interested in these kind of programsthat
+  40:27generate programs, then you could do a lotworse
+  40:29than cracking open Rubinius or JRuby and havinga
+  40:31look at how they work and maybe, you know,
+  40:33submitting a pull request or something.
+  40:35So much more generally than that, if you&#39;regenerally
+  40:38interested in this sort of thing, I&#39;ve writtena
+  40:40book about all this sort of thing, which uses
+  40:43Ruby to go over all of these kinds of
+  40:44things and interperters and compilers andthe lambic calculus
+  40:48and cellular atomator and stuff? So if you&#39;reinterested
+  40:51there&#39;s a book that you can read.
+  40:52There&#39;s a website for it. I&#39;ve already givena
+  40:55discount card so you can get fifty percentoff
+  40:56if you use RubyConf as the discount code.
+  40:59That&#39;s all I want to say. Thanks very much.

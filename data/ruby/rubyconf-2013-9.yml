@@ -1,0 +1,914 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=D9j_Mf91M0I
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16CONRAD IRWIN: I&#39;m Confrad.
+  0:17I&#39;m one of the maintainers of Pry.
+  0:19And today I want to talk with you guys
+  0:21a bit about REPL-driven development.
+  0:23So REPLs have been really popular
+  0:25since the Lisp days - the 1960s,
+  0:27that&#39;s a long time ago now, when they realized
+  0:30that there&#39;s not much difference between
+  0:32the data in your program
+  0:34and the code that your program is running.
+  0:36So wouldn&#39;t it be nice if you could just
+  0:37take a string and then run it as though
+  0:40it were code? And that gives you the eval
+  0:42function, which is the core to making somethinglike
+  0:44a REPL work.
+  0:46So in Lisp days, they had Lisp, they had
+  0:48a REPL, and the idea is that you read
+  0:50in a line from the user, you run it,
+  0:53you eval it, see what it does, print out
+  0:55the output, and then you just loop aroundto
+  0:57start again. And all the modern scriptinglanguages, so
+  1:0Python, JavaScript, Ruby, they all have aneval function
+  1:3and they all have REPLs built with that.
+  1:7In Ruby, building a REPL is really, reallyeasy.
+  1:9It looks exactly like it says on the tin.
+  1:12You just read a line, eval it, puts it,
+  1:15and loop back around again. Indeed, like,IOB ships
+  1:19with Ruby. In principle. They&#39;ve added a bitof
+  1:21fluff to make it work better, but under the
+  1:24hood is this one line of code that&#39;s pairing
+  1:26IOB.
+  1:28It&#39;s exactly the same line of code that started,
+  1:30I don&#39;t know, Pry started exactly the same.Pry
+  1:32is a REPL. Started with this line of code
+  1:35and then the first git revision is about seventy-five
+  1:37lines that wrap this to make it better. So
+  1:40John Mare was the guy who originally createdit.
+  1:42He&#39;s at Bannister Fiend if you want to follow
+  1:44him on Twitter. He&#39;s kind of cool. Writesdeveloper
+  1:46tools all the time.
+  1:48So we started from this one line of code,
+  1:50git revision one was seventy-five lines ofcode. And
+  1:53because nothing ever gets smaller, we&#39;re nowat twelve
+  1:55thousand lines of Ruby. Which is a lot. But
+  1:59we&#39;ve done quite a lot to improve on this.
+  2:1So, there are about three majors areas inwhich
+  2:4Pry beats this one line. Firstly, and mostobviously,
+  2:8if you look here, if you do anything wrong
+  2:11in that readline and it crashes, the entireREPL
+  2:14just falls apart and you have to restart it
+  2:16and go from scratch. So Pry will catch exceptions.
+  2:19It will tell you what&#39;s going wrong. And it
+  2:21won&#39;t make a fuss about it. It&#39;s not like
+  2:22a massive stack trace. It&#39;s just, hey, youhave
+  2:24an exception, maybe you want to try again.
+  2:27We&#39;ve also made it so if you want to
+  2:29define a method, if you want to do something
+  2:30that takes multiple lines, you can do that.So
+  2:33robustness is something we&#39;ve really workedon. We have
+  2:35about four million downloads now, so everyoneis hammering
+  2:38it. Pry just kind of works out of the
+  2:40box.
+  2:42The second major area we&#39;ve improved is makingit
+  2:45fun and easy to use. So the one line
+  2:48there is just puts. We do kind of pretty
+  2:52inspection. We do syntax highlighting bothinput and output.
+  2:56We ma- try and make it really easy to
+  2:58read what&#39;s coming out. We&#39;ve also added thingslike
+  3:0tab completion. IRB has a bit of tab completion.
+  3:3Pry takes that to the next level.
+  3:5Just to make it easy to interact with. You
+  3:8don&#39;t need to always type everything out correctly,just
+  3:10tab complete and that will fill in methodnames
+  3:12for you.
+  3:14And the third way in which we&#39;ve improvedPry
+  3:16is we&#39;ve added introspection commands. SoRuby is an
+  3:19awesome language and has all kinds of dynamicfeatures
+  3:21for looking around and seeing what your programis
+  3:24doing. Most obvious one of this is if you
+  3:26call the class method on an object, it says
+  3:29I am this class. So it, you can get
+  3:32ActiveRecord base, so you can get whateverout.
+  3:34And there are other more complicated ones,like dot
+  3:37methods, will give you the list of methodsthat
+  3:39you can call on an object. Pry knows all
+  3:41about all of these things, and knows all about
+  3:43the bugs and the edge cases in them. And
+  3:45it wraps them up and tries to make them
+  3:47easy to use.
+  3:48And so a big part of the later bit
+  3:49of this talk is going to be demonstratinghow
+  3:51Pry&#39;s commands can help you explore Ruby programswithout
+  3:55having to go through so much effort yourself.The
+  4:0question you should all really be asking,though, is
+  4:2twelve-thousand lines of Ruby. That&#39;s a lot.
+  4:6And it is. Why did we, just like, four
+  4:9or five of us on the code team, there&#39;s
+  4:10thirty or forty people who&#39;ve sent poll requests-
+  4:12why was it worth doing that? Instead of just
+  4:15using the hack-y one line whenever we neededit?
+  4:19And the answer, I think, is REPL-driven development.So
+  4:23the idea is kind of similar to test-drivendevelopment.
+  4:27Don&#39;t write code first. And, with REPL-drivendevelopment, it&#39;s
+  4:30not even writing tests, so don&#39;t write testsfirst.
+  4:34Instead, work out the code you&#39;re going towrite
+  4:36using a REPL. And then start documenting itand
+  4:40writing it down properly.
+  4:42And the reason for doing this is that if
+  4:44you&#39;re in a REPL, and something goes wrong,it
+  4:46takes no time to fix it. You can just
+  4:48loop around and loop around. And so, onceyou&#39;ve
+  4:50used a REPL, the chances are the line of
+  4:52code you&#39;ve written actually works. Whichyou can&#39;t say
+  4:55if you&#39;ve just added it to a text editor.
+  4:58So test-driven development is very much aboutmaintainability, about
+  5:1writing nice APIs. REPL-driven developmentis about writing code
+  5:4that works first time, or making it way, way
+  5:6faster to get to working code. REPLs are so
+  5:10awesome that you can even find celebritieslike Spoc
+  5:12using them.
+  5:13That&#39;s the only way to make code perfect.
+  5:22So as a developer, I have a kind of
+  5:25problem, and I hope that you all share it
+  5:28with me, otherwise this is gonna be quiteembarrassing.
+  5:31But about eighty percent of the time, if I
+  5:34write down a line of code, it crashes. This
+  5:37is usually for something really, really simple.I have
+  5:39a typo. I have spelt the method name wrong.
+  5:41Or, you know, I&#39;ve just missed a plus. I&#39;m
+  5:45doing the wrong maths.
+  5:47And this is kind of unacceptable. If I pushed
+  5:50code out and it crashed eighty percent ofthe
+  5:52time, no one would use anything I&#39;d written.And
+  5:55you can see that really clearly when you look
+  5:57at GitHub&#39;s status page. So they actuallypublish how
+  6:0crash-y GitHub is. When I was writing theseslides,
+  6:3they crash on about, not point not not not
+  6:6eight percent of requests.
+  6:8What makes that number so astounding is thatGitHub
+  6:12isn&#39;t just one bit of code anymore. There&#39;sprobably
+  6:14thousands of method calls, or thousands ofchunks of
+  6:17code that go into serving each request. Andif
+  6:20you multiply those out, that kind of worksout
+  6:23that each method call on GitHub dot com has
+  6:26a failure rate of about eight in a billion
+  6:28times.
+  6:29And that&#39;s embarrassing for me because that&#39;sabout a
+  6:32hundred million times better than what I manage.So
+  6:37what do I do to fix this?
+  6:39Well, three simple things. If you run thecode,
+  6:42that&#39;ll tell you about all the typos. That&#39;lltell
+  6:44you about all the stupid little things thatyou&#39;ve
+  6:46just got slightly wrong. It&#39;s very quick todo.
+  6:50You just run the code, and then you have
+  6:51reasonable confidence. That&#39;s one of the reasonsthat test-driven
+  6:53development exists. It ensures that you&#39;veactually run the
+  6:57code before you deployed.
+  7:0The other things you can do. You can read
+  7:2the code around that. So if you&#39;re workingon
+  7:4an application, each line of code isn&#39;t inisolation.
+  7:7You&#39;re calling methods. There are methodscalling you. If
+  7:11you just read those methods, the chances areyou
+  7:13can get a good idea for what the code
+  7:16you&#39;re writing should expect. You can seehow other
+  7:19people are handling nils in the surroundingcode.
+  7:21You can get a feel for how you&#39;re code
+  7:23should be written to work the best.
+  7:26And so it&#39;s not as good as running the
+  7:27code. I mean, if you run the code, you
+  7:29have a very high degree of confidence thatit
+  7:32works. But it lets you get another level better,
+  7:34or, you know, one further level down the line.
+  7:39And it&#39;s also reasonably quick to do. Readinga
+  7:41few methods doesn&#39;t require understandingthe code. You&#39;re just
+  7:44looking around to see if you can spot anything
+  7:47obvious.
+  7:49Understanding the code is kind of the endgoal.
+  7:52If you can write code in a code base
+  7:54that you completely understand, you can probablyget away
+  7:57without running it. I mean, you should checkfor
+  7:59typos and things, but the chances are, ifyou
+  8:1fully understand your code base, you&#39;re notgoing to
+  8:4make silly mistakes, or you&#39;re going to makethem
+  8:6less often. And so like the ideal goal for
+  8:9everyone should be to understand the code.But the
+  8:11obvious problem is that can literally takeforever.
+  8:16If you&#39;re in the Lodge Rails app, there&#39;sthe
+  8:17whole of Rails. I don&#39;t know if anyone has
+  8:19the whole of Rails in their head anymore.And
+  8:22any app, like, of non, of substantial sizewill
+  8:27be tens of thousands of lines of code. It&#39;s
+  8:28going to take you days or even months to
+  8:30understand that stuff.
+  8:32So I tend to leave the understanding the code
+  8:34until the first two approaches have failedme. I
+  8:38run the code. It will take a few seconds.
+  8:40I can just iterate on that a few times.
+  8:42I&#39;ll read the code around if I need higher
+  8:44degrees of confidence. So if I&#39;m changingsomething deep
+  8:46in our data lair, I&#39;m like, this could be
+  8:48dangerous. I&#39;ll start reading around and checkingthat my
+  8:51assumptions are lining up with the assumptionsin the
+  8:53rest of the code.
+  8:55And this doesn&#39;t take me very long.
+  8:58It takes me particularly less time becauseI use
+  9:0Pry to do it. And this is where everything
+  9:3ties together. If you have a REPL, it makes
+  9:6it really, really fast to run code. You literally
+  9:8just pitch it in, run it, done. Pry has
+  9:11features to make it really, really easy toread
+  9:13code as well.
+  9:14You can just look at a method and it&#39;ll
+  9:16tell you the source code.
+  9:19I&#39;d like to think that it helps with understanding
+  9:20as well, because if you can inspect your program
+  9:23while it&#39;s running, it&#39;s easier to understand.But I&#39;ve
+  9:26noticed for myself that if I need to understand
+  9:28a gem, I&#39;ll git clone it. So Pry still
+  9:30has some way to go there.
+  9:31And what I&#39;d like to do now is just
+  9:34show you a little bit of, you know, how
+  9:36Pry works. This is going to be embarrassing,because
+  9:38I&#39;m going to deliberately make mistakes onstage so
+  9:40that I can debug them.
+  9:43So opening Pry is just like IRB. You just
+  9:46type in Pry. You have to have gem installed
+  9:48at first. And this is a task I had
+  9:51to do when I started at my new job.
+  9:53So I started a new job a few months
+  9:54ago. We&#39;re using Mongo. Before I&#39;d only everused
+  9:57Postgres. So I was like, eh, what&#39;s this thing?
+  10:0What do I do?
+  10:1So all I know is there&#39;s this local database,
+  10:4dollar Mongo - it&#39;s just a Ruby global variable.
+  10:6And you can see here how Pry&#39;s already starting
+  10:9to help. So we&#39;ve got dark green for globals.
+  10:11It&#39;s like, maybe you shouldn&#39;t be using this.
+  10:15Then classes are blue and strings, et cetera,et
+  10:18cetera. So you can see that this Mongo object
+  10:21is actually a moped session object. Well,I have
+  10:24no idea what one of those is. But I
+  10:26can look it up really easily. I don&#39;t need
+  10:28to go to GitHub. I don&#39;t need to go
+  10:29to Google and try and work it out. I
+  10:31can just type question mark dollar Mongo.
+  10:33The full name for this command is show-doc,but
+  10:36why would you ever type eight characters whenone
+  10:37will do?
+  10:38So question mark Mongo is going to look up
+  10:41the documentation for moped session and thenshow it
+  10:43to me in the terminal. And you&#39;ll see that
+  10:45took no time at all. Why? Because Ruby code
+  10:48is all local. It doesn&#39;t have to go to
+  10:50the internet. It&#39;s just all there.
+  10:52And so if I skin read this, I can
+  10:53see that a session in Moped is the root
+  10:55for interactions with Mongo. It can talk toa
+  10:58single database or dynamically multiple databases.But what I&#39;m
+  11:1interested in here is this example.
+  11:3It&#39;s like, here&#39;s how to use Mongo. This is
+  11:5exactly what I want.
+  11:7So I want to find a user in the
+  11:9user&#39;s table. I want to look up my user,
+  11:11so I have an admin user, and I want
+  11:12to just find it. And so this should be
+  11:15easy to do. I can just ask Mongo for
+  11:19it&#39;s user&#39;s collection, and then find theone that
+  11:22has the name of Conrad.
+  11:26And that didn&#39;t do what I wanted. Why not?
+  11:29I don&#39;t know.
+  11:30So let&#39;s have a look at the find method
+  11:32and see what it&#39;s actually doing. So justlike
+  11:35question mark is for showing documentation,dollar is for
+  11:38showing source code. That&#39;s also show-sourceif you type
+  11:41it out fully.
+  11:43And if I run that, I can see, oh.
+  11:45Well, the find method doesn&#39;t actually findanything. All
+  11:48it&#39;s doing is creating a new query. So my
+  11:51next question is going to be, well, thanksMongo.
+  11:55What do I do now?
+  11:56AUDIENCE MEMBER: [indecipherable - 00:11:58]
+  11:59C.I.: Oh, sure.
+  12:2Yeah. Doesn&#39;t help, no.
+  12:5I&#39;m not sure I can make this - maybe
+  12:7I can do something like this. Cool.
+  12:13Is that high enough? Cool.
+  12:18OK, so I have this find method. It&#39;s returning
+  12:22me a moped query. What do I do with
+  12:24one of those? Well, this is the third Pry
+  12:26command I want to show you. Ls shows you
+  12:28the list of methods on classes, or methodson
+  12:31objects. So I can just ls Moped::Query andit
+  12:35shows you, well, here are all the things you
+  12:37might do with a query.
+  12:38So you can iterate over them with each, you
+  12:40can use one or first to find one of
+  12:42them. And so that&#39;s now what I&#39;m going to
+  12:44do. So I just use the upper arr- up
+  12:47arrow a few times. I&#39;m back here. I can
+  12:50find one user and that&#39;s fine. That&#39;s notactually
+  12:53the user I was looking for, though. If you
+  12:54notice here it&#39;s not the admin user that I
+  12:57was hoping to find.
+  12:58Maybe if I get all of them that&#39;ll work.
+  13:1But still not. Doesn&#39;t matter - Mongo hasa
+  13:5way of querying for everything in an array.So
+  13:8here I&#39;m going to look up everything in Mongo
+  13:10that has my name or my full name, and
+  13:14I run that and Pry says, no.
+  13:17Why does it say no? Well, if you look
+  13:19you can see this dollar in has been highlighted
+  13:21like it&#39;s a global variable. And so it turns
+  13:23out you can&#39;t use the new hash syntax unless
+  13:25you have valid symbols. So we just go back
+  13:28the old fashioned way, us a string and make
+  13:31that dollar in.
+  13:33And then finally I find both the users I&#39;m
+  13:34looking for. So here&#39;s the admin user withthe
+  13:36full name. Here&#39;s the non-admin user withjust my
+  13:39temporary name.
+  13:39So hopefully it was obvious that most of those
+  13:44things were deliberate. If you&#39;re in doubtlet me
+  13:48know later.
+  13:50And this is just the three commands I showed
+  13:53you. So this is the core bread and butter
+  13:54of using Pry to work out how to write
+  13:57code. I mean, you can just type lines of
+  14:0code in - I couldn&#39;t fit that on the
+  14:1slide in an easier to say way. But type
+  14:4in lines of code, watch it crash, fix it.
+  14:7It takes no time.
+  14:8It&#39;s even quicker if you&#39;re not trying toexplain
+  14:9what you&#39;re doing as you&#39;re going. Then wehave
+  14:13introspection commands. So ls wraps objectdot methods, it
+  14:17shows you all the methods. It groups themby
+  14:19which class they&#39;re defined in. It highlightsthem depending
+  14:21on whether they&#39;re public or private. Andyou can
+  14:24use ls dash dash grep to find some of
+  14:26the specific names.
+  14:27So ls is kind of the work horse of
+  14:29Pry. In the same way ls and bash is
+  14:34basically the workhorse of Bash. Every timeyou CD
+  14:36someway, you write ls, and then you can see
+  14:37what&#39;s going on.
+  14:40Dollar, otherwise known as show source, showsyou the
+  14:42code and question mark, or show documentation,or show
+  14:45doc, shows the documentation. I find almostalways show
+  14:49source is more useful. I&#39;m not sure whetherthat&#39;s
+  14:52because people don&#39;t document very well orjust I
+  14:54don&#39;t know. Ruby is easy to read, I think,
+  14:56is the kind way of saying that.
+  14:59So those are the three things that, if you
+  15:1want to learn anything about how to use Pry,
+  15:2more than it&#39;s just IRB, other things youshould
+  15:5remember.
+  15:5Uh-huh?
+  15:6AUDIENCE MEMBER: [inaudible - 00:15:10]
+  15:9C.I.: Yes. Yes. So, actually what&#39;s the- oneof
+  15:13the funny things with the ls in Bash is
+  15:15it has a bug filed against it, which is
+  15:17too many options, cause there are twenty-sevenalso. Pry
+  15:20could probably do the same bug.
+  15:24So you can give it, like dash p will
+  15:26show you more, dash v will show you more,
+  15:28cause my default we hide all the ones on
+  15:30object because they&#39;re the same for everysingle thing.
+  15:33Yeah. Thanks. If anyone else has questions,I&#39;m happy
+  15:39to take them at any point.
+  15:43AUDIENCE: [indecipherable - 00:15:44]
+  15:45C.I.: I- so you can give them method names.
+  15:48So you can do like, show source puts. You
+  15:51can also, if you know which class they&#39;reon,
+  15:53do kernel pound puts. And if they&#39;re on an
+  15:56object you can do sort of dollar Mongo dot
+  15:59find. In theory you could put any Ruby expression
+  16:2in there, but the tokenizer&#39;s a bit weak sometimes.
+  16:4So generally object dot is the safest.
+  16:12So let&#39;s say I want to define REPL. I
+  16:14just do that, and you can see my prompts
+  16:16changed to have the star, which means hey,you
+  16:19started writing a Ruby expression, and thenI can
+  16:21just do loop puts eval readline, and thenyou&#39;re
+  16:28done.
+  16:28So that just works. And you can see it&#39;s
+  16:30syntax how I did it is indented it for
+  16:32me. I didn&#39;t have to type tab at all.
+  16:33It just worked.
+  16:38So REPLs are great. But, and this is kind
+  16:44of more into maintenance mode. So we haveGitHub.
+  16:48They have an exception rate of like 8 in
+  16:49a billion method calls. I still wonder howthey
+  16:52do that. They can&#39;t just be writing everyline
+  16:54of code right. They must be writing it in
+  16:56a cohesive way.
+  16:58And REPLs aren&#39;t great for this. They don&#39;tkeep
+  17:0a record of the things that you&#39;ve found that
+  17:2went wrong. If you try and change stuff you
+  17:4have to test it again manually. And as you&#39;re
+  17:6app gets larger and larger it can be really,
+  17:8really hard to construct one line of codein
+  17:10a REPL that actually tests anything useful.
+  17:15And so the obvious solution to this is, well,
+  17:17let&#39;s use tests as well. And so the way
+  17:20I tend to develop is finding the solutionin
+  17:22the REPL. I am a really, really big fan
+  17:23of this because, as I said, eighty percentof
+  17:25the time when I write code it doesn&#39;t actually
+  17:27work. So I can iterate really fast in the
+  17:30REPL, get a line of code that works, then
+  17:32kind of put it somewhere. Write some teststhat
+  17:34test what it should do and then duel the
+  17:37wiring, which is basically all the code app&#39;suse,
+  17:40have to, have left to write.
+  17:42I&#39;d like it if that let me write code
+  17:44that works first time. It still doesn&#39;t seemto
+  17:46always work. But it&#39;s a lot, lot better than
+  17:48eighty percent. I don&#39;t knoq quite how muchbetter.
+  17:54So when you&#39;re code gets- code base gets large,
+  17:57you need to start thinking about maintenance.You need
+  17:59to start thinking about, every line of codeI
+  18:1change has a potential to break the entireapp.
+  18:4Wouldn&#39;t it be nice if there were somethingautomatically
+  18:6testing stuff? And that&#39;s exactly what testsare for.
+  18:9The test-driven, test-driven development guysalso really love the
+  18:12idea of designing your API via tests. Becauseif
+  18:16you start building an object by calling it,you
+  18:19end up with a much natural, more easy to
+  18:21use object than if you&#39;re trying to take the
+  18:23really complicated bit of code you just wroteand
+  18:25then build an API outwards. You end up with
+  18:27something much more ugly.
+  18:28And the third thing, and kind of subtle thing
+  18:31they&#39;re really useful for, is for documentingassumptions. If
+  18:35there&#39;s a test that says, when I pass nil
+  18:37in here, it shouldn&#39;t crash, that probablymeans that
+  18:40someone is assuming they can pass nil in.So
+  18:42if I break that, it&#39;s going to break something
+  18:44else, and I can then use the fact that
+  18:46it&#39;s been tested to try and find where in
+  18:49the code this is a problem.
+  18:52Tests aren&#39;t the be all and end all, though.
+  18:57So the least favorite thing I have with them
+  19:0is they&#39;re slow to run. Because this meansthey&#39;re
+  19:4slow to write, because they&#39;re just code.So eighty
+  19:6percent of the time, I write one, it fails
+  19:9for the wrong reason or it passes when it
+  19:10should fail. It jut doesn&#39;t work. And thatmeans
+  19:13I&#39;m having to run these tests over and over
+  19:15again.
+  19:15And if you were at the performance talk just
+  19:17now, they were improving it. But still loadinga
+  19:20Rails environment isn&#39;t going to be instant,ever. And
+  19:24so it&#39;s these first two I want to fix.
+  19:26The bottom one I&#39;ve just put in because it&#39;s
+  19:27annoying. But in theory if you write reallygood
+  19:30tests that shouldn&#39;t happen.
+  19:36Obvious solution - let&#39;s use a REPL again.So
+  19:40Pry itself doesn&#39;t have integrations withindividual frameworks. It
+  19:46doesn&#39;t really have any C extensions. Pryitself will
+  19:49run on Ruby 1.8 or run on RBX. It
+  19:52will run on JRuby. But Pry plus is where
+  19:55all the cool stuff is.
+  19:56So if you&#39;re running on Ruby 1.9 or Ruby
+  19:592.0, install Pry plus and you&#39;ll get a whole
+  20:1load more magic up along with your Pry. And
+  20:4the two things I want to point out or
+  20:6ought to mention specifically are pry-rescue/minitestand pry-rescue/rspec.
+  20:11These things are kind of magic. What theydo
+  20:14is, when your tests fail, instead of havingto
+  20:17wait for the other 452 tests to pass, and
+  20:20then seeing the error message underneath,they just pause
+  20:23you right there and say, this test failed.Maybe
+  20:25you should look at it right now. It will
+  20:27save you time.
+  20:30We have it for minitest, we have it for
+  20:31rspec. If other people are using better testingframeworks,
+  20:34we can talk about integrating those afterwards.
+  20:38How does this work?
+  20:41So I have a test file - I&#39;m actually
+  20:43going to be testing that line of code we
+  20:44just, I just showed you in the REPL. I
+  20:47run the test, it&#39;s going to fail. So Pry&#39;s
+  20:49going to open. It says, I expected to find
+  20:53two users. So here it&#39;s finding users, whichis
+  20:56the line of code, it should find both the
+  20:59non-admin user called Conrad and the adminuser called
+  21:1Conrad Irwin.
+  21:2But for some reason it&#39;s only finding one.
+  21:7I don&#39;t really know what the problem is yet,
+  21:8but the chances are it&#39;s inside the find user
+  21:10method. And so what I&#39;m going to do is
+  21:12I&#39;m going to add a break point using the
+  21:14break command at the find user method.
+  21:16This means next time the find_user methodgets called,
+  21:19instead of running the code, it&#39;s going todump
+  21:22me into Pry.
+  21:23So I&#39;ve added that break point. It&#39;s kindof
+  21:25verbose, but here it is. Break point on Mongo
+  21:27dot RB line three. And you can see that&#39;s
+  21:30exactly where I was talking.
+  21:32All I need to do now is call find_user
+  21:34again. But I don&#39;t want to have to type
+  21:36stuff in manually because the chances areI&#39;ll do
+  21:38it wrong. So instead I can just run try-again.
+  21:43Try-again comes from Pry rescue. And in thecontext
+  21:45of minitest or Rspec will just rerun the failing
+  21:48test. That means you can get, that means you
+  21:51can just keep cycling over this test untilit
+  21:53passes. You&#39;re not having to wait for theRails
+  21:55environment to load. You&#39;re not having towait for
+  21:57matches to be set up or anything. It&#39;s literally
+  21:59the smallest amount it can try again, it&#39;sgoing
+  22:2to do.
+  22:3If you use Pry rescue with Rails, try-againwill
+  22:6like rerun the web request. If you&#39;re usingPry
+  22:8rescue on just a stand-alone script, it willrerun
+  22:10the script from the start. So this is kind
+  22:12of the power, let&#39;s do stuff again and again
+  22:15and again, to see when it breaks.
+  22:18I run try-again, and you can see that my
+  22:20break point&#39;s been hit. So up here, breakpoint
+  22:231 first hit, and then here&#39;s the little arrow
+  22:25that says, and you&#39;re ready to start debuggingfind
+  22:28user.
+  22:29I can use step or next to move the
+  22:31arrow down a line. The difference is step,if
+  22:35there are any function calls, would step intothem
+  22:38so I could debug the sub functions. Next is
+  22:40just working over the top. And so if I
+  22:43do that again, I&#39;m on line six. Line six
+  22:45looks like the scary one. So it&#39;s probablythe
+  22:47broken one.
+  22:48I don&#39;t want to step over it yet, because
+  22:50I want to debug it. And so I can
+  22:52use the play command and just say play line
+  22:55six.
+  22:55What this is going to do is, it&#39;s as
+  22:57though I stepped over it, but instead it&#39;sjust
+  23:0going to run it and leave my arrow where
+  23:2it is.
+  23:4So indeed, we can see, playing line six gives
+  23:7me only one user back. It&#39;s only finding the
+  23:9admin user. It&#39;s not finding that cognitoConrad user
+  23:12I had before.
+  23:14And that&#39;s kind of surprising, because lookingat line
+  23:16six, that&#39;s exactly what we had in the REPL.
+  23:18Why is it broken? Well, I&#39;m guessing the problem
+  23:20is names. It involves the only thing I&#39;vechanged.
+  23:24And if I look at names, you can see,
+  23:26well, there&#39;s missing a space. So if I show
+  23:28you the source of the current method, showsource
+  23:31with no arguments does that, you can see that
+  23:33when I added the first and last name together
+  23:35I forgot you need to join them with a
+  23:37space.
+  23:37This is the kind of mistake I make all
+  23:39the time. I don&#39;t know whether you guys are
+  23:40just better programmers than me, but that&#39;show it
+  23:45is. Edit is Pry&#39;s way of saying, OK, we&#39;ve
+  23:49found the problem. Let&#39;s fix it. So edit dash
+  23:51m is edit the current method.
+  23:54And this is obviously very easy to do. I
+  23:56just add a space in here.
+  23:59And once I&#39;ve done that, the find_user methodis
+  24:3now fixed. Pry is reloaded it for me. I
+  24:5don&#39;t have to close everything and start itup
+  24:6again. Pry will take care of that. So all
+  24:9I need to do is disable this break point
+  24:11on find_user - I think it&#39;s, disable the first
+  24:14break point.
+  24:16And now I can stop debugging and just try
+  24:19again. And hopefully now the test will pass.Because
+  24:21I fixed the methods so that find_user actuallyworks.
+  24:25And indeed, when I run it, that&#39;s true.
+  24:28So you can see I had one test, and
+  24:30it thinks no failures just because I calledthem
+  24:32and rescued them for it.
+  24:45So the whole idea here is I run the
+  24:47test once. I loaded Rails once. I loaded everything
+  24:50just once. And I was able to run several
+  24:53lines of code, fix the problem, really interactively,and
+  24:56then move on the next thing. If I&#39;d had
+  24:58many failing tests, it would have just dumpedme
+  25:0in Pry the next time as well. And then
+  25:1I could have fixed it.
+  25:6A few more commands this time. So the top
+  25:8few are from Pry plus. Try-again is Pry rescue,
+  25:12and it gives you this idea of let&#39;s rerun
+  25:14the tiniest bit that failed again and seeif
+  25:17it still fails.
+  25:19Then break is adding break points. If you&#39;veused
+  25:22the Chrome developer tools, though, Eclipse,or any other
+  25:24debugger, you&#39;ll know there are break pointssupport. You
+  25:26just say, please stop on this line of code.
+  25:29Pry, you just name the method. You can name
+  25:31a file on a line if you want to.
+  25:32And that will just work.
+  25:35Then step and next are moving around onceyou
+  25:38stop the debugger. You can also use continueto
+  25:40say stop debugging now, or finish, to finishthe
+  25:43current function and go back up to the previous
+  25:47one.
+  25:48Play is actually core Pry, and it&#39;s basicallya
+  25:51copy and paste helper. I could have just copied
+  25:53and pasted that line into Pry, and it would
+  25:55have had the same effect. But the chancesare
+  25:57I&#39;d have copied, like, that line number atthe
+  25:59start, or something else would have gone wrong.
+  26:1So if I can use play, that&#39;s just more
+  26:2reliable.
+  26:4There&#39;s also the edit command. Edit is justmagic
+  26:7meta-programming, and I&#39;m very, very gladthat Ruby lets
+  26:10you do things like this. But we save the
+  26:12file and then we read it again, and that
+  26:14causes the methods to be redefined. It causeseverything
+  26:17to just get back into a good state.
+  26:20So it&#39;s really nice that Ruby lets you do
+  26:22that, and Pry just wraps it in a nice
+  26:24and easy to use way.
+  26:30So even with testing, stuff still goes wrong.So
+  26:34bugs just get through the net. Either becausethey
+  26:37don&#39;t happen very often, like GitHub eightin a
+  26:39billion is very good, but it&#39;s not zero. And
+  26:42the problem with this kind of bug is they
+  26:45get really hard to find. They get really hard
+  26:48to fix. Because the chances are they happen,like,
+  26:51only in production, and you never see them.Or
+  26:53they happen if Mongo takes more than fiveseconds
+  26:56but less than seven seconds to reply. Or something
+  26:59like that.
+  27:0And you just have to use your ingenuity to
+  27:1find them. The company I&#39;m working at nowis
+  27:4bugsnag, and we try and help you with this.
+  27:6So we&#39;re like, OK, we know you&#39;ve REPLd stuff.
+  27:9We know you&#39;ve tested stuff. Everything&#39;sworking in development.
+  27:13But still some stuff&#39;s going wrong in production.
+  27:15And so what we do is when that happens,
+  27:17we send you an email, we say, hey, user
+  27:19Fred just requested this page. It crashedfor him.
+  27:22This is what we think is why and then
+  27:24we let you try and fix it yourself.
+  27:26How do you fix bugs that happen in production?
+  27:30Well, three steps.
+  27:32Firstly, reproduce them. If you can&#39;t reproducethe bug,
+  27:35there&#39;s no way you know if you&#39;ve fixed it.
+  27:37Because you can&#39;t tell. And this is, like,a
+  27:41really difficult thing. This requires guesswork,almost. You can
+  27:45just be, you can see what&#39;s gone wrong. You
+  27:48can try and work out from the request if
+  27:49there&#39;s anything odd happening. But in theend, you
+  27:52just have to try stuff and see if you
+  27:54can get the same exception.
+  27:56Once you have that, you then have to find
+  27:59the problem. So there&#39;s a big difference betweenthe
+  28:2place where an exception was raised and theplace
+  28:4where your code is broken. So even once you&#39;re
+  28:6reproducing an exception locally, findingthe actual point of
+  28:9the problem can be tricky.
+  28:12Fixing it should be easy. Fixing it is just
+  28:13writing code. I&#39;ve already shown you how todo
+  28:15that. You just use a REPL. You can then
+  28:17write some tests so that the code never breaks
+  28:19again. That&#39;s easy. You just use a REPL.
+  28:22So the thing I really want to concentrateon
+  28:24now is how do you find the problem?
+  28:28And so this is the third and last kind
+  28:30of Pry show-off session. I have a file, run
+  28:35dot rb, and when I run it, I get
+  28:37this exception. Undefined method plus fornil.
+  28:41Anyone seen that one before?
+  28:44And the worst thing about it is, that&#39;s not
+  28:46going to be where the problem is. So this
+  28:49exception&#39;s happening on line 5 of Mongo dotrb.
+  28:51So let&#39;s have a look. Well, this is the
+  28:53method we&#39;ve seen before. This line is crashing.
+  28:58For the purposes of today, I&#39;m just gonnaadd
+  28:59a binding dot Pry, because I want to show
+  29:1you guys this.
+  29:2In real life, I would have just rerun the
+  29:4command with rescue instead of Ruby, and thatwould
+  29:6have intercepted it with Pry rescue, justlike the
+  29:9minitest example. But here&#39;s how you do stuffmanually.
+  29:12So if you put a binding dot Pry in,
+  29:14this is going to open Pry on the current
+  29:16binding. Bindings are magic Ruby objects thatjust encapsulate
+  29:20the currently running code.
+  29:22So this binding has access to names, it has
+  29:24access to self, it has access to everythingthat
+  29:27running code has access to. And there arekind
+  29:31of three uses for binding dot Pry. One is
+  29:33finding why exceptions failed, which is whatwe&#39;re going
+  29:36to see now.
+  29:37Another is for understanding code. If youhave some
+  29:40complicated algorithm, and you can see theinput&#39;s coming
+  29:43in here, you can see it&#39;s returning the right
+  29:44result, but you still don&#39;t know why, if you
+  29:47add a binding dot pry in, the chances are
+  29:49you can print out the values from inside Pry
+  29:51and just get a feel for what the algorithm
+  29:53is actually doing.
+  29:56The third use case is kind of edge case-y,
+  29:58but I&#39;ve used it a few times, and it&#39;s
+  29:59good fun. Have you ever been implementingsomething and
+  30:3you&#39;re like, I wish someone else had implementedthat
+  30:5other method? Well, what you can do is implement
+  30:9the method, but instead of writing the code,just
+  30:11put a binding dot Pry in, and then when
+  30:13that sub-function gets called, you just returnthe right
+  30:16value from Pry, and the calling code can tend
+  30:18to continue to run.
+  30:19So in that way you can kind of debug
+  30:21one function, even if it&#39;s dependents haven&#39;tbeen written
+  30:24yet. But for now we&#39;re just going to use
+  30:28the first use case. Something is going wrongon
+  30:31the next line, and I want to know what
+  30:32it is. So I&#39;m going to add a binding
+  30:34dot pry in just before it crashes. If I
+  30:37run, run dot rb again, instead of crashing,it
+  30:40now opens Pry. And I can show you the
+  30:43play command again.
+  30:44If I play line six over this now I
+  30:46get this crash that I&#39;ve seen before. Undefinedmethod
+  30:49plus for nil class. Well, OK, that was great.
+  30:56But how am I going to debug this? Clearly
+  30:58first is nil. Something is wrong somewhereelse in
+  31:1the code. And this is where Pry stack explorer
+  31:4comes in. So the up command is one of
+  31:8the methods that it provides for accessingthis stack.
+  31:11So programs that all organize into a callstacks,
+  31:13it starts at the top and then each thing
+  31:16calls down into the function below. So somethingis
+  31:19passing nil down the stack. We want to go
+  31:21up and have a look at what it is.
+  31:22We can just run up.
+  31:24And you can see now, I&#39;ve moved to line
+  31:26five of run dot rb and something is calling
+  31:29find_user with request dot first_name. I wouldreckon that
+  31:33request dot first_name is going to be nil.
+  31:35And indeed it is. Why?
+  31:38Well, I don&#39;t know yet. I&#39;m not inside request.
+  31:43So you can use up and down to move
+  31:44around the call stack, and then you can use
+  31:46cd to just move around sideways. So I&#39;ve moved
+  31:49up one level, and now I&#39;m going to move
+  31:51sideways into request. CD comes from Bash,same as
+  31:54ls. You should be - you should feel familiar
+  31:56with them is the idea.
+  31:58I cd into request. Out of habit I run
+  32:0an ls and you can see that there&#39;s a
+  32:3first_name and a last_name method. There&#39;sthis crazy Pry
+  32:5method which is just Pry internals. You cansee
+  32:9it has a instance variable at data, and then
+  32:11there&#39;s all of these local variables. As ageneral
+  32:14rule, anything that starts and ends with underscoreis
+  32:16Pry-related. And this is no exception.
+  32:19I want to highlight three of these which are
+  32:21useful, and the rest you can pretty much ignore
+  32:23forever.
+  32:24So let&#39;s say I do something like seven plus
+  32:26eight. Fifteen. That&#39;s great. Now in the nextline
+  32:30I want to reference that output, fifteen.I can
+  32:32just use underscore instead. And underscoreis going to
+  32:35be fifteen, because it always refers to thelast
+  32:38output.
+  32:39Underscore underscore is there because sometimesyou just want
+  32:41to go one before. It does the same thing.
+  32:46You can use underscore out underscore to getfurther
+  32:49back, but it&#39;s a bit complicated. The otheruseful
+  32:51one, however, is underscore ex underscore.Which is the
+  32:54most recently raised exception.
+  32:56So there&#39;s actually the thing we&#39;re tryingto debug
+  32:58right now, and you can do things like get
+  33:1its backtrace, ex dot backtrace. But becausethat&#39;s a
+  33:6really common thing to do, Pry actually hasa
+  33:8command to help you. And chances are exceptionsannoy
+  33:11you a bit, so if you just run wtf
+  33:15it gives you the first five lines of the
+  33:16backtrace.
+  33:19There you go.
+  33:26Anyway. We were debugging this thing. What&#39;swrong? So
+  33:31the first_name method is returning nil. Why?I don&#39;t
+  33:35know. Let&#39;s look at the source code.
+  33:36So there&#39;s dollar again, or show source. It&#39;sjust
+  33:39going to let me have a look and to
+  33:40see what&#39;s happening. Well, the first_namemethod is just
+  33:43reading the first name out of the data. That
+  33:46looks fine. The only thing that could possiblybe
+  33:49wrong is if first_name isn&#39;t in data.
+  33:52And if you look, you&#39;ll see I&#39;ve committedkind
+  33:54of the cardinal Ruby sin. These are strings.That&#39;s
+  33:58a symbol. It doesn&#39;t work. Yeah. My leastfavorite
+  34:2thing. I can use the edit command. It takes
+  34:5a method as well. Edit dash m will be
+  34:8the current method. If you give it a first_name
+  34:10method it will edit the first_name method.
+  34:12And then I can quickly fix this. I see
+  34:13last_name has exactly the same mistake.
+  34:17And so now I&#39;ve fixed these things. Pry has
+  34:21reloaded them automatically. I can call first_nameimmediately. There
+  34:24you go. It&#39;s fixed. So I&#39;m done debugging.I
+  34:27can cd back out again - dot dot, straight
+  34:30from Bash. And then - what was I looking
+  34:33at? Whereami is going to just show me where
+  34:36I am.
+  34:36So if you&#39;ve done a lot of cd&#39;ing around,
+  34:39it gets hard to keep track. If you&#39;ve moved
+  34:40up and down the call stack a few times,
+  34:42it&#39;s hard to keep track. So whereami, it&#39;lljust
+  34:44get you centered back in.
+  34:45Yeah?
+  34:46AUDIENCE: [indecipherable - 00:34:49]
+  34:49C.I.: I think there&#39;s - you call a thing
+  34:53called pi- pry-backtrace, which is just whereyou open
+  34:57Pry and the backtrace up there. So here, it
+  35:0will be - not paged, but that&#39;s essentiallywhat
+  35:4it does.
+  35:4AUDIENCE: [indecipherable - 00:35:06]
+  35:6C.I.: Yeah. And it will do that. The, I
+  35:9think that&#39;s the best command for using it.
+  35:12So if I ran whereami, it&#39;s showing me I&#39;m
+  35:15here. I can run down and then I&#39;m back
+  35:18into find_user, and this is where I was.
+  35:21Now I&#39;m going to remove that binding dot pry.
+  35:23This is one of the bad things about Pry.
+  35:25If you forget to remove it, it&#39;s just going
+  35:26to pause and wait for you forever. So I
+  35:28remove binding dot pry. This program crashedbecause I
+  35:31didn&#39;t fix it fast enough. It had alreadycalled
+  35:34find_user with nil. But now when I run ruby
+  35:36run dot rb, it&#39;s gonna print out my email
+  35:39addresses.
+  35:39So it&#39;s fixed. And I had to run it
+  35:42once. Luckily this would have been a reallyquick
+  35:44trip to run over and over again. But imagine
+  35:46if that were something in a Rails initializer,or
+  35:48something else that&#39;s going to take ten orfifteen
+  35:50seconds every single time you run it. It gets
+  35:53frustrating.
+  35:54Quick recap of the commands I&#39;ve shown you.Binding
+  35:58dot pry - not really a command, but the
+  36:0reason ?? or ?? of Pry [00:36:03]. So this
+  36:3was the reason that John Mare was like, yeah,
+  36:5we need to, we need to share this code.
+  36:7If you can open a REPL anywhere in your
+  36:9app, it enables so much cool stuff. You can
+  36:11understand things, you can debug things. Youcan even
+  36:14just, you know, intercept it and return manualvalues.
+  36:19Then there&#39;s cd. If you want to look inside
+  36:21an object, if you want to call private methods,
+  36:23if you want to get at instance variables,cd
+  36:26into the object. It will let you do whatever
+  36:27you like. It&#39;s as though you&#39;re running codeinside
+  36:30that method.
+  36:32Up and down let you move around the call
+  36:34stack. If you have a nil bug, chances are
+  36:37it&#39;s not doing it nil plus in the code.
+  36:39Something has passed a nil in. And so being
+  36:41able to move around the call stack lets you
+  36:43debug stuff like that.
+  36:44If you&#39;ve been using those three for awhile,whereami
+  36:48will show you where you are. I didn&#39;t actually
+  36:50show you the help command. We touched on it
+  36:52earlier. But if you&#39;re inside Pry and you&#39;relike,
+  36:55I wonder what Pry can do - try running
+  36:58help, and shield your eyes a little bit cause
+  37:0it goes on for awhile.
+  37:3But the basic useful ones are at the top.
+  37:5Here you&#39;ve got cd, you&#39;ve got ls, you&#39;vegot
+  37:7pry-backtrace that I just mentioned. Thenthere&#39;s various other
+  37:10things. Whereami, wtf. The more question marksyou add
+  37:14to wtf, the more backtrace if gives you.
+  37:19And then various commands for dealing withsource code.
+  37:21Edit, play, et cetera, et cetera. Right downat
+  37:24the bottom you&#39;ll find that I have, and I
+  37:28get that various gems installed, these almostall come
+  37:32from the Pry plus package. So there&#39;s moredocumentation.
+  37:35Pry plus gives you documentation for Rubysyntax as
+  37:38well as standard library and gems as well.
+  37:42Pry-em is just eventmachine. Integration,if you guys are
+  37:46using eventmachine, that&#39;s pretty useful.Git lets you do
+  37:48git operations with system methods. And thenthe two
+  37:51at the bottom are the real meta-programm-yones. Catch
+  37:56unhandled exception and move around in thecall stack.
+  38:4So in summary, you should be using a REPL.
+  38:7If you&#39;re not using it at all at the
+  38:9moment, then use it a little bit. If you&#39;re
+  38:11using it a little bit, use it more. It&#39;s
+  38:13not going to waste time. The chances are,when
+  38:15you write code, it actually doesn&#39;t work.And so
+  38:19if you can get very, very quickly to a
+  38:21point where you have confidence in the code,that&#39;s
+  38:23going to save you time.
+  38:24I also like to think it improves the quality
+  38:27of code. If it takes no time to write
+  38:29a line of code that works, you have no
+  38:31incentive to go, well I&#39;m not gonna touchthat
+  38:33code because it&#39;s scary. You can just fixit.
+  38:36And in that way of just really getting in
+  38:38touch with your code base is very useful.
+  38:41It&#39;s obviously also a lot of fun. If you&#39;re
+  38:45going to use a REPL and you&#39;re using Ruby,
+  38:46you should use Pry. IRB is OK, but Pry
+  38:49has color and commands and it&#39;s robust andit
+  38:54works. And that&#39;s about all I wanted to say.
+  38:56Thank you very much.

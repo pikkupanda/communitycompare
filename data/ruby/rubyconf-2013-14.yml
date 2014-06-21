@@ -1,0 +1,678 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=qzNNH2mnp08
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16SAM RAWLINS: Thanks everybody for stayingfor a late
+  0:18afternoon talk. So I&#39;m gonna talk today onRuby 2 point 1,
+  0:23a new feature in Ruby 2.1 called it&#39;s allabout,
+  0:26it&#39;s about tracing object allocations.
+  0:29My name is Sam Rawlins and on the internetI&#39;m srawlins.
+  0:33The slides are on my GitHub if you look atGitHub srawlins.
+  0:37So Ruby 2 point 1 o preview 1 is
+  0:39out. This is exciting. You can grab it with
+  0:42RVM. You can grab it with RVM. This is
+  0:46the Ruby 2.1 news file. If anybody saw Koichi&#39;s
+  0:50talk, he, he stole this from me. It&#39;s actually,
+  0:52I stole it from earlier talks of his where
+  0:55he does this, and the gag is that this
+  0:58is much smaller than the news file for 2.0.
+  1:0So the feature that I&#39;m gonna talk about is
+  1:2way in the corner there. It&#39;s ObjectSpacedot trace_object_allocations.
+  1:8So ObjectSpace isn&#39;t new. This module hasbeen around.
+  1:12People may have used it for things like count.objects
+  1:14or each.object. What&#39;s new in 2.1 is the ObectSpace
+  1:19dot trace_object_allocations method, and thensome sibling methods. You
+  1:24have trace_object_allocations_start, stop,clear, and a few others that
+  1:27they&#39;re, like, each day when you check thechange
+  1:29log they&#39;ve added a few more.
+  1:31So the ones in asterisks are not availableyet.
+  1:34They will be available in 2.1.0 preview two.I
+  1:36was hoping that would be released by RubyConfand
+  1:38it has not. So you can&#39;t get it with
+  1:41Ruby 2.1.0 preview one. You&#39;ll have to gethead.
+  1:44And I&#39;ll, I&#39;ll show that later.
+  1:47So let&#39;s start out with an anecdote from GitHub.
+  1:49They have a blog post called Hey Judy, Don&#39;t
+  1:52Make a Bad that kind of details this. So
+  1:56they looked and they saw, when they fire up
+  1:58the GitHub application, and immediately counthow many objects
+  2:1it has just right after firing it up, it
+  2:4has more than six-hundred thousand objects.And they thought,
+  2:6this is crazy and unexpected. Why is this?
+  2:11So they wanted to explore why this happens.Where
+  2:14am I supposedly hogging all this memory? Wheream
+  2:16I, where, what Ruby files and what classesare
+  2:20allocating all this memory? So this was areally
+  2:23hard problem to solve until Ruby, this newfeature
+  2:26in Ruby 2.1.0, trace_object_allocations, wehave lots of CPU
+  2:30profilers and other various tools, SQLingprofilers. But until
+  2:36this tool, this, that was a really hard question
+  2:37to answer. So let&#39;s look at an example. Hopefully
+  2:40there&#39;s enough contrast and you can, you canread
+  2:42this.
+  2:43So I, I&#39;m gonna, I have a class called
+  2:45myClass. It has two methods: an_array returnsan array,
+  2:49so therefore it allocates an array and returnsit,
+  2:52and then a_string returns a string after allocatingit.
+  2:56So let&#39;s look at an example of how we
+  2:58can trace that code. So what we can do
+  3:1is we have some code that we want to
+  3:2trace. It&#39;s allocating memory and we wantto see
+  3:5where. So that&#39;s gonna be the two lines in
+  3:8the middle of there. A equals myClass.newan_array. So
+  3:12we&#39;re saving that array variable. And myClass.newa_string. We
+  3:15save that s. And we want to trace this.
+  3:18So to trace it, you wrap your code in
+  3:20a block and pass it to trace_object_allocations.And then
+  3:24afterwards you have these methods availableto you. You
+  3:27can call ObjectSpace dot allocation_source_fileand pass it in
+  3:31you object. And that&#39;s gonna give you backexample
+  3:34dot rb, the file that it was, that it
+  3:36came from. And you can say allocation_source_linethat tells
+  3:39you line three. So back up there, the return
+  3:42that the array is on line three. You can
+  3:44also ask for the class path and the method
+  3:46ID that allocated your object.
+  3:50So another way to invoke this, if you, if
+  3:54it&#39;s maybe a little bit cloodgy or hard to
+  3:56wrap the code that you want to trace in
+  3:57a block, you can instead call trace_object_allocation_startand then
+  4:2run the code that you want to trace and
+  4:3then call trace_object_allocation_stop.
+  4:6That is, again, not available in preview one.That&#39;s
+  4:9in the trunk.
+  4:11So why are we doing this? Why is this
+  4:12a useful feature. In general, you, many, manyproduct
+  4:19companies are, are in the position where theywant
+  4:21to reduce their memory footprint. You havea large,
+  4:24maybe a Rails app that&#39;s using a lot of
+  4:26memory and you want to reduce that. I think,
+  4:29more commonly, or, yeah, more commonly, peoplewant to
+  4:33reduce garbage collection time. So this is,of course,
+  4:36like theme for the conference. Each iterationof Ruby
+  4:40has an improved garbage collector. If you,if you
+  4:42do profiling for a large Rails app, you might
+  4:45see that you&#39;re spending some large num- amountof
+  4:48time in garbage collection.
+  4:50So if you can manage to allocate fewer objects,
+  4:54then you&#39;re gonna reduce time in marking objectsand
+  4:57in sweeping those objects. If you were inon
+  5:0Koichi&#39;s talk, he, he mentioned that, especiallyin Ruby,
+  5:4he, he showed an excellent graph, most objectsare
+  5:8young objects, so they are created, and thenon
+  5:11the next garbage collection cycle, they&#39;repronounced dead and
+  5:13are collected. And then more objects are createdand
+  5:16they&#39;re, they&#39;re, and they die.
+  5:19So if you can reduce, somehow, if there are
+  5:21accidental allocations of young objects, ifyou can reduce
+  5:25that, you can really improve garbage collectiontime in
+  5:27your app.
+  5:28But you say, well, my Rub- my applicationisn&#39;t
+  5:30on Ruby 2.1, like, I don&#39;t, I don&#39;t think
+  5:32it&#39;s compatible. If your Ruby applicationis running on
+  5:35Ruby 2, it should be compatible. I think there
+  5:38are very few incompatibilities, and what youcan do
+  5:41is, if you can get, just on your one
+  5:44machine, if you can get your application runningon
+  5:462.1, then you can use the trace_allocationsfeature as
+  5:50a diagnostics tool and you don&#39;t have to go
+  5:52through the whole production whatever to getyour production
+  5:55app on 2.1, if you want to just use
+  5:58this locally on your box.
+  6:1So that feature seems neat. But it&#39;s pretty,it&#39;s
+  6:4pretty limited. I had to have a handle on
+  6:6an object and say, hey Ruby, what file allocated
+  6:9this? And what line number. And you have to,
+  6:11like, have your hands on these objects ifyou
+  6:14want to ask about, if you want to find
+  6:15out where they were allocated. And it&#39;s reallyfine-grained.
+  6:18It&#39;s, it&#39;s telling us information about eachsingle allocation.
+  6:22So this isn&#39;t terribly useful without somemore, some
+  6:26more work ahead of us.
+  6:28So it&#39;s just the start. This feature allowsus
+  6:30to write better tooling on top of Ruby that
+  6:34can help us find where we&#39;re allocating objects.So
+  6:38the next step is gonna be aggregation. Youwant
+  6:40to be able to aggregate these statistics,these, this
+  6:43information about your allocations and findwhat, what are
+  6:47the worst offenders in terms of files or classes
+  6:50that are allocating objects.
+  6:52So we&#39;ve, I&#39;ve got a gem out, AllocationStats,that
+  6:56is gonna help us do this. Unfortunately, itrequires
+  7:0at least an unreleased Ruby 2.1.0 previewtwo. Hopefully,
+  7:4I, I honestly think within the week, Koichisaid
+  7:7within a few days they want to release preview
+  7:9two.
+  7:9For now, you can still in, install RubyTrunkwith
+  7:13rbenv or RVM. They both have commands availablefor
+  7:16you to do that.
+  7:18So let&#39;s look at a low-level example of how
+  7:20this library&#39;s gonna work. We again have aclass
+  7:22and a method inside that class, and the method
+  7:26on line three is gonna create a hash, and
+  7:29on line four it&#39;s gonna create a string.
+  7:31So we can require the allocation to that gem,
+  7:34and then the code that we want to trace
+  7:37is gonna be there on line ten. myClass dot
+  7:39new dot my_method - we want to run this
+  7:41code and see, see where allocations happen.
+  7:44So you take that, you wrap it in a
+  7:46block, pass it to allocations_stats dot traceand you&#39;ll
+  7:49get back an object. So you get back, you
+  7:52get back this allocation_stats object, andyou can call
+  7:54allocations dot to_text on it to get you this
+  7:57tabular output. Oh, and it doesn&#39;t show toowell.
+  8:0All right.
+  8:1So what it&#39;s showing us there is that, let&#39;s
+  8:4look, on line four of trace_my_class_raw dotrb, we
+  8:10have allocated a string. And you can see the,
+  8:13the class path and the method id that allocated
+  8:14it are myClass and my_method. It also showsyou
+  8:17on line three, we allocated - it&#39;s cut off
+  8:20at the end - we allocated a hash and
+  8:21three strings. So those were all on line three.
+  8:24And you see the three strings are the values,
+  8:26the, the three values for the hash. And on
+  8:29line ten we allocated an instance of myClass,so
+  8:33myClass dot new is what allocated that.
+  8:37That&#39;s not powerful enough, yet. We&#39;re stilljust looking
+  8:41at a tabular output of individual allocations.So let&#39;s
+  8:43try and group our allocations. You have thesame
+  8:46code up at the top, same code all the
+  8:48way down through line eleven. We&#39;re gonnatrace a
+  8:50call to myClass dot new dot my_method.
+  8:54This time, though, we&#39;re gonna call allocationsdot group_by,
+  8:57and we&#39;re gonna pass in, we want to group
+  8:59by the file, the line number, and the class
+  9:3of the object being allocated. So we&#39;re gonnacreate
+  9:5groups of these and output that to a tabular
+  9:8output again. And this time we have somethingmore
+  9:10useful. We can see that we allocated threestrings
+  9:14on line three of the file. We allocated one
+  9:17hash on line three. One more string on line
+  9:19four and one instance of myClass on line ten.
+  9:23Let&#39;s look at a more complicated example.We can
+  9:25look, we can look at where the psych library
+  9:29allocates. So this is the built-in yaml libraryin
+  9:32Ruby. So let&#39;s do the simplest thing we can
+  9:36think of when we want to generate a yaml
+  9:38string - almost the simplest. We&#39;re gonnatake an
+  9:41array of two strings, and I want to conver
+  9:43that to yaml. Seems like a pretty trivialexample.
+  9:47So here we&#39;re gonna call allocations. We&#39;regonna pass
+  9:50in alias_paths true, and I&#39;ll show you whatthat
+  9:52does. And we, I&#39;m gonna group_by the sourcefile
+  9:56and the class of the object and get us
+  9:58some tabular output.
+  10:0So here we see, at the top there, there
+  10:2were thirty-eight instances of a string beingallocated in
+  10:5visitor dot rb. And we also see five instances
+  10:10of a matchdata, so a result from a regular
+  10:13expression execution in visitor dot rb.
+  10:16And the, the allcaps Ruby libdr on the left
+  10:19there, that&#39;s the alias_paths bit that&#39;s builtin. So
+  10:23half the time, you&#39;re rbenv or RVM class paths
+  10:27for these, for gems or Ruby libdr would, that
+  10:31wouldn&#39;t even fit on the slide itself. Soto
+  10:33make it easier for everybody, we can alias_pathsso
+  10:36Ruby lib files will be prefixed with Rubylibdr,
+  10:41and then there&#39;s gemdr and dot for anythingin
+  10:44your current working directory.
+  10:46Let&#39;s sort those allocation count, let&#39;s sortthose groups
+  10:51by how many were allocated in each group,so
+  10:53by the count column. So here we&#39;re gonna group
+  10:56by source file and class again. We&#39;re gonnasort
+  10:58by count this time, for something more useful.And
+  11:1now this is something that&#39;s getting muchmore, much
+  11:3more interesting, right. So now we have thetop
+  11:6three offenders in yaml, in psych. We havethirty-eight
+  11:10strings being allocated on visitor. Again,this is just
+  11:13to convert an array with two strings intoyaml.
+  11:17So this gets kind of interesting. You kindof
+  11:19want to go into visitor dot rb now and
+  11:20see what&#39;s going on.
+  11:21There&#39;s twenty-one strings in yaml tree. Twelvearrays in
+  11:24yaml tree and on and on. So class plus
+  11:28is a feature I added, as well. So for
+  11:32this example, we&#39;re gonna use the hike gem.So
+  11:36hike is, is kind of the core of sprockets.
+  11:38It allows you to take a subdirectory somewhereand
+  11:42say give, find me all the files that match
+  11:44this filter.
+  11:45So here we&#39;re gonna look at the hike direc-
+  11:48library tree itself. And find me all the,all
+  11:51the rb files that have hike in them. So
+  11:54pretty simple hike example. Here, this time,I&#39;m gonna
+  11:57group by the source file and class plus, which&#39;ll
+  12:0give us some more information other than class.So
+  12:3here we see, let, if you look at the
+  12:6class plus column, it&#39;s, it&#39;s telling us thatin
+  12:10kernel require dot rb, there were a hundredand
+  12:12thirty-four allocations for an array and forall of
+  12:16those allocations, the members were fixnumor false class.
+  12:20So they were all integers or false.
+  12:22The next highlighted one down says that allthe
+  12:25allocations in path name of an array for all
+  12:27of them, the members were strings. So that&#39;spretty
+  12:31cool. What might seem a little weird aboutthis
+  12:34list is that there are a ton of allocations
+  12:38here. Four-hundred thirty-eight. One fifty-two.Why is this so
+  12:40expensive?
+  12:41And then the directories are weird, too. Theseare
+  12:43all, these all come from the RubyGems directory.And
+  12:46it&#39;s kernel require dot rb and we have some
+  12:48Ruby VM instruction sequences. So what&#39;s actuallyhappening here
+  12:53is that the first time I use the hike
+  12:55library, that&#39;s when it loads all the, that&#39;swhen
+  12:58Ruby loads all the files, or RubyGems, I guess,
+  13:1loads all the files. And so the loading process
+  13:4is allocating strings left and right, RubyVM instruction
+  13:6sequences.
+  13:8So this is not useful. We need to filter
+  13:9this out. So we got another option, burn.So
+  13:14burn is like burning in poker. We can burn
+  13:16one when we trace a block of code. So
+  13:21what burn one is gonna do is it&#39;s gonna
+  13:23run our block once, without tracing anything.And throw
+  13:26away whatever happened. And then it&#39;s gonnarun again
+  13:29while, with object allocation tracing turnedon.
+  13:33So now we get much more useful results. So
+  13:35that was the same hike code. Now we see
+  13:38that all the allocations are happening inthe hike
+  13:40gem or in Ruby&#39;s pathname dot rb. That seems
+  13:43to make more sense.
+  13:46So object churn is kind of the next subset
+  13:49of, of problems in, in expensive garbage collection.This
+  13:53is kind of the idea of young objects. One
+  13:55specific instance of this that hits a lotof
+  13:58us, I&#39;m sure, is per-Rack::Request allocations.So this is
+  14:2where, for the sake of an example, let&#39;s say
+  14:5this is a Rails, we have a Rails app,
+  14:8and you have a request coming through. It&#39;sgonna
+  14:11have to go through all your Rack middleware,all
+  14:12your, the, the routes, into a controller,action, your
+  14:16views, your helpers. It&#39;s, it&#39;s generating,it&#39;s pulling out
+  14:20objects from the databases, it&#39;s generatinglots and lots
+  14:22of objects. And as soon as a response has
+  14:25been generated, it&#39;s gonna throw away - howmuch
+  14:27of that? Like most of that, right.
+  14:29And so every single request, every singleuser that&#39;s
+  14:31hitting a rack app like this is, is generating
+  14:34all these young objects and they&#39;re immediatelybeing swept
+  14:36away on the next garbage collection. So agreat
+  14:41way to see how your Rack app is allocating
+  14:44objects, there&#39;s another gem I have calledRack AllocationStats.
+  14:48So this is a Rack middleware. Let&#39;s say you
+  14:50have a Rack app sitting at my dot rack
+  14:53dot app on port 9292, and you want to
+  14:56send, you have some viewer resource sittingat slash
+  14:59path with parameters foo equals bar.
+  15:3You can just append and ras[trace] equalstrue, and
+  15:7that will kick off Rack allocation stats.So ras
+  15:11there stands for Rack allocation stats. We&#39;llsee lots
+  15:13of ras parameters.
+  15:16So let&#39;s look at a simple Sinatra app. I
+  15:18believe we can see most of this. This is
+  15:20very simple. At slash erb, all we&#39;re gonnado
+  15:23is we&#39;re gonna parse an erb template. It&#39;ssitting
+  15:25down here. All it does is it creates a
+  15:28list of helloworld in with hello in thesesix
+  15:31different languages.
+  15:33So here&#39;s that app sitting at, we&#39;re lookingat
+  15:35slash erb. When I take an, when I take
+  15:39question ras trace equals true on the end,I
+  15:42now have a tabular listing - it&#39;s sorted -
+  15:46of all the allocations that are happening.SO this
+  15:48is the default grouping is by file and line
+  15:52number and the class of the object. So you
+  15:54can see at the top there, we&#39;ve got -
+  15:57I&#39;m not gonna do it.
+  15:59WE&#39;ve got forty-six strings being allocatedon line four
+  16:3hundred and forty-five or erb dot rb.
+  16:7And so that&#39;s, that&#39;s your sorting. So there&#39;slots
+  16:10of different options that ras accepts, andI&#39;m adding
+  16:12a lot cause I&#39;m actively working on this.So
+  16:15ras[help] will give you a, will respond aman
+  16:18page-style help. [alias_paths] equals truewill, again, alias those
+  16:24paths at the front so you can see, at
+  16:25the top, erb is in Ruby libdr. A couple
+  16:28lines down we are doing a lot of string
+  16:30allocations in, in gem colon Sinatra 1.3.3.
+  16:36ras[times] is, will pass the request downinto your
+  16:41Rack app n number of times. So for this
+  16:44it would be ten number of times. So if
+  16:46your application maybe has some variabilityin the path
+  16:50that takes or the objects that it&#39;s allocating,you
+  16:53can do ten times and then you&#39;ll see like
+  16:54a sum of what happens, what happens over ten
+  16:56requests. Where, where, where are the bigoffenders in
+  17:0allocating objects.
+  17:3You can also [output] to JSON, so there&#39;sa
+  17:5little snippet of some JSON. If you predifyit
+  17:8it looks like this. So it&#39;s an array of
+  17:10groups - so you&#39;ve got the group key there.
+  17:12We&#39;re grouping by that file, that line number,and
+  17:15string objects. And then you get a list of
+  17:17all the allocations that happen there. Youcan do
+  17:20fun things with that.
+  17:21[output] interact, [output] equals interactiveis another fun way
+  17:26to, way to use this tool. So, let&#39;s actually
+  17:30demo that. I can demo all that.
+  17:32So here&#39;s my Rack app again. I&#39;m gonna say
+  17:36ras[trace] equals true. OK, so now I get -
+  17:40these are, this is the sorted list. You can&#39;t
+  17:43tell, cause it&#39;s like the tiniest monitor.So I&#39;m
+  17:45gonna and ras[alias- oh, it&#39;s already there- paths]
+  17:50equals true.
+  17:51Now it&#39;s a little more readable cause I&#39;veshortened
+  17:53my file names. If I, instead, go interactive,[output]
+  17:59equals interactive, let&#39;s see what we get.So it&#39;s
+  18:4mostly visible. It&#39;s, we get this JavaScriptapplication, this
+  18:9interactive application where we can kindof poke around
+  18:11and see where we&#39;re allocating objects.
+  18:13So, right now, by default, it groups by file
+  18:16and line and the class, and class plus. I
+  18:19can take off line and say, OK, so this,
+  18:21the erb file is allocating a lot. Sinatrabase
+  18:25dot rb. I can filter out Ruby and say
+  18:29I just want to look at gems. I&#39;m, I&#39;m
+  18:32interested in where the gems are allocatingobjects.
+  18:36And there&#39;s, most often there&#39;s a long tailof
+  18:39allocations. So here, most of the page isfilled
+  18:41with like, oh this file allocated one of these
+  18:43and one of these and two of these. Which
+  18:45is not terribly interesting to you, so youcan
+  18:47shorten it and say, just show me the interesting
+  18:49ones. So now, if I go one more, now
+  18:52we&#39;re looking at - this is a nice little
+  18:54compact list of all the, of all the offenders,
+  18:58of all the combinations of file, line, andclass
+  19:1that are using, they&#39;re allocating more than,they kind
+  19:3of account for more than one percent of the
+  19:6allocations.
+  19:6So you might want to look in here and
+  19:8see, like, why is, first of all, why does
+  19:10it have fifteen hundred lines? And then whyis
+  19:12base dot rb, why is that line allocating so
+  19:15much, like, this was a pretty simple application.Maybe
+  19:17this can be reduced.
+  19:20So that&#39;s interactive.
+  19:22So you&#39;re saying, OK, what do I do? You&#39;ve
+  19:25shown me how to look at where my, my
+  19:28applications, my Ruby code is allocating objects.What do
+  19:32I do about that? Well, you want to allocate
+  19:34less. That&#39;s the goal here.
+  19:35How do I allocate less, you say. OK, that
+  19:38depends. This can be pretty tricky actually.I think
+  19:41a lot of times - this is, Koichi&#39;s observation
+  19:43is not terribly new. This is true in the
+  19:46Java world when people do garbage collection,academic papers
+  19:50and such, they, they see that most objectsare
+  19:53young objects. They die when they&#39;re young.
+  19:55So there&#39;s, there&#39;s maybe not a lot you can
+  19:59do. But let&#39;s see what you can do. OK,
+  20:1if this is readable - the red might not
+  20:3be. This was a very simple pull request I
+  20:8sent to the temple gem, where, on, on that,
+  20:11on that Sinatra app, if you use a slim
+  20:14template instead of erb, the biggest offenderis this
+  20:17line in temple, where they&#39;re saying keysplus equals
+  20:20h dot keys.
+  20:21If anybody knows, let&#39;s say keys is an array.
+  20:25Plus equals is gonna allocate a new array.And
+  20:28Ruby documentation is actually really goodabout this so
+  20:30I have some links to the documentation there.Ruby&#39;s
+  20:32documentation says plus will allocate a newarray and
+  20:36fill it with the contents of keys and h
+  20:39dot keys. So that&#39;s allocating a new objectright
+  20:42there.
+  20:42In this case, we don&#39;t need to allocate a
+  20:44new object. We can use the concat method instead,
+  20:47which will concatenate the second array ontothe first
+  20:50array and reduce our allocations.
+  20:54Memoization is a good technique for reducingthis. I&#39;m,
+  20:57I&#39;m not advocating premature optimizations.You should kind of
+  21:1see where your offenders are and then seeif
+  21:3you want to memoize those, those spots. Sowe&#39;ll
+  21:5look at some examples of these.
+  21:7A big one is string building, where you might
+  21:9be concatenating strings, you might be usingsome metaprogramming
+  21:13and building a method name that you&#39;re gonnajust
+  21:17pass to send and then throw away the method
+  21:19name that you&#39;ve just built up. So we can
+  21:22look at a few examples of what we can
+  21:24fix there.
+  21:25let&#39;s look at Rails 3.2.15, from the latestRails,
+  21:283.2. So here I&#39;ve got a very, very, very
+  21:32simple Rails app. It has two models. It has
+  21:34projects and tasks. And projects have manytasks. And
+  21:37on this page, we have a few with ten
+  21:41projects, and each project has, I think it&#39;sfour
+  21:44tasks. And, and we&#39;re displaying these variousfields of
+  21:48them.
+  21:48So, theoretically for this page, we are retrievingabout
+  21:52one hundred stringy fields from the database.SO that&#39;s
+  21:57like some context of what, what work maybeshould
+  21:59have been done for this. When I add ras[trace]
+  22:2equals true and let&#39;s look at it interactively,we
+  22:4get these results.
+  22:5So we can see at the top here, ActiveRecord::Relation
+  22:11allocated seven hundred and fifty-six strings.So that&#39;s pretty
+  22:16wild. It doesn&#39;t, I mean, I showed you it.
+  22:18Project has many tasks. That was the onlyrelation
+  22:21that we have here. I didn&#39;t do anything fancy
+  22:23in the controller. I literally - Rails new,and
+  22:25then I created those two models and we have
+  22:27this.
+  22:28So something&#39;s a little fishy here. We alsohave
+  22:31ActiveSupport::Callbacks generating sevenhundred and seven strings. And then
+  22:35the next one is SQLite3 statement is generatinga
+  22:38lot of strings - only three hundred thirty-twostrings,
+  22:40actually.
+  22:40And, and SQLite3 is, is, is where I&#39;m pulling
+  22:44those supposed, you know, one-hundred stringyfields out of
+  22:47the database. So this maybe isn&#39;t a huge offender.
+  22:50We&#39;re allocating three times as many stringsas we
+  22:53were expecting. If you dig into the code,you
+  22:56know, it&#39;s possible that a lot of that&#39;s unavoidable.
+  23:0So let&#39;s look at some of these, some of
+  23:1these big offenders. Active_support/callbacksdot rb. So here, any
+  23:6time you have a call back, I think this
+  23:8is ActiveSupport, so this is gonna be foryour
+  23:9callbacks in your models and callbacks inyour controllers.
+  23:13It has to build the names for the callbacks,
+  23:16and it does this every single time so that
+  23:18it can send on line eighty-one there.
+  23:21And so this is crazy expensive. Every singletime
+  23:23you, you want to call methods, you just want
+  23:26to call your callbacks in a response, Railsis,
+  23:29is building these methods each time, and ifit
+  23:32doesn&#39;t, as if it&#39;s never built them beforeand
+  23:34as if they&#39;re gonna change from time to time,
+  23:36right, these callback method names.
+  23:38So this is pretty ridiculous. Luckily, inRails 4
+  23:42this is all fixed. You can see now we
+  23:45are caching the, the callback runner namesin a
+  23:49thread-safe cache, so that&#39;s pretty excellent,that&#39;ll reduce the
+  23:51allocations in a Rails 4 app. If we look
+  23:55at active_record/relation, this class is prettywild.
+  23:59So it starts with these three constants withlots
+  24:4of, with lots of symbols in them. And these
+  24:7symbols are basically going to be instancemeth- or
+  24:10instance variables. So as soon as we initializea
+  24:14new active_record/relation, so like, you&#39;rechaining relations or pulling
+  24:17things out of the database, you&#39;re initializingnew relations,
+  24:20it takes each of these and it&#39;s gonna do
+  24:23instance variable set and then build a stringwith
+  24:25what it wants to set, right, because it&#39;s,it&#39;s
+  24:27gonna append this value at the end and it&#39;s
+  24:29gonna put an app in front. And every single
+  24:31time you create a new active_record/relation,it&#39;s building this
+  24:36string and throwing it away for like, thirty-oddattributes
+  24:40that it&#39;s doing this for.
+  24:41So this was pretty wild and inefficient, andthis
+  24:44code has just been totally rewritten for Rails4,
+  24:47so it, it doesn&#39;t apply anymore. But thisis
+  24:49why that was such a huge offender in a
+  24:50Rails 3.2 app.
+  24:53It&#39;s not always easy to fix these things.So
+  24:55there are some - I think I - I
+  24:57think these links are actually to the Rails4
+  24:59version to show you that, like, there aresome
+  25:1that still exist, and I&#39;m not sure how they
+  25:3should be fixed. So if we look at ActiveSupport&#39;s
+  25:7output safety, which is where you get HTMLsafe
+  25:9and some methods like that, we see that, at
+  25:12the very end of the, the file, it puts
+  25:15this HTML_safe method onto string, and allthat does
+  25:19is it creates a new safe_buffer instance,passing in
+  25:21the string.
+  25:23And safe_buffer inherits from string so thatimmediately allocates
+  25:26a new string with that, because we&#39;re, we&#39;recreating
+  25:28a new one. And so this isn&#39;t, it&#39;s not
+  25:31terribly obvious how you could solve thisanytime you
+  25:34want to HTML_safe something that, you know,the idea,
+  25:38the ActiveSupport idea is to create this newclass,
+  25:40this safe_buffer class and put your stringin there.
+  25:43And so you can, you can theorize a bunch
+  25:45of different ways that this might be solved,but
+  25:48I don&#39;t think it&#39;s obvious how - there&#39;s no
+  25:49quick solution, I think, that this maybe shouldbe
+  25:53done with care if, if this is gonna be
+  25:55fixed.
+  25:57We have the tag helper here - this one&#39;s
+  25:58a big one. SO any time you&#39;re using a
+  26:1form helper in Rails, so - or, I&#39;m sorry,
+  26:5a view helper, so form helpers, the JavaScripthelper
+  26:9tags, all these, you know, link_for, theyall kind
+  26:12of boil down to a call to the tag
+  26:15method, which is going to have an open bracket
+  26:18and then a bunch of string interpolation withthe
+  26:19things that are passed into it, and then it
+  26:21has to decide whether to open or close, or,
+  26:24to leave the tag open or close it. So
+  26:26over on the right you see it&#39;s either a
+  26:27right bracket or slash right bracket.
+  26:29So all of those are strings that every single
+  26:32time tag is called, those strings have tobe
+  26:36allocated again. Every single time. And sothis is,
+  26:40again, not - it&#39;s not easy how to solve
+  26:42this. like, all of your tags are gonna be
+  26:44different. If you have some view with tablewith
+  26:47hundreds of cells in it or something, they&#39;reprobably
+  26:50all different. It&#39;s, there&#39;s, memoizing isnot a good
+  26:52idea here, right. This one&#39;s kind of toughhow,
+  26:56how we can reduce allocations in that one.
+  27:0The SQLite3 offense that we saw was, it happens
+  27:5right here on line 108 of statement dot rb.
+  27:8It&#39;s val equals step. So why is this allocating
+  27:11so many strings? It&#39;s, it doesn&#39;t appear toallocate
+  27:13any strings.
+  27:15It presumably calls this step method. So whereis
+  27:17that? And you search for it in statement dot
+  27:19rb and it&#39;s not there. And that&#39;s becauseit&#39;s
+  27:22a C function in statement dot C. So the
+  27:26SQLite gem is part C extension and part Ruby.
+  27:29So if you want to fix those string allocations,
+  27:31you have to now, like, know the C API
+  27:34for Ruby and go in and see which methods
+  27:36are, are allocating strings.
+  27:37So that&#39;s not impossible to fix, but it&#39;sa
+  27:39little, little more tricky to fix that one.
+  27:42But, in general, I think that we should be
+  27:45excited. I think that these are really new,really
+  27:48exciting features to add to our, our performancetool
+  27:52chest, so we have a bunch of different gems
+  27:54out there already. This thing is new, though,provides
+  27:56new functionality. I think that it&#39;s importantfor us
+  28:1to be aware that Ruby allocates objects, becausewe
+  28:5have a garbage collector - it&#39;s hidden fromus.
+  28:7Every Ruby implementation hides this fromus, that we
+  28:10allocate objects, and we don&#39;t know that we&#39;reprogramming
+  28:12badly until our app is suddenly hundreds ofmegabytes
+  28:15and we have, like, all these unicorns on one
+  28:17server, and each of them is three hundredmeg
+  28:19and we&#39;ve got just a mess on our hands.
+  28:22So I think it&#39;s important to think about how,
+  28:25when you&#39;re, when you&#39;re appending, when you&#39;rechaining methods
+  28:27in a collection - so chaining hash methodsor
+  28:30array methods or string methods, that youcould be
+  28:33instantiating new objects and that you maynot need
+  28:35to.
+  28:37Be aware of how much garbage collection costsyou.
+  28:39So this one&#39;s kind of a fun test to
+  28:41do if you haven&#39;t used perftools dot rb or,
+  28:45I think it&#39;s, is it rackperftools? There&#39;s,there&#39;s a
+  28:48Rack gem. It is amazing to see, you know,
+  28:52in a big application, how frequently we&#39;reobject, we&#39;re
+  28:56garbage collecting, and how much time it takes.Especially
+  28:59in a Ruby 1.9 app.
+  29:1So, I think that that&#39;s really important,to be
+  29:3aware of that and, if you&#39;re having performanceproblems,
+  29:6there&#39;s a good chance that it&#39;s garbage collection.If
+  29:8you, if you cruise around the internet forpeople
+  29:11fixing their own perf, Ruby performance problems,a lot
+  29:15of it is tuning the garbage collector. I think
+  29:18GitHub, Twitter, oh there&#39;s another one - Ithink
+  29:22AirB and B all have articles on how they&#39;ve
+  29:24tuned the garbage collection, the garbagecollector, for their
+  29:27own purposes.
+  29:29And I think it&#39;s important to add this, this
+  29:31tool to your toolbox. So what this space.This
+  29:35tool is actually the trace_object_allocationsfunctionality is still being
+  29:39written. Aman Gupta committed something, Ithink yesterday morning,
+  29:43to this. So like, it&#39;s changing every - I,
+  29:46I have to constantly rewrite my slides asI&#39;m
+  29:48doing this.
+  29:49And, and I think, also, so I&#39;ve written a
+  29:52few gems that I just showed, but I think
+  29:55what this tool does is what the, what the
+  29:58new Ruby functionality does, is it&#39;s gonnaallow us
+  30:1to build really great tools and more toolsaround
+  30:3this. So I think we should be cognizant of
+  30:6that, of how we can, we can reduce our
+  30:8object allocations by using different tools.
+  30:11So things to Google if you&#39;re interested inthis
+  30:13talk. First of all, now that I&#39;ve been here
+  30:15a few days, a bunch of the talks here
+  30:17- so Koichi&#39;s talk, Pat Shaughnessy&#39;s talkwas really
+  30:20excellent, on the garbage collector in differentimplementations, Koichi&#39;s
+  30:24previous talks. So you should read GitHub&#39;sblog post,
+  30:29Hey Judy, Don&#39;t Make a Bad. This is a
+  30:31really interesting read. It actually, so,it starts out
+  30:35telling the story that GitHub wanted to solvethat
+  30:38problem of 600,000 objects. So they have afork
+  30:42of Ruby. Aman Gupta writes this feature intoRuby
+  30:45to see what files and lines are allocatingobjects,
+  30:48and they kind of find where the problem is.
+  30:50It&#39;s an interesting read.
+  30:52So then Aman opens up a feature request at
+  30:54RubyCore and Koichi adopts it into Ruby 2point
+  30:571. So that&#39;s kind of the, the back story
+  30:59of how that feature got put in here.
+  31:2You can search for the two gems, allocation_statsand
+  31:5rack-allocation_stats. And I would definitelysearch for, especially if
+  31:9you saw Koichi Sasada&#39;s talk, I would definitelysearch
+  31:12for his other talks. I think it&#39;s called Building
+  31:15a more efficient Ruby 2 point 1. So he
+  31:17gave one at RubyKaigi and one at Euroku. And
+  31:20there should be videos of both of those, and
+  31:23he changes his talk each time. So he kind
+  31:25of gave the same talk at, at RubyConf, but,
+  31:27you know, it evolves cause he&#39;s, he&#39;s writingthese
+  31:31features.
+  31:31As a matter of fact, like, his talk yesterday
+  31:33had a bunch of features that I think he
+  31:34committed yesterday or the day before. Sopretty goofy.
+  31:39And I need to thank Aman Gupta for writing
+  31:41this initially. GitHub for everything thatGitHub ever does.
+  31:45Matt Brooks is a coworker of mine who helps
+  31:46me with the slides. Ruby Central, for puttingon
+  31:50this incredible conference, and then Hakimfor reveal dot
+  31:53js, which is what this talk is written in.
+  31:55And that&#39;s everything. So.

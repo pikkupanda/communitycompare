@@ -1,0 +1,1051 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=VVmENBTc1jM
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16JERRY D&#39;ANTONIO: Good afternoon everyone.
+  0:18Hope you guys had a good lunch.
+  0:19Hopefully you&#39;re not gonna fall asleep onme.
+  0:21I&#39;ll do my best to keep that from happening.
+  0:25As the slide here says, my name is Jerry
+  0:27D&#39;Antonio. I work for a company called VHT,formerly
+  0:30Virtual Holes Technology, and we are an Erlangand
+  0:33Ruby shop out of Akron, Ohio. And, again as
+  0:36the slide says, I&#39;m here to talk to you
+  0:37guys about concurrency.
+  0:39So, yesterday I was monitoring the Tweetsfor the
+  0:42conference, and somebody sent out a Tweetthat I
+  0:44thought was very interesting, and it askedthe question,
+  0:46it said something to the effect of, RubyConfshould
+  0:50give me a reason why I want to use
+  0:53Ruby in 2014.
+  0:55Now, I assume, like the rest of you guys,
+  0:58I really love Ruby. And I think there&#39;s a
+  1:0million reasons why people would want to continueusing
+  1:2Ruby in the future. Unfortunately, when thequestion comes
+  1:6to concurrency, selling Ruby is a little bitharder
+  1:8of a sell, all right.
+  1:10Now, I&#39;m not talking here about interpretiveissues. I&#39;m
+  1:13not talking about the global interpreter lock.I&#39;m talking
+  1:16about any of that kind of stuff. I&#39;m talking
+  1:17about abstraction. All right, let me giveyou a
+  1:19brief bit of history.
+  1:21Years ago, I used to work in banking systems,
+  1:23and we wrote highly performant, highly concurrentsystems in
+  1:26C++. Now, if you&#39;ve ever had to deal with
+  1:29concurrency in a language like C++, you realizethat
+  1:32it is full of a lot of pain and
+  1:33agony. You spawn a bunch of threads, and a
+  1:36bunch of low-level concur- locking, you know,in terms
+  1:40of, of kernel-level objects to try and synchronizethose
+  1:43threads. And it&#39;s very easy to get wrong.It
+  1:46was so easy to get wrong that we actually
+  1:47have whole categories oc bugs named aftercommon concurrency
+  1:51errors, all right.
+  1:52So like most people who do that work, eventually
+  1:53I had to get out of it because it
+  1:54was just too painful, right. But five, sixyears
+  1:57ago I discovered Ruby. I&#39;ve been using Rubyever
+  1:59since, and I love Ruby.
+  2:1Unfortunately, the concurrency tools thatRuby provides to us
+  2:4are pretty much the same things that I was
+  2:6using fifteen years ago in C++. We had thread
+  2:10dot new, we have mutex, where we can cross-synchronize,
+  2:13and we can do all this low-level stuff which
+  2:15is every bit as painful, right.
+  2:17Now, if you look at what&#39;s going on in
+  2:19other languages, with respect to concurrency,today we have
+  2:23this thing called asynchronous concurrency,k. Rather than trying
+  2:26to place a bunch of different threads andplace
+  2:27a bunch of locks on a bunch of things
+  2:29and get a bunch of contention, instead, wesend
+  2:33operations off onto different threads or differentprocesses. They
+  2:36do their thing, and then we coordinate those,right.
+  2:40And if you look around at a lot of
+  2:41the languages not called Ruby, you see a lot
+  2:43of really cool things going on, right. Languageslike
+  2:45Erlang and Clojure and Scala and, even JavaScriptand
+  2:50Java and C# are doing some very interestingthings
+  2:53with respect to concurrency.
+  2:54Now, Ruby, being the great language it is,we
+  2:56can actually use these same abstractions inRuby if
+  2:59we take the time to build them, K. They
+  3:2don&#39;t exist in our standard library rightnow. They
+  3:4don&#39;t exist in the, the language itself. Butwe
+  3:7can still build them and we can still use
+  3:9them.
+  3:9So my goal today is to give you a
+  3:11survey of some of the asynchronous concurrencytechniques that
+  3:15are being used in other languages. And showyou
+  3:18how you can use those in Ruby today.
+  3:21This is going to be an incredibly code-heavypresentation,
+  3:23all right. Pretty much every slide in hereis
+  3:26either a picture or code, right. Now, there&#39;sa
+  3:30lot of stuff to cover and I&#39;m not gonna
+  3:31be able to go over everything in detail, so
+  3:33my goal here is - all of the, in
+  3:35this presentation, in its entirety, with extensivenotes and
+  3:38all of the source code samples are up on
+  3:40GitHub.
+  3:41So you can go out there, you can clone
+  3:42the repo, you can pull this down. You can
+  3:44run all the code I&#39;m gonna show you. So
+  3:45as I go through this, I&#39;m gonna ask that
+  3:46you focus on the concepts that we&#39;re gonnatalk
+  3:49about. Cause these concepts for things thatare independent
+  3:52of any particular programming languages, andthey are concepts
+  3:55that will allow you, once you understand them,to
+  3:57start thinking about your code differentlyand start solving
+  3:59problems differently.
+  4:0And so that&#39;s really my hope is that after
+  4:2you leave here today, you&#39;ll have some newways
+  4:4that you can think about code in terms of
+  4:7concurrency, and you&#39;ll have an interest ingoing out
+  4:8and starting to write more concurrent code,K.
+  4:11Most of the code we&#39;re gonna look at today
+  4:12is gonna be from a gem that I put
+  4:13together called concurrent_ruby. It&#39;s MITLicense, opensource, available on
+  4:17GitHub. It&#39;s something that we use at VHTtoday,
+  4:20because we had some very specific needs wewanted
+  4:22to fulfill.
+  4:22And I&#39;m gonna show you that gem, because it&#39;s
+  4:24the one I know the best. But it is
+  4:26by no means the, the best or canonical or
+  4:29right way to do it. These concepts, like I
+  4:32said, are concepts that are independent ofany language
+  4:35and can be implemented in many different ways.I&#39;m
+  4:37just gonna show you one possible way to use
+  4:40these particular ideas within Ruby.
+  4:42All right. So that being said, let&#39;s go ahead
+  4:45and move forward.
+  4:46In order to do this, we&#39;re gonna need a
+  4:47crash test dummy, all right. When writingcode examples
+  4:51of concurrent code, often times we throw inthese
+  4:53random sleep statements, and we say, somethingimportant happened
+  4:56here, all right. It&#39;s kind of fake when we
+  4:58do that. It sort of gets the point across,
+  5:0but it&#39;s not a really good example.
+  5:1So for this presentation, I created a classthat
+  5:3we&#39;re gonna use as our crash test dummy in
+  5:6most of the examples that we&#39;re gonna go over
+  5:8today. And I put this class together on purpose,
+  5:10not to show good object-oriented design, becauseit&#39;s a
+  5:13really crappy design, but this class willexpress a
+  5:17couple of ideas that are very important tous
+  5:19when writing concurrent code.
+  5:21So let me show you the crash test dummy
+  5:22we&#39;re gonna use, K.
+  5:24This is a very simple class. It does one
+  5:26simple thing. When you create this, an instanceof
+  5:30this, you&#39;re gonna pass a name of a company
+  5:32in. Yahoo, Microsoft, Apple, Google - whatever.When you
+  5:35call update on this, it&#39;s gonna go out to
+  5:37this Yahoo API, it&#39;s gonna retrieve informationabout what
+  5:41ticker symbols that company trades at, under,on different
+  5:45stock exchanges around the world, that data&#39;sgonna come
+  5:48back with some Ajax wrapper stuff around it,so
+  5:50we&#39;re gonna strip that off, and then we&#39;regonna
+  5:51update this internal member variable withthat data. Now.
+  5:55Here&#39;s a couple things to keep in mind. How
+  5:57many people here have heard that shared, mutabledata
+  6:1is bad? All right. Whatever you were toldis
+  6:4a lie. It&#39;s ter- it is ten times worse
+  6:8than that, right. Shared mutable data in concurrentprogramming
+  6:13is really bad.
+  6:15This thing is fat with shared mutable data.All
+  6:18right, first this thing goes out and it performs
+  6:20blocking IO, right. That&#39;s good for us inrespect
+  6:23to concurrency, because blocking IO is onereason why
+  6:25we want to write concurrent code.
+  6:26But it then goes, and the object itself mutates
+  6:29when we go and we update it, which means,
+  6:32now, this thing, if we share it across threads,
+  6:34is shared mutable data. Even worse, this hasan
+  6:37internal member variable which is an arrayof hashes,
+  6:42which we expose through and attribute reader.Which means
+  6:44we now are passing a reference to a mutable
+  6:47object outside of this thing, potentiallyacross threads.
+  6:50So this thing is very, very dangerous, andthat&#39;s
+  6:53why we&#39;re gonna use this as our example, because
+  6:55we&#39;re gonna show different ways that we canuse
+  6:57this thing in a concurrent environment, andhopefully not
+  7:1keep ourselves up late trying to debug allkinds
+  7:2of weird bugs.
+  7:4So, with that, let&#39;s talk about the firstconcurrency
+  7:6object that we&#39;re gonna look at. It&#39;s calledFuture.
+  7:9How many people have heard of Future in terms
+  7:11of asynchronous concurrency? Cool.
+  7:13A Future is a general term to describe any
+  7:16particular operation that gets started andreturns a result
+  7:21at some point in the future. OK, so it&#39;s
+  7:23a class of different types of, of asynchronousconcurrency
+  7:27objects.
+  7:29Future also, very specifically, is one ofthe two
+  7:32core concurrency abstractions in the Clojureprogramming language. For
+  7:36those of you not familiar with Clojure, it&#39;sa
+  7:37Lisp-like language run from the JVM, whichis designed
+  7:40specifically to be concurrency friendly.
+  7:42So here&#39;s how a future works - very simple.
+  7:44It&#39;s probably the simplest and more pure asynchronousconcurrency
+  7:47abstraction. Here&#39;s how it works.
+  7:49You create a future and you give it some
+  7:51operation. At that point, the runtime schedulesthat operation
+  7:56as soon as possible, OK. A future has three
+  7:59states. It can be pending, which is what happens
+  8:2on creation. It&#39;s not done yet. Once the operation
+  8:5completes, it can be either fulfilled or rejected,K.
+  8:9If the operation completes successfully, itbecomes fulfilled. If
+  8:11the operation throws it an exception, thatexception gets
+  8:15swallowed, and the, the, the state becomesrejected.
+  8:20At that point, you can then retrieve eitherthe
+  8:23value for the successful operation, or youcan retrieve
+  8:26the reason for the rejection, which wouldbe the,
+  8:28the exception that was thrown. So very simple.Very
+  8:32straight-forward. You basically throw thisthing off on another
+  8:34thread, let the runtime schedule it, do importantstuff,
+  8:37and then later on you come back and you
+  8:38ask, what was the result of that operation?And
+  8:40if it blows up, your program doesn&#39;t blowup,
+  8:43it just tells you that your operation blewup.
+  8:45So that&#39;s great.
+  8:46It&#39;s very simple, and it&#39;s a very easy way
+  8:47to start adding concurrency to your programs.Now, how
+  8:51many people are JavaScript programmers here?Right. So you
+  8:54guys are all familiar with call-backs, right?Whenever you&#39;re
+  8:57dealing with asynchronous concurrency, thereare two ways that
+  9:0you can retrieve the results of the asynchronousoperation.
+  9:3One, as we see here, is query the object,
+  9:6and say, what happened? The other way is to
+  9:9attach a call-back, right. This is the JavaScriptway
+  9:12of doing things - we attach call-backs. Ruby,it
+  9:15turns out, has a very serviceable call-backmechanism built
+  9:18into the standard library.
+  9:20How many people here have heard of the observable
+  9:22module? Right. There you go. The observablemodule, which
+  9:25we know is based upon the game-of-four patternobserver,
+  9:29actually can work as a very fine call-backmechanism
+  9:32for any kind of asynchronous object.
+  9:34So in this particular library, I&#39;ve triedto make
+  9:37it as consistent as possible and dependentonly on
+  9:39the Ruby standard library. So in this case,this
+  9:41future class implementation is observable.So you can attach
+  9:45an observer to that, and then when the operation
+  9:47completes, the observable will be called,it will be
+  9:50given the time that the operation finished,it&#39;ll be
+  9:52given the value of the operation for the exception
+  9:56that was thrown. Very simple.
+  9:58Now, I want to take a step away from
+  10:0future for a second, and talk about a very
+  10:2important concept that is not unique to futurebut
+  10:5applies to all asynchronous concurrency, allright.
+  10:8There is a code smell on this string. Right.
+  10:12I&#39;ll even give you a hint to where it&#39;s
+  10:13at. It is up here on line eighteen. Now
+  10:17there&#39;s code smell. Think about it for a second,
+  10:19and I&#39;ll give you the answer what it is,
+  10:23all right.
+  10:24All advanced asynchronous concurrency abstractionstry as much as
+  10:28possible to hide the details of concurrencyfrom us.
+  10:32They try and hide the locking and the threading
+  10:34and all this other stuff that has to go
+  10:36on. But what we cannot do is change the
+  10:38actual nature of concurrent operations. Andwhen we&#39;re dealing
+  10:41with concurrency, the order of operationsis non-deterministic, OK.
+  10:45I&#39;m sure you&#39;ve heard that term before. It&#39;snon-deterministic.
+  10:48We cannot guarantee at what order things happen.So
+  10:52line eighteen right here, which looks fairlyinnocuous, is
+  10:54very interesting because, once we create thisfuture on
+  10:57line seventeen, that block is scheduled foroperation, and
+  11:0we have no control over when that thing occurs
+  11:3with respect to anything else.
+  11:6So it is theoretically possible that thatoperation could
+  11:9complete before we add the observer on lineeighteen,
+  11:13K. That&#39;s just the nature of non-determinism.
+  11:16Now, in this particular case, right, thisparticular future
+  11:21implementation is aware of that and the add-observermethod
+  11:24here behaves in a way that you would expect
+  11:27it to, despite that non-determinism. But thetake-away from
+  11:31this, and this&#39;ll apply to everything we talkabout
+  11:32today, is concurrency is non-deterministic,and that can never
+  11:37change, so always when using these concurrentabstractions, in
+  11:40any language, keep that non-determinism inmind.
+  11:43OK. So that&#39;s a future. We&#39;re gonna referback
+  11:45to this a lot because you&#39;re gonna see the
+  11:46API of this future several times.
+  11:49Let&#39;s talk about another very interestingabstraction that comes
+  11:51out of Clojure. Let&#39;s talk about the Agent.Clojure
+  11:54has two core concurrency abstractions: futureand agent, right.
+  11:58Agent is, Clojure is the only language I know
+  12:0of that does something like agent. It&#39;s veryfascinating,
+  12:2and that&#39;s why I like to talk about it.
+  12:4I&#39;ll give you an example. Let&#39;s say you&#39;rewriting
+  12:6a video game, and that video game is old-school
+  12:8arcade-style video game, and there&#39;s a score,all right,
+  12:10and you&#39;ve got all kinds of threads runningaround
+  12:13doing different things, and each one of thosethreads
+  12:14wants to update the score.
+  12:15And the way we would do that in the
+  12:17old-school days was then put some kind oflock
+  12:20around that score, and every thread that wantedto
+  12:23change the score would have to obtain thatlock
+  12:26and it would have to block until it got
+  12:27that lock and then it would update the score.
+  12:29So it happens that you have all these threads
+  12:31that want to be doing these different things,but
+  12:32every time they have to update the score,they
+  12:33have to block and go into contention withanother.
+  12:35It&#39;s very inefficient, right. So the agent,from Clojure,
+  12:40turns that on its head and says, rather than
+  12:42putting the lock on the, the value that we
+  12:47want to change, let&#39;s instead queue up theoperations
+  12:50against that value and do it sans-locking.
+  12:53So here&#39;s how the agent works.
+  12:55Right, and it&#39;s really fascinating.
+  12:56Create an agent and give it an initial value.
+  12:58The value can be anything, and the score the
+  13:1input would be like zero. K, then, when a
+  13:4thread wants to change that value, ratherthan getting
+  13:7the current value instead, it throws an operationat
+  13:11the agent, which is running on its own thread,
+  13:13and it says, perform this operation againstthat value.
+  13:18The agent itself then queues up all of these
+  13:20different operations, runs them one at a time,in
+  13:23order, so there&#39;s no contention amongst thoseoperations. When
+  13:26an operation runs, it has complete accessto that
+  13:28value. Another great thing about is that theoperation
+  13:32we&#39;re sending doesn&#39;t have to have top-levelknowledge of
+  13:35what the value is.
+  13:36When that block runs, the agent gives theblock
+  13:39the current value, and the block returns whatthe
+  13:42new value is, right. And, much like many of
+  13:45the things in this library, this particularimplementation of
+  13:48agent also supports the observable interface.So we can
+  13:51hang an observer off of this.
+  13:53So now let&#39;s go back to that video game
+  13:54score example. In that case, every thread,we create
+  13:57an agent, set its initial value to zero, and
+  14:0every thread that wants to then update thescore
+  14:1can throw a block operation at that threa-at
+  14:3that agent. At any point in time, anythingcan
+  14:6retrieve the value of the agent. That retrieval,though,
+  14:9will get you the value at that time, irrespective
+  14:11if things are still queued up, right.
+  14:14But, we can then hang an observer off of
+  14:17that and make it the observer&#39;s responsibilityto update
+  14:20the score on the screen, and now we can
+  14:22take that, that video game score type scenarioand
+  14:25we can run that using agent with absolutelyzero
+  14:28locking and zero blocking of our worker threads.
+  14:31And it&#39;s a very fascinating approach. LikeI said,
+  14:34the idea for this comes from the languageClojure.
+  14:36Now, again I&#39;m gonna take a step aside. We
+  14:39took a step aside a minute ago and talked
+  14:40about non-determinism. I&#39;m gonna take a stepaside and
+  14:43talk about another concept that&#39;s very importantin concurrent
+  14:46programming.
+  14:48This code right here is horribly, horriblybroken. All
+  14:52right. The agent does exactly what it&#39;s supposedto
+  14:55do, but the way I use the agent in
+  14:56this code is ridiculously broken and bad.Take a
+  14:59second to look at it and think about it
+  15:1and I&#39;ll tell you what the problem is.
+  15:2K. I gave you a hint earlier on, during
+  15:5the introduction. I said there&#39;s somethingthat we really
+  15:8need to worry about that&#39;s really, really,really bad.
+  15:10And that&#39;s mutation, K.
+  15:13The value that we gave to that agent is
+  15:16an array, right. And that is an array of
+  15:19hashes. And those are mutable data structures.So whenever
+  15:23we retrieve the value from that agent, weare
+  15:26retrieving a reference to a mutable data structure.
+  15:30So although that agent will queue up thoseoperations
+  15:33on one thread to make sure they don&#39;t compete
+  15:35with one another, any thread that has a handle
+  15:38to that agent and wants to get that value
+  15:40is gonna be retrieving a mutable reference,right. And
+  15:44that&#39;s really bad. That can lead to a lot
+  15:46of pain and agony. Don&#39;t do that.
+  15:49So here&#39;s the question - how do we avoid
+  15:50doing that? Cause, let&#39;s be honest. We&#39;reworking in
+  15:52Ruby. A lot of the languages that are concurrency-friendly
+  15:54are things like Clojure and Erlang and Haskelthat
+  15:58have immutable variables. Ruby does not haveimmutable variables.
+  16:2Problem.
+  16:2So how do we solve this problem? In this
+  16:4case, we solve it with a hamster.
+  16:10Did anybody see that coming?
+  16:12In 2000, a gentleman named Phill Bagwell starteddoing
+  16:14some research into something called a tri.All right,
+  16:15a tri is a high-performance tree-like datastructure which
+  16:19every node has at least two hundred and fifty-six
+  16:21other nodes hanging off of it.
+  16:23By having two-hundred and fifty-six nodesoff of every
+  16:25node, we can have one million nodes in a
+  16:28tri with only three levels deep, which givesus
+  16:31incredibly fast access to those nodes.
+  16:34He then followed that up with something calledan
+  16:36ideal hash tree. Has anybody heard of an ideal
+  16:38hash tree? All right, an ideal hash tree is
+  16:40a very high-performance data structure whichallows you to
+  16:44create immutable data structures, but havethem perform very
+  16:48fast, because what you&#39;re doing is in thetree,
+  16:50you&#39;re storing indexes to the objects, you&#39;renot, and
+  16:53when you copy things, you are now copyingthe
+  16:56indexes, not the objects themselves.
+  16:57An ideal hash tree is the underlying enginethat
+  17:1makes Clojure work.
+  17:3Clojure gets its immutable variables withhigh performance list
+  17:8comprehensions because the underlying engineis this thing called
+  17:11an ideal hash tree. Well, fortunately forus, a
+  17:15couple of Rubyists went and read the samepapers
+  17:18by Phil Bagwell and had the same ideas, and
+  17:20they created a library for us that providesus
+  17:22with high performance immutable data structures,and that particular
+  17:25library is called Hamster, k.
+  17:27Hamster&#39;s an opensource gem. It proves a threadsafe,immutable,
+  17:32high-performance data structure. So now whatwe&#39;ve done in
+  17:34this case is we&#39;ve replaced that example ofthe
+  17:37agent we used before, getting rid of the array,
+  17:39which is not safe, putting in our Hamstervector
+  17:42instead. Now every time we operate in thatvector
+  17:44we of course have to replace the vector, cause
+  17:46it&#39;s a non-mutable struct- immutable datastructure.
+  17:49But really all we&#39;re doing is internally justreplacing
+  17:51the indexing, and it&#39;s doing it for me fast.
+  17:54So now we&#39;ve created a thread safe immutabledata
+  17:57structure inside of our agent, and now weget
+  17:58the behavior that we wanted with absoluteand complete
+  18:2safety, k.
+  18:2So the point to understand is in Ruby, we
+  18:6have mutable variables. Mutable variablesare bad in concurrency,
+  18:9so when you are using variables, passing variablesacross
+  18:12threads, make sure you, whenever possible,make them immutable.
+  18:16Now, the second example is an important onefor
+  18:19comparison.
+  18:20This, the second example is from a librarycalled
+  18:22thread_safe. It&#39;s written by one of the peoplefrom
+  18:25the JRuby core team, and it provides thread-safeimplementations
+  18:29of Ruby&#39;s hash and array. It is a really,
+  18:32really great library that does really, reallygreat work,
+  18:34and it&#39;s something you should definitely knowabout if
+  18:36you&#39;re doing concurrent code, because threadsafety is important.
+  18:39But notice, with that, we still have the same
+  18:42problem we had before, cause it&#39;s still mutable,K.
+  18:45We&#39;re still passing mutable records. So, youdefinitely should
+  18:48get to know thread_safe, you definitely shouldget to
+  18:50know Hamster. You should definitely be awareof thread-safety,
+  18:52but remember, whenever possible, immutabilityis the best.
+  18:57So. So there&#39;s JavaScript programmers. Howmany JavaScript programmers
+  19:0in here are familiar with promises? All right.
+  19:4So a promise is a contract between you and
+  19:8something that happens on another thread.A promise is
+  19:10a very popular data struct- or excuse me,concurrency
+  19:13abstraction in JavaScript, and it&#39;s divinedby two specifications.
+  19:17Promises a and promises a plus.
+  19:20Promise is basically a future, right. It&#39;spart of
+  19:23that general class of future. We send it this
+  19:24thing off with the promise, and it promisesto
+  19:27us that it will get us a value at
+  19:29some point.
+  19:30Promises as expressed in JavaScript are verydifferent than
+  19:33the future that we saw earlier in one special
+  19:36way. Promises are chainable, K. The futurewe looked
+  19:39at earlier was a one-shot deal. Send it out
+  19:42there, it does its thing, it returns a value
+  19:44and it becomes immutable at that point. Done.
+  19:47Promises are chainable. A promise can begeta promise
+  19:49can beget a promise can beget a promise. They&#39;re
+  19:51not only chainable, but you can make treesout
+  19:53of them as well, K. In order to make
+  19:55that work, there are some actual some error-handlingsemantics
+  19:58built on there, too. You can say, when this
+  20:0happens, rescue this, on error this and soon
+  20:3and sort forth.
+  20:3So a promise is very much like a future
+  20:6in this implementation a promise supportsall the same
+  20:9methods we saw earlier on future. The ideaof
+  20:11state being pending, fulfilled, rejected.Value, reason and so
+  20:15forth. The difference is, however, the chainabilityof this.
+  20:18There&#39;s greater internal plexy to make thathappen, but
+  20:21you can then use that in a very similar
+  20:23way, especially for chaining.
+  20:25In this particular case, promise does notimplement observable,
+  20:30and the reason why is that in this case,
+  20:32the call-back mechanism is built into promisethrough the,
+  20:35the chaining, right. So promise, like I saidthis
+  20:37particular implementation is very true topromises a and
+  20:41a plus specifications from JavaScript, butit&#39;s a Ruby-ish
+  20:44library.
+  20:45OK. How many people know what Chron is? That
+  20:49should be everybody in the room. So one of
+  20:52the things that we oftentimes want to do is
+  20:54we want to have a task or something that
+  20:56occurs at a very specific time. If you&#39;rein
+  20:59Rails land, there are gems that allow us to
+  21:1do this, right. But if you&#39;re outside of Rails
+  21:3land, not quite so easy.
+  21:5So looking at Java, of all languages, Javaprovides
+  21:9this really cool abstraction that allows usto handle
+  21:11this thing where we want to have somethinghappen
+  21:13at a certain time. Now of course because it&#39;s
+  21:16Java, it has a really stupid name. It&#39;s called
+  21:18the scheduled executor service.
+  21:22But it&#39;s actually a really cool abstraction.And so
+  21:24because I&#39;m not a Java person I&#39;m gonna call
+  21:27it schedule task. So this implementation schedule_taskis based
+  21:30upon Java scheduled executive service, andit does basically
+  21:34the same thing. You create this thing, youpass
+  21:36it a block. And you say, I want this
+  21:38operation to occur at a certain time, right.
+  21:40And then you can say either this many seconds
+  21:42from now, or at this specific time. Right.Then
+  21:45it just goes off and it does that, right.
+  21:47This supports the same, for consistency, supportsthe same
+  21:50kind of interface that we saw in future earlier,
+  21:52cause I&#39;m, I&#39;m not that smart and I like
+  21:54things to work the same so I can remember
+  21:56them.
+  21:57So it provides us with a state that&#39;s pending
+  21:58and fulfilled and reject, and provides usvalue and
+  22:2reason and so forth. And this can go ahead
+  22:3and go on and make that operation occur at
+  22:5a specific time. Now, the astute among youmight
+  22:8be saying, all right, Jerry, that&#39;s reallycool, but
+  22:10how is that different from just basicallycreating a
+  22:12future and making the thing go to sleep, you
+  22:14know, when you first create it?
+  22:15Well, it really isn&#39;t. I mean, I could literally
+  22:17do the same thing by creating a future and
+  22:19having the first line of the block I passed
+  22:21the future be sleep. There&#39;s two reasons whyI
+  22:24don&#39;t.
+  22:24One, is cancel-ability, right. The intentof a future
+  22:27is to say go and do this right now.
+  22:30The intent of a scheduled task is go and
+  22:33do this later. So a scheduled task can be
+  22:35canceled. You can&#39;t cancel a future. Onceyou set
+  22:37that thing in motion it&#39;s done, right. It&#39;sjust
+  22:39gonna work.
+  22:40This allows us to cancel it. There&#39;s anotherreason.
+  22:42It&#39;s more important, and again, this is somethingthat,
+  22:45it transcends this particular implementationbut is true of
+  22:47concurrency abstractions in general, K.
+  22:50And it&#39;s the idea of intent. You&#39;ll noticeas
+  22:54we&#39;ve gone through this that we&#39;ve workedvery hard
+  22:56to decouple our business logic from our concurrencylogic.
+  22:59It&#39;s done on purpose, all right. If you&#39;veever
+  23:2tried to test concurrent business logic, youfound out
+  23:5that it&#39;s probably very hard and painful,all right.
+  23:8When we test, we set things at a known
+  23:10state, we change that state and verify thatthe
+  23:13new state is what it&#39;s supposed to be. Concurrency
+  23:16is non-deterministic. It is very hard in aconcurrent
+  23:19environment to create a known state. That&#39;sthe whole
+  23:22problem.
+  23:22So if you decouple your business logic fromyour
+  23:27concurrency logic, you can test the businesslogic in
+  23:29a way that&#39;s not concurrent, make sure thatyour
+  23:32business logic does exactly what it&#39;s supposedto do
+  23:34- our crash test dummy example being that.Make
+  23:37sure it does what it&#39;s supposed to do.
+  23:39Then you can take a concurrency abstractionthat is
+  23:42tested and that has defined behavior and doesa
+  23:45specific thing, and you can put the two together
+  23:48with a very minimal intersection, and nowyou&#39;re testing
+  23:50a concurrency becomes minimal, because youjust have to
+  23:52test an intersection, right.
+  23:54So when we do that, now we have code
+  23:57that very clearly expresses intent. When I&#39;mlooking at
+  24:0code and you see something that says scheduletask,
+  24:3that expresses intent. It has meaning. Ittells you
+  24:6that there are certain concurrent behaviorsgoing on.
+  24:9You see something called future. That expressesintent. You
+  24:12see something called agent, that expressesintent. So although
+  24:15in this case we could have simulated scheduletask
+  24:19with future, or in fact we could have simulated
+  24:21all of these things with something calledactor that
+  24:23we&#39;re gonna look at later on. By having a
+  24:25abstraction that does one thing very wellwe better
+  24:28express intent and we allow ourselves to optimizethat
+  24:33abstraction for the thing it needs to do.
+  24:35So, schedule_task, in this case, looks verymuch like
+  24:38future, but it has that scheduling.
+  24:40Now for all of us who like to use
+  24:41Chrone - oh, and also, in this particularcase,
+  24:44this implementation schedule_task does, ofcourse, support observer as
+  24:47well, so that we can have that call-back type
+  24:49ability, right. Again, I&#39;m not very bright.I like
+  24:51my things to work consistently so I can remember
+  24:53how they go. So this observ- is observableas
+  24:56well.
+  24:57So getting back to that Chrone example, wehave
+  24:59another reason to use Chrone is repetition.We want
+  25:2something to happen over and over and overand
+  25:3over again. Whether it&#39;s every five secondsor every
+  25:6minute or every ten minutes or whatever, K.
+  25:9Java provides us with a really cool abstractionto
+  25:11do that too. And unlike scheduled executorservice, the
+  25:16abstraction for this in Java actually hasa name
+  25:18that&#39;s not entirely stupid. It&#39;s called atimer_task, right.
+  25:23So a timer_task is simply this. It says, here&#39;s
+  25:26an operation I want you to perform. I want
+  25:29to perform at this particular interval, fiveseconds- however
+  25:32many seconds, right - and if that tasks takes
+  25:35longer than a certain timeout value, killit.
+  25:38Now this is broken, K. You know, I notice
+  25:41though, one thing different about this fromthe things
+  25:43we saw before is this is a run method
+  25:45that we&#39;re calling on here, on line nine.
+  25:47Remember that when we come back to that in
+  25:48a minute, K.
+  25:49So I create this timer task, we give it
+  25:51the timer values, we send this thing off and
+  25:53just say just go do this thing over and
+  25:55over and over again, K. Shouldn&#39;t surpriseyou by
+  25:58now that, in this particular implementation,cause, you know,
+  26:2we like consistency, it also supports observabilityas well,
+  26:5K. So we can have this timer task go,
+  26:8we can run it, we can attach an observer
+  26:9to it, and every time that it occurs, we
+  26:11can have the observer or observers respondto that
+  26:14in a call-back like fashion, K.
+  26:16Now, so one of the things that this does,
+  26:20one of my co-workers is using this in a
+  26:21project he&#39;s working on, he came to me and
+  26:23said, how do I stop this thing once it&#39;s
+  26:25started? I&#39;m like, what do you mean, it&#39;ssupposed
+  26:27to go forever.
+  26:28You can call stop on it, but you&#39;d call
+  26:30that, but I don&#39;t wanna, see, but I don&#39;t
+  26:32wanna call stop from main thread. He said,what
+  26:33happens if within the block that&#39;s running,there&#39;s something
+  26:36occurs, and I want to, based upon that logic,
+  26:39change the execution whenever I want to shutthis
+  26:41thing down?
+  26:42So I thought, it&#39;s a good use case I
+  26:44hadn&#39;t thought of. but it&#39;s very smart one.So,
+  26:45based upon that, him and I sat down. We
+  26:47paired and created small changes and said,you know
+  26:49what, let&#39;s just, inside that block, everytime it
+  26:52executes, lets pass a reference to the taskitself.
+  26:56Basically, self. Right. Within the block,self isn&#39;t gonna
+  27:0be what we want it to be, so we&#39;ll
+  27:1pass that task in. Now, that scheduled taskhas
+  27:5the ability to change its own life cycle within
+  27:7the block by changing its own timer valuesor
+  27:10by making or stopping itself if necessary.OK.
+  27:15Now last, a really important topic we&#39;re gonnatalk
+  27:17about, well, not the last topic, but really,a
+  27:19big topic. Let me ask this question: How many
+  27:22people have heard of the actor model for concurrency?
+  27:26OK.
+  27:27Good. How many people have heard - so, Always
+  27:31Sunny in Philadelphia for those of you whodon&#39;t
+  27:33know.
+  27:34How many people here have heard that Erlangimplements
+  27:37the actor model for concurrency? A few? Allright.
+  27:40So actor model is sort of a big deal
+  27:43these days. Now here&#39;s the interesting - now,I&#39;ve
+  27:46been doing this a long time, nearly twentyyears,
+  27:47and if there&#39;s one thing I&#39;ve learned in twenty
+  27:48years of being a programmer, is if there&#39;sanything
+  27:50that programmers want to talk about, apparentlyit&#39;s also
+  27:53worth getting into ridiculous flame wars over.
+  27:56And actor, the actor model for concurrencyis the
+  27:59same thing. K. This is surprisingly controversialin some
+  28:2circles, K. There are some people who thinkthat
+  28:5the actor model can only do concurrency andeverything
+  28:7else should just go away, and there are people
+  28:8who think that they&#39;re completely wrong, right.
+  28:10Not gonna weigh into that debate. Just understandthat
+  28:12debate, they exist. There&#39;s also a debateabout what,
+  28:16exactly, an actor is. So here&#39;s the thing,at,
+  28:19the actor model was first proposed in 1973,right.
+  28:23A gentleman named Caller Hewitt and his associatesworking
+  28:27at the MIT Artificial Intelligence lab, publisheda paper
+  28:30called The Actor Model for Concurrency.
+  28:32Well, it shouldn&#39;t surprise you that in thepast
+  28:35forty years, a lot has changed with respectto
+  28:39programming. What they really described inthis paper was
+  28:42a pattern, right. They weren&#39;t, they weren&#39;tusing the
+  28:44term pattern the same way back then. So they
+  28:46don&#39;t call it a pattern. But they said, we&#39;ve
+  28:48seen a bunch of things that behave a certain
+  28:50way, and we&#39;re gonna document the way thesethings
+  28:53behave.
+  28:53And anything that behaves this way we&#39;re gonnaretroactively
+  28:56call an actor. Right. This is also beforethe
+  28:58days of object orientation, long before Gangof Four
+  29:1wrote their book, so we didn&#39;t have greatdiagramming
+  29:4techniques for creating class and object designs.
+  29:7So they used the only notation that they knew
+  29:9at the time, which was a mathematical notation,which
+  29:13means this paper, which is very fascinatingto read,
+  29:15is, has very limited direct applicabilityto today. The
+  29:20ideas, forty years later, are still very good,but
+  29:22the paper, as far as being a blueprint for
+  29:24creating an actor, is very limited.
+  29:27So as a result, today in 2013, there is
+  29:30no single universally agreed upon strict definitionof what
+  29:36an actor is. Additionally, there is no onecanonical
+  29:39implementation of actor. If you look at everythingthat
+  29:42people- that claims to be an actor, and things
+  29:45that people claim are actors even when theydon&#39;t
+  29:47claim to be actors themselves - they all look
+  29:49very, very different.
+  29:51And so that leads to a lot of debate
+  29:52within the actor community about what reallyan actor
+  29:54should look like. K.
+  29:57So for the purposes of this presentation,I&#39;m going
+  29:59to give you my definition of actor. OK, I&#39;m
+  30:1sure I&#39;m gonna get flamed for it by somebody,
+  30:3but, you know, we have to move forward.
+  30:5So here&#39;s my definition of actor. An actoris
+  30:8an independent single purpose concurrent computationalentity. Again, an
+  30:16independent single purpose concurrent computationalentity that communicates via
+  30:23messages, K. It&#39;s gotta, it&#39;s gotta do something.It&#39;s
+  30:28got to be independent computational entitythat does something.
+  30:31A class called actor is not an actor. A
+  30:35class called actor can create an object whichbehaves
+  30:38as an actor, but it&#39;s gotta be something that
+  30:41does something.
+  30:42It has to be concurrent. All right, that was
+  30:44one of the key things about the original paper.
+  30:45And it has to be single-purpose. Now thisis
+  30:48critical. When Hewitt and his colleagues wrotethis paper,
+  30:51they, their examples were people performinga play on
+  30:57a stage.
+  30:58Every actor fulfills a role. Every actor playsthat
+  31:2role. There is not a tremendous amount of,there&#39;s
+  31:6no overriding control of those actors. They&#39;reall acting
+  31:9independently. But they coordinate amongstthemselves to do something
+  31:13greater than the sum of its parts.
+  31:16So an actor must perform a role in order
+  31:19to be an actor, K. And one of the
+  31:21key things about the original Huett paperwas it
+  31:23said, y ou must communicate via messages,K. Now
+  31:26they didn&#39;t define what a message is, andthat&#39;s
+  31:29one of the areas where there&#39;s a lot of
+  31:31contention these days is, what constitutesa message?
+  31:33Now, if you were using Erlang, or using Scala,
+  31:36or some language like that, they have built-ininter-process
+  31:40messaging systems, right. The bang operatorin Erlang is
+  31:44a way of one process sending a message to
+  31:46another process.
+  31:47A message in that case is pretty cut and
+  31:49dry. In Ruby, we have no similar underlyingcommunication
+  31:53mechanism to define a message. Therefore inRuby it&#39;s
+  31:57kind of hard to decide what constitutes amessage.
+  31:59So.
+  32:0The example I&#39;m gonna show you, the exampleI
+  32:1like the best, is by no means the right
+  32:5example or the canonical example and I&#39;m surea
+  32:7lot of people will think that my choice is
+  32:8not good, and that&#39;s fine, but the exampleI&#39;m
+  32:10gonna show you is based upon Scala&#39;s actorclass
+  32:13for, a trait, excuse me, from the Scala standard
+  32:16library.
+  32:17Now Scala has since deprecated this particulartrait and
+  32:21moved on to the acka library. But this particular
+  32:25implementation of actor from Scala servedScala programmers very
+  32:28well for a number of years, and it exhibits
+  32:31all of the things an actor is supposed to
+  32:32exhibit, and its also very simple. And I&#39;ma
+  32:34simple guy. I like simple libraries that areloosely
+  32:37coupled and that give me things that workreally
+  32:39well by themselves.
+  32:41So here&#39;s how this works.
+  32:42Straightforward. You extend the actor class.The actor class
+  32:47there, then gives your object all of the message
+  32:50patching semantics it needs. It gives it thethreading
+  32:53it needs so this thing can run on its
+  32:54own thread, right, and it handles queuingof the
+  32:58messages. Every time a message comes in, itcalls
+  33:1the act methods, which you, in your subclass,override,
+  33:5in order to give your actor some behavior,right.
+  33:7In this case, this is a pretty simple example,
+  33:9all its gonna do is basically echo the message
+  33:11to the screen, K.
+  33:13Straightforward - very simple. Now, the problemwith that,
+  33:16when you give each actor its own thread, or
+  33:19its own process, the problem you run intois
+  33:21one of contention. Blocking. Right.
+  33:24If your actor performs some lengthy operationsuch as
+  33:28blocking IO, you run the risk of having a
+  33:30whole bunch of stuff back up in the queue.
+  33:34So most actor implementations will give yousome ability
+  33:36to pool actors off of some shared mailbox,right.
+  33:40So that that way you can have a whole
+  33:42bunch of threads running with a whole bunchof
+  33:44different actors and you can send messagesto one
+  33:46place, K.
+  33:47F#&#39;s mailbox processor works this way. Ackaworks this
+  33:51way. Scala&#39;s original acka works this way,cellular works
+  33:54this way, right. The idea of a pool. So
+  33:56the way you get a pool out of this
+  33:57particular implementation is you just callthe pool method
+  34:0off of the, the class, tell it how many
+  34:2things you want, then we return a whole bunch
+  34:5of actors that all share one mailbox, andit&#39;ll
+  34:8return the mailbox, right. It&#39;s very simple.
+  34:10You can then run each of the things in
+  34:12the pool and you can start sending messagesat
+  34:13it, and all those things in the pool will
+  34:15then start handling those messages, K. It&#39;svery straightforward,
+  34:19K.
+  34:20And again this is a very Scala-ish way of
+  34:22doing things. So when, now you&#39;ll notice thoughwhen
+  34:26you call post and you send the message in
+  34:28there there&#39;s no way to then interact withthat
+  34:29message or that result later on, K. That was
+  34:32by design in Scala&#39;s actor class, becausethe original
+  34:37actor model paper from 1973 said actors onlyinteract
+  34:42with each other via messages, K.
+  34:44Now, again, a lot&#39;s changed in forty yearsand
+  34:47that&#39;s not necessarily that efficient, andso sometimes you
+  34:48want to have other ways to interact with that,
+  34:50and so Scala, Martin O&#39;Dersky being a verysmart
+  34:54guy, decided to create other ways to interactwith
+  34:56the actor. So here&#39;s two other ways that you
+  35:0can interact with this particular actor whensending messages.
+  35:3The first one is the post question mark, all
+  35:5right. What that does is it sends a message
+  35:7to the actor and it returns a future object,
+  35:11K. This is a very common paradigm in asynchronous
+  35:15programming where we send something off forprocessing and
+  35:18we get back a future. In this case, that
+  35:20future object behaves exactly the same asif you
+  35:22put a future object in the beginning: pending,fulfilled,
+  35:26rejected, value, reason, K.
+  35:29So when I send this thing off to the
+  35:30actor I get my future object back, I go
+  35:32through my very important stuff and lateron I
+  35:34query that object to see how it occurred.
+  35:37The second example is post bang, all right.There
+  35:40are cases where you may want to use an
+  35:42actor in a synchronous capacity, but here&#39;sthe problem.
+  35:46An actor&#39;s trying to queue up these operations,so
+  35:49as to prevent locking. So we don&#39;t have to
+  35:51lock so that we can have these happen one
+  35:53at a time. If we try and use an
+  35:55actor synchronously and asynchronously atthe same time we
+  35:59run the risk of breaking things very badly.
+  36:1So any case where you might want to use
+  36:3this thing synchronously - and again Scalaprovided the
+  36:6same capability - you&#39;re gonna call this methodpost
+  36:11bang, which will then block and wait for the
+  36:14operation to complete, thus imitating synchronousbehavior. Now the
+  36:18problem with that is when that occurs, there&#39;sno
+  36:21way of knowing what the result is other than
+  36:23the return value of the, of the method.
+  36:25This case, on success, this will return the,the
+  36:28result of the, the processing of the message,right.
+  36:32So in this particular case, this is one of
+  36:34the few places in this library we&#39;re gonnasee
+  36:36any kind of exceptions being raised, all right.If
+  36:39this thing times out, we&#39;re gonna raise atime
+  36:40out exception, if, for some reason the messagecan&#39;t
+  36:43be queued, we&#39;re gonna get a life cycle exception.
+  36:45If our operation throws an exception, theactor will
+  36:48then handle that internally the way it handlesall
+  36:51other exceptions, and then reraise that exceptionout of
+  36:53this particular method, all right.
+  36:55And that way it allows us to treat this
+  36:56in a very synchronous way, but we&#39;re givena
+  36:59very strong warning that, really, what we&#39;redoing might
+  37:1not be quite the best way to do it
+  37:2and we&#39;re gonna get exceptions, so we&#39;re gonnawant
+  37:4to wrap that in a rescue block, OK.
+  37:5And, at this point it should be no surprise
+  37:8to you that this particular actor implementationalso supports
+  37:12observers, because it&#39;s very common in thecase of
+  37:14actor frameworks to provide some sort of callback
+  37:17against messages being processed successfully.
+  37:20So here we leverage that observer again. Andif
+  37:23you&#39;re familiar with actors, you know thatthe canonical
+  37:25actor example, the hello world of actors,is a
+  37:27ping pong example, so for completeness, hereis a
+  37:30ping pong example using this particular actorimplementation.
+  37:32That actually, I took that directly from theScala
+  37:36tutorial on actors and, and rebuilt it usingRuby,
+  37:39K.
+  37:40So last concept. How many people here haveheard
+  37:43about Erlang being a very fault-tolerant language.Nine-nine&#39;s availability
+  37:48in some cases (00:37:49). How many peoplewould like
+  37:50to have their Ruby programs have nine ninesof
+  37:53uptime? All right, that should be everybodyin the
+  37:55room.
+  37:56There&#39;s nothing magic about Erlang. You probablyhave heard
+  37:58of the let-it-fail philosophy of Erlang, allright. There
+  38:2really, truly is nothing magical about Erlang.In the
+  38:5language or the virtual machine itself. This,it&#39;s a
+  38:7great language and does some really cool thingsbut
+  38:9then the actual nine-nine fault tolerancecomes from something
+  38:14called the supervisor, all right.
+  38:17How many - how many people have heard of
+  38:19the supervisor in Erlang? OK. This is sucha
+  38:22powerful concept that you see supervisorsall the time
+  38:25in concurrency libraries. You see supervisorsin Acka, you
+  38:27see supervisors in Celluloid, you see supervisorsall the
+  38:31time.
+  38:31So what is a supervisor? The idea in Erlang
+  38:33is, when we create these processes, we sendthem
+  38:36out to do things, and if something goes wrong
+  38:38we want to let them crash. Why do we
+  38:41let them crash?
+  38:42WE let them crash because we don&#39;t want to
+  38:43have anything in some kind of intermediatestate, K.
+  38:46If you&#39;re like me you&#39;ve probably programmedsome kind
+  38:48of wrapper at some point in your life, where
+  38:49you thought I&#39;m gonna put this really greatsimple
+  38:52O-O wrapped around some whole bunch of complexstuff.
+  38:55And I&#39;ve got connections and all these variousthings
+  38:57in there, and then one of those things blows
+  38:58up. Now I&#39;ve got this mess, and I&#39;ve got
+  39:0to dig through all this kind of crap and
+  39:2figure out what state is this thing in so
+  39:4I can get the broken pieces back where they
+  39:6need to be.
+  39:7Erlang says no. Don&#39;t do that. There&#39;s onlytwo
+  39:10states. Good or bad. If it&#39;s good, great.If
+  39:12it&#39;s not, you should just kill it and let
+  39:13it die. Right, and that works only if there&#39;s
+  39:17a way to restart it, all right. This philosophy
+  39:20is really good because now it&#39;s very easy,it&#39;s
+  39:21very freeing. So I&#39;ve got this complex thing,something
+  39:24blows up, I&#39;m just gonna kill everything.
+  39:26All right. But that depends if I have something
+  39:27that restarts it. And in Erlang, that&#39;s thesupervisor,
+  39:31K. This right here is a functionally completeimplementation
+  39:35of Erlang&#39;s supervisor module, K. It&#39;s a,the Erlang&#39;s
+  39:39supervisor module provides a lot of reallygreat capabilities.
+  39:42It provides something called restart strategies,which allows you
+  39:45to define when one thing dies, what wouldyou
+  39:47do with the other things (00:39:49). It allowsyou
+  39:48to find child-types that could be permanent,temporary, transient,
+  39:52as meanings (00:39:53). You can provide asliding window
+  39:54of, of intervals. You can say if we get
+  39:57x number of crashes within y period of time,
+  40:0we&#39;re gonna shut the whole thing down.
+  40:2And one of the best things about Erlang&#39;ssupervisor
+  40:4is something called supervisor trees. Supervisorscan manage supervisors
+  40:9which can manage other supervisors. So ifyou look
+  40:11at Erlang&#39;s documentation on how to buildfault-tolerant systems,
+  40:15they discuss a bunch of very different treestructures,
+  40:18K.
+  40:19This particular implementation here is a functionallycomplete version
+  40:23of Erlang supervisor, and here&#39;s how it works.You
+  40:25can give this thing anything that supportsthree methods.
+  40:28A blocking run method, a runable predicatemethod -
+  40:31excuse me, a running predicate method, andthis stock
+  40:34method. You can use that to - and then
+  40:36you use the run method to start it and
+  40:37the stop method to shut it down.
+  40:40That&#39;s why we looked at a couple of things
+  40:41earlier that had that run method. So whatwe&#39;re
+  40:43doing in this case, we&#39;re gonna create a super-
+  40:45we&#39;re gonna create an actor. From that, fromthe
+  40:48actor class we create a pool of actors, all
+  40:50right. We&#39;re gonna create a couple timer tasks,which,
+  40:53that have random intervals. We&#39;re gonna createa supervisor.
+  40:55We&#39;re gonna tell the supervisor, manage andmonitor all
+  40:57of these things, here, add_worker, add_worker,add_worker. We then
+  41:0start the supervisor, and it runs, all right.And
+  41:4at that point it starts up all of those
+  41:5things, and all of those things run, and they
+  41:7all do all the things they want to do
+  41:8and the supervisor monitors them, and if anyof
+  41:10them should crash, the supervisor will restartthem based
+  41:13upon the restart strategy.
+  41:15And if you want, you can have supervisorsmonitor
+  41:18supervisors, so that that way, if something&#39;swrong with
+  41:19the supervisor, it can restart that wholething. All
+  41:22right, and thus you can get a supervisor tree
+  41:24and that is how languages like Erlang, andlibraries
+  41:27like Celluloid and Acka and so forth, gettheir,
+  41:30their fault-tolerant abilities, by using acts-supervisors to manage
+  41:35those processes.
+  41:37OK. Now this is a really long presentationand
+  41:39we don&#39;t have a lot of times, so I
+  41:40want to mention two of the libraries thatare
+  41:42very, that, that, express some really coolideas in
+  41:45terms of concurrency. And the first one isgonna
+  41:47be something called a vent machine. Vent machineis
+  41:49based upon the reactor pattern, right. Reactorpattern was
+  41:53first documented in 2000.
+  41:56We like vent machine a lot at VHT. A
+  41:57vent machine&#39;s basically like node.js4 forRuby, K. Oh,
+  42:3again, all these slides are gonna be up on
+  42:5GitHub as well as all the coding samples.
+  42:6Then the other thing is Celluloid. Celluloidis a
+  42:9fairly well-known, fairly popular actor-basedlibrary, written in Ruby,
+  42:13all right. It&#39;s got a good following, it&#39;sgot
+  42:16a very good community. And the Celluloid librarymakes
+  42:19it, has the expressed interest in making iteasy
+  42:24for you to add concurrency to your code.
+  42:28This right here is the original example weshowed
+  42:29at the very beginning of our crash test dummy,
+  42:31with one change. Up at the very top, you
+  42:33see include Celluloid. That makes this objectinherently asynchronous.
+  42:39It becomes something you can create actorsfrom, K.
+  42:43The Celluloid is a great library for makingyour
+  42:47job easy. But this particular implementationI&#39;m showing you
+  42:51here is horrible broken because it violatesa bunch
+  42:53of Celluloid rules, K.
+  42:55Celluloid is, has a very tightly coupled andvery,
+  42:59it&#39;s very powerful, but it&#39;s very tightlycoupled and
+  43:1it has a very, a lot of complexity internally.
+  43:7Because it&#39;s providing a lot of auto magicin
+  43:8order to prevent you from harming yourselfthrough concurrency.
+  43:12So when you look at Celluloid documentation,there&#39;s a
+  43:16page of gotchas, which describe the, the idiomaticway
+  43:19in which you need to use Celluloid.
+  43:20So Celluloid is another very powerful libraryfor doing
+  43:22actors, and for doing supervisors. And, and- but,
+  43:29using Celluloid properly requires a littlebit of work.
+  43:32So I encourage you to look not only at
+  43:35the library that I put together, but the vent
+  43:38machine and also Celluloid. Make sure whenusing each
+  43:40of those libraries that you are aware of the
+  43:42idiosyncrasies of those libraries and howthey work. And
+  43:44remember, you can never escape the underlyingrealities of
+  43:47concurrency, which are non-determinism andshared mutable data.
+  43:52So with that, my final thought is this. All
+  43:55right. My challenge to you is to go out
+  43:57and write code, K. If you&#39;ve never writtenconcurrent
+  44:0code before, you should know that writinggood concurrent
+  44:4code is something that requires effort. Youcan&#39;t learn
+  44:6about it by reading. You have to do it.
+  44:9Concurrent systems don&#39;t behave the way non-concurrentsystems work.
+  44:13They have different design patterns that makethem work.
+  44:15They have different ways of testing and debuggingand
+  44:17the only way to learn this is to write
+  44:19the code.
+  44:20Over the past forty-five minutes, we&#39;ve lookedat a
+  44:22tremendous amount of code that did a lot of
+  44:24very, very powerful things, and we never,ever once
+  44:26had to type thread dot new. We never once
+  44:30had to type dot synchronize off a mutex object,
+  44:34K.
+  44:35You can go out, using the libraries that we&#39;ve
+  44:37looked at today, using the code that I&#39;veput
+  44:39up on GitHub, and you can write concurrentcode.
+  44:42So if you think concurrency is important,which you
+  44:45should, if you think that learning to programconcurrency
+  44:48is good for you at your job and your
+  44:50career, which you should, and if you thinkconcurrency
+  44:53is something that is going to become justmore
+  44:55important in the near future, which it is,then
+  44:58you need to go out and write code.
+  45:1So add my GitHub page, all of the slides,
+  45:5detailed notes, all of the source code inRB
+  45:8files, and even a gem file. So that&#39;s my
+  45:11challenge to you. Pull out your computer,get clon-
+  45:14open up your favorite editor, git clone, bundleinstall,
+  45:17and write concurrent code. And with that,I&#39;m out
+  45:19of time.
+  45:20Thank you very much. My name is Jerry D&#39;Antonio.

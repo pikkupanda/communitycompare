@@ -1,0 +1,755 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=IlGD8lAUMoA
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16DAVY STEVENSON: Hey everyone, we ready? Readyfor some pirate game?
+  0:19AUDIENCE: Arrrr!
+  0:21D.S.: Arrr! I am Davy Stevenson. I work at
+  0:25the Ezri Portland R&amp;D Center in Portland,Oregon.
+  0:27ERIC HODEL: I am Eric Hodel. I work for
+  0:31AT&amp;T under Coby, who is doing the filminghere.
+  0:34REIN HENRICHS: I am Rein Henrichs. I alsowork
+  0:37for Coby at AT&amp;T and I am responsible for
+  0:39looking like a pirate and saying &#39;arrrr&#39; alot.
+  0:43Arrrr!
+  0:45D.S.: So, who here has played Spaceteam orknow
+  0:52what Spaceteam is? Excellent. We got at least,like,
+  0:55a third of you who kind of know what&#39;s
+  0:57coming. And the rest of you are in for
+  0:59a treat. Let&#39;s see if the sound here works.
+  1:1Maybe. This is the Spaceteam trailer. Sound,sound, there
+  1:4is sound.
+  1:5-SPACETEAM TRAILER-
+  1:5GUY: This is the captain speaker. I&#39;ve hadreports
+  1:13of incoherent shouting and confusion.
+  1:14D.S.: No sound. Anyway. So Spaceteam is aco-located
+  1:17collaborative mobile game, on IOS and Android,where you
+  1:24work together as a Spaceteam. So everyonegets a
+  1:30randomly generated board indicating your,your spaceship controls, and
+  1:36you get a command that you need, are responsible
+  1:37for making sure gets activated.
+  1:40However, that command is not necessarily onyour board.
+  1:46You also have to avoid asteroids. And wormholes.And
+  1:55there&#39;s other technical difficulties like,all of your controls
+  1:59turning into crazy symbols. Or falling apart.Or there&#39;s
+  2:4boo and random other things that can ruinyour
+  2:7life.
+  2:10There is also a massive player mode, whichI
+  2:18actually didn&#39;t know about until watchingthis trailer. Anyway,
+  2:21it&#39;s gotten lots of awards and is a lot
+  2:22of fun to play. So Eric and I like
+  2:26writing DRb, and so when we, we&#39;re tryingto
+  2:30figure out a good topic for, you know, a
+  2:33talk about it, and we decided, well, whatif
+  2:35we reimplemented Spaceteam, but used, usedRuby to do
+  2:39it?
+  2:40What if we used DRB and Rinda to do
+  2:43the distributed performance, and why, whynot use Shoes
+  2:48to write the, the GUI application?
+  2:54And then we decided, well, you know, Space--
+  2:56that Space. Let&#39;s do it with pirates.
+  3:3So-
+  3:3E.H.: So, we chose to use DRb because it,
+  3:7it leaves, easily allows us to communicatebetween multiple
+  3:10processes, where you either, on the same machineor
+  3:13across the network. And you&#39;re both able toget
+  3:16and send data really easily. It&#39;s really transparentand
+  3:19it&#39;s peer-to-peer so you don&#39;t need one serveror
+  3:22any of that. You just go and connect to
+  3:24each other.
+  3:27We use Rinda because it allows us to flexibly
+  3:30discover the other services. So we don&#39;t haveto
+  3:33have any, any explicit destination. You canjust put
+  3:35it in this, it includes a tuplespace, youcan
+  3:37just put it in the tuplespace, and put information
+  3:39in the tuplespace, get it out through Breezy.
+  3:43But, we chose Shoes because - Davy is gonna
+  3:46explain.
+  3:47D.S.: So, you know, a lot of people have
+  3:50asked me, you know, why, why didn&#39;t you just
+  3:51write a web-server and do, you know, do it
+  3:53that way? And one is that, you know, HTTP
+  3:57is already sort of a distributed protocol.Trying to
+  4:0do things with DRB and Rinda behind the scenes,
+  4:3it&#39;s not quite as obvious that something awesomeis
+  4:6happening, because we all are, for the mostpart,
+  4:9have done web-programming before. And, youknow, have, setting
+  4:13up a server somewhere far away, that&#39;s, youknow,
+  4:15easy to handle a lot of the, that background
+  4:18processing.
+  4:19Not only that, but this is RubyConf. Not RailsConf,
+  4:22or web-programming with RubyConf. So we reallywanted to
+  4:25put a talk together that had nothing to do
+  4:26with web programming at all. So Shoes.
+  4:30Shoes is a really great resource that theRuby
+  4:32community has. But it needs a little bit of
+  4:35love and attention. For us, it was a perfect
+  4:38showcase for distributed code, because ititself has, you
+  4:41know, no communication built in at all. Shoesis
+  4:47also, you know, I think, finding some greatexamples
+  4:54of really cool things you can do for Shoes
+  4:55and trying to get people a little bit more
+  4:57involved in the development was another reallybig plus
+  5:0for me, personally.
+  5:3R.H.: So you might all be wondering, why pirates?
+  5:6And as the resident pirate expert and beard,I&#39;m
+  5:10going to tell you there are two reasons why
+  5:12pirates.
+  5:12One, because this is a Ruby Conference, andpirates
+  5:16like treasure. Nothing? And two, because piratesare clearly
+  5:19better than, than space teams. Clearly moreexciting to
+  5:23be a pirate. And that&#39;s it.
+  5:27No, that&#39;s it. That was- Also, yarr. I have
+  5:30to. I&#39;m contractually obligated to say yarr.
+  5:33D.S.: OK, so I Tweeted this out yesterday.Tweeted
+  5:38it out last night, really late. Other peoplere-Tweeted
+  5:40it out this morning. But just to make sure,
+  5:42if you want to play this game, you need
+  5:44to have followed the preparation instructions.You have to
+  5:46install JRuby, install Shoes.
+  5:48AUDIENCE: Yay JRuby!
+  5:49D.S.: And we&#39;ll get back to that. There&#39;salso
+  5:52a - all this information, which is now in
+  5:54the pirate_game GitHub repo. So we want tolook
+  5:58there and find it - all the preparation instructions.
+  6:2E.H.: So DRB is a remote invo- a method
+  6:6invocation library for Ruby. So it allowsyou to
+  6:9use remote methods as if they were local,and
+  6:12call them the same way you would call local
+  6:15methods. It&#39;s part of the standard library,and you
+  6:18can load it with require DRb.
+  6:22And so here we have an example of a
+  6:24shared array over DRb. In the first line we
+  6:27create an array and then we go and share
+  6:29it, and we put nil in that first argument
+  6:31so that DRb can pick which URI. So we
+  6:35display that, and then at the bottom herewe
+  6:36wait for you to quit the server.
+  6:41And so, in the client, we just go ahead
+  6:42and reference it with that URI that we, we
+  6:44printed out. You know, we can go and apend
+  6:47an a or push a b or a c
+  6:48on there. And then in a, in a third
+  6:52process, we can go and get that referenceagain,
+  6:55and then if we go and print out within
+  6:56the array it goes to the server and it
+  6:59can see all the stuff we&#39;ve added to it.
+  7:3And Rinda is an implementation of the Rindatuplespace
+  7:6model of distributed programming. There&#39;sa, there&#39;s a book
+  7:9on this, but I forgot to include the link.
+  7:11So ask me later.
+  7:13And it&#39;s also part of the standard library.You
+  7:14can load it up with rinda slash tuplespace.And
+  7:17it stores tuples or, kind of like, arrays,so,
+  7:21an arbitrary length of data. So you can write
+  7:24a tuple into the space, and then the reader
+  7:26take tools out of the space with, what, what
+  7:28are, what, what - excuse me, with templates.
+  7:31And they are what Rinda calls can anti-tuple.
+  7:35And so this is an example we use in
+  7:38pirate_game. So there&#39;s several operations.There&#39;s read and write
+  7:43and take. And so with the take here, we
+  7:45go in with this template, so the first thing
+  7:48- it must be a button. And the second
+  7:49thing must be a string. But the third thing,
+  7:51it&#39;s a range. So it uses the case equals
+  7:54operator to match that.
+  7:55And then the last one is a nil. It
+  7:57can be anything you want. And so that&#39;ll just
+  7:59wait until a tuple appears in the space that
+  8:1matches it. And then you&#39;ll get that tupleback
+  8:3out. And so this is waiting for the user
+  8:6to press the keel button. So when the user
+  8:9presses that on, possibly another machine,it&#39;ll go and
+  8:12write this tuple in with the current timestamp.And
+  8:14so if those match up you press the keel
+  8:16button at the right time, then that takesit,
+  8:17it goes and returns and, you know, can register
+  8:20the action that you&#39;ve pressed.
+  8:23And then, on top of the tuplespace, Rindaprovides
+  8:26service discovery through the Rinda::Ringlibrary. And so it
+  8:31has coordinates between processes using broadcastor unicast UDP
+  8:38messages with multisport- multicast supportcoming in Ruby 2.1.
+  8:42And it holds the tuplespace use for all the
+  8:45And then there&#39;s also the ring provider, whichis
+  8:47a wrapper for advertising your service on,into the
+  8:50tuplespace.
+  8:52D.S.: So Shoes was originally created by _why,to
+  8:56be a very simple cross-platform GUI toolkitfor the
+  9:0Ruby language. There has been a couple ofrewrites
+  9:4since then. The current is, Shoes4 is an all-Ruby
+  9:7rewrite. It is still under active development.So if
+  9:10you go look at the preparation instructionsyou&#39;ll notice
+  9:12that I require you to check out a very
+  9:15specific commit of Shoes4.
+  9:18Mainly because, people have been doing a lotof
+  9:20awesome work in the month of October, andwe
+  9:22were not able to keep up and make sure
+  9:24that Pirate Game works with the, all the cool
+  9:27new stuff that&#39;s been added. We&#39;re gonna beworking
+  9:29on that in the future, hopefully.
+  9:33So the, there&#39;s a Shoes manual online, whichhas
+  9:37been for the, you know, previous Shoes versions.So
+  9:41you can read a lot more about a lot
+  9:43of the things that, that are provided by Shoes.
+  9:45There&#39;s, you know, basic layout, so you, howdo,
+  9:47how do things lay out on the screen, do
+  9:50they stack, do they flow?
+  9:53There&#39;s a variety of input elements that areprovided,
+  9:56bit- buttons, radio and check-boxes, textfields and things
+  10:1like that. You are able to draw directly on
+  10:4the screen. You can do background images,colors, you
+  10:8can draw shapes, arcs. Various other shapes.Add images.
+  10:13And you&#39;re able to animate, move, and haveevents.
+  10:17You can keep, do key events or, you know,
+  10:20other things like that. Hover. And so the,there&#39;s
+  10:24a link to the manual if you want to
+  10:25check that out a little bit more in depth.
+  10:28So the, currently Shoes4 definitely has somestill some
+  10:33functionality gap from the previous Shoesimplementations. And like
+  10:38I said before, a lot of this might be
+  10:40already out of date, because I know that they&#39;ve
+  10:43been adding a lot of these features lately.But
+  10:46for, for our implementation, we had to kindof
+  10:49get around some of the deficiencies, lackof features
+  10:52that were in Shoes4 right now.
+  10:54So not all the movement methods have beenfully
+  10:56implemented on all the objects. You can, youcan
+  10:59move things but not displace, which is alwaysfun.
+  11:2Some of the width/height, you know, accessorssettings aren&#39;t
+  11:6working very well. And the other thing thatwas
+  11:9kind of rough for us was that the general
+  11:11show, hide, and toggle options on all theobjects
+  11:13didn&#39;t exist, so we had to kind of, basically,
+  11:15destroy and rebuild things a lot. But hopefullythat
+  11:19will be going away soon.
+  11:21The other thing that kind of took us a
+  11:24little bit, a little while to figure out -
+  11:26so I figured I would state it for all
+  11:28of you, was that the animations, you know,run
+  11:32in parallel, and they&#39;re, you do need to manually
+  11:34manage them. So unlike a lot of the other
+  11:37sorts of things when you clear off the screen,
+  11:39it does not clear out the animations likeyou
+  11:41might expect it would.
+  11:42You need to explicitly call start, stop, removemethods
+  11:46on those animation blocks. So there was afun
+  11:49time when I was like, why is the app
+  11:51just getting slower and slower as I move the
+  11:54screens, because I was basically stackinganimations upon themselves
+  11:57over and over and over again. And not, and
+  11:59losing references to them and not clearingthem up.
+  12:2So, pro-tip, you need to keep track of your
+  12:4animations and, for us, it was really helpfulto
+  12:6separate out the drawing from the animationsteps. So
+  12:10that was, really helped clean up our codea
+  12:12lot.
+  12:14The other thing that, you know, we found by
+  12:17developing this, you know, for, what I cantell,
+  12:20for Shoes, is a pretty complex Shoes app,was
+  12:22that, you know, it can highlight a lot of
+  12:24the regressions that might be introduced asShoes4 development
+  12:29continues.
+  12:30And so hopefully we&#39;re gonna be using thatto,
+  12:33use the game to detect those issues and be
+  12:35able to fix them and contribute back to Shoes.
+  12:36I know I already have a couple patches that
+  12:38I want to contribute, so hopefully, you know,that
+  12:41can be a really great benefit for having something
+  12:43like this around to test on regularly.
+  12:46So-
+  12:48E.H.: So we&#39;re, we, all of this is opensource,
+  12:53and we have three gems. They&#39;re under Davy&#39;srepo
+  12:56as pirate_command, shuttlecraft, and pirate_game.
+  13:2R.H.: So in the grand tradition of noun that
+  13:6verb and action that thing generators, wepresent you
+  13:10the pirate themed generator, which has a purposeprovided
+  13:14entirely by Davy, that includes the word booty.Which
+  13:19is going to cause us some problems later,I
+  13:21expect.
+  13:22But you are free to use this. It is
+  13:24free as in grog for all of you to,
+  13:26to enjoy. So please, add some more pirate-themedawesomeness
+  13:29to your web applications and enterprise applications.I think
+  13:35it&#39;d be great.
+  13:38D.S.: So, shuttlecraft was built to basicallyadd an
+  13:44extra layer of stuff upon the sort of distributed
+  13:48system stuff that&#39;s provided by Rinda. It&#39;sexplicitly helped
+  13:52simplify a lot of the registration, and clientservices
+  13:56management, you know. With Rinda it&#39;s kindof, you
+  13:59eith- you get a full tuplespace, but you are
+  14:1kind of left to implement everything on topof
+  14:5that.
+  14:6So with the shuttlecraft, you&#39;re very easilyable to
+  14:8create a mothership that handles managingthe tuplespace and
+  14:12watching for registrations, and then multipleshuttlecrafts can dynamically
+  14:16find any motherships around and register veryeasily. And
+  14:21then both sides can easily get all the list
+  14:23of register services.
+  14:25We also added a bunch of convenience methodsto
+  14:27help broadcast messages from either side,as well. And
+  14:32hopefully we&#39;ll be adding to that sort offunctionality,
+  14:34making it a little bit, a little bit easier
+  14:35to use Rinda, since it is a little bit
+  14:37dense.
+  14:44And then of course, there&#39;s pirate_game, whichyou use
+  14:48to play the Pirate Game.
+  14:53So this is kind of a, perhaps a traditional
+  14:56game architecture, where you have sort ofa game
+  14:59master that handles all of the business logic,and
+  15:2it explicitly issues commands to all the gamesand
+  15:6manages the actions coming back from that.
+  15:9But that is no fun at all. And so
+  15:13by using Rinda and DRB we&#39;re able to implement
+  15:17a variety of other game architectures.
+  15:22So I&#39;ll talk about three of, sort of, the
+  15:25sub-components of the Pirate Game. The registration,layout generation,
+  15:29and the, the more complicated issuing theaction and
+  15:33gathering responses and saving those actionsas completed.
+  15:38So yay diagrams! Because there&#39;s not spaceon all
+  15:41the slides for all the words, we&#39;ll be color-coding
+  15:44the components like so.
+  15:49So for registration, and this is sort of the
+  15:52stuff that&#39;s baked in directly to the shuttlecraftgem,
+  15:56so each of the games simply, when it tries
+  16:0to register with the game, it just writesa
+  16:4name into the tuplespace.
+  16:10And then the game master can use the read
+  16:12all to collect those, those names, so the,so
+  16:15these names will live in the tuplespace aslong
+  16:17as those services are registered. And in thatway
+  16:20the game master, and also the games themselves,can
+  16:23know who else is around. And so that URI
+  16:26there, that&#39;s the, the DRB URI that can be
+  16:28used to directly communicate to any of thoseprocesses.
+  16:32And then when the, the games, you know, exit,
+  16:36then they take those names out of the tuplespace
+  16:39to indicate that they are not registered anymore.
+  16:43So for the layout generation, this is, youknow,
+  16:46our game, the, you know, issuing what buttonsshould
+  16:48appear on each of the games. For right now,
+  16:51the simplest way was to generate a list of
+  16:54all the buttons that should per- should bescattered
+  16:56amongst all the different games, and then,and each
+  16:59game gets that full list.
+  17:1And then also it gets a smaller list of
+  17:3the buttons that should be displayed on thatparticular
+  17:6game for that stage. And for this, we just
+  17:8simply use direct DRB. There&#39;s no real needto
+  17:12use Rinda in this, in this case, since we
+  17:14know exactly who we&#39;re talking to at thispoint.
+  17:18So now we get to the fun part, where
+  17:25those, those actions are being generated oneach of
+  17:29the games. And so the architecture that wetook
+  17:31was that each of the games was going to
+  17:32be responsible for generating that actionand then waiting
+  17:36for the message from the other games to indicate
+  17:39that that button has been clicked.
+  17:42The game master is responsible for gatheringup all
+  17:47the list of correctly completed actions. Andso here,
+  17:51we&#39;re, we simply are, are, running a takethat
+  17:54will watch for the completed action tuplesas they&#39;re
+  17:57entered into the tuplespace. And so this will,will
+  18:0block intel, a matching tuple has entered.
+  18:6So the game generates an action. Haul theKeel.
+  18:11Then it also sets up a take, which blocks
+  18:15and waits for the button click from the other
+  18:18game. So the other game has clicked the button,
+  18:23and writes a tuple into the tuplespace. Whichis
+  18:27similar to the previous slide. Here is thebutton
+  18:30action, the button that was actually clicked,which was
+  18:34Keel, the timestamp that it was clicked andthe,
+  18:37the URI that was, actually clicked it. Sowho&#39;s
+  18:40this from.
+  18:42And so the timestamp is really important tobe
+  18:44able to detect whether or not the button was
+  18:46clicked within the correct time period. Becauseif it&#39;s
+  18:48too late than the other game will not register
+  18:51that as a correct action.
+  18:54And the from we use basically just for, for
+  18:56tracking. We want to be able to indicate statistics
+  18:58on end about how many people have, you know,
+  19:0who&#39;s correctly performed how many actions.
+  19:5So now that that button has been put into
+  19:7the tuplespace, that&#39;s going to match thattake that
+  19:9the previous game is blocking on. And so it
+  19:15takes that tuple out and then writes a new
+  19:17one in, an action tuple. Again with the Keel,
+  19:21and just passing through that timestamp, andfrom URI,
+  19:24to indicate that the, that that action wascompleted
+  19:26successfully.
+  19:29And that, of course, matches the take thatthe
+  19:31game master is looking for. And so it grabs
+  19:33that action, increments it, marks, you know,as a,
+  19:37another completed action for the, in the totalcount,
+  19:42and we&#39;ll move on.
+  19:47So I&#39;d also like to discuss a little bit
+  19:49of our, kind of like, internal structure ofthe
+  19:51application. So we split up into kind of three
+  19:54main components.
+  19:55The apps, the master app and the client app
+  19:58at the bottom. Those are basically the, theShoes
+  20:0apps themselves. But the vast majority ofthe logic
+  20:4is not in the Shoes app. The, that&#39;s in
+  20:8the game master and client objects, whichare wrappers
+  20:10for the shuttlecraft gems. So the, the appsthemselves
+  20:15are responsible only for layout, animation,and drawing.
+  20:19Pretty much any game logic is not in the
+  20:23main Shoes app itself, it&#39;s in the sub-object.So
+  20:26the game master knows how to generate stages,collect
+  20:30information about the actions, et cetera,et cetera. And
+  20:33the client knows how to automatically generatethe actions
+  20:36and watch for the button clicks and all that
+  20:39fun stuff. And then the shuttlecraft gem handlesall
+  20:42the communication through the tupplespace.
+  20:49R.H.: Arrrr! You land lovers and scallywags,prepare yourselves
+  20:57for the Pirate Game. That&#39;s all I got.
+  21:0D.S.: OK, so preparation again. JRuby, Shoes4,and the,
+  21:7now, next important step, which is to installthe
+  21:11pirate_game gem. So, a brief discussion aboutnetworking.
+  21:15Will you take this one?
+  21:17E.H.: So theoretically, this should all workon the
+  21:20conference wifi, but for best results, you&#39;llwant to
+  21:23be using, like a personal access point ora
+  21:25private network. Also, for reasons of security,which we&#39;ll
+  21:28be covering later in the talk.
+  21:31So, to run the game, someone needs to run
+  21:34the ring server. We haven&#39;t made this automaticas
+  21:37part of the game master yet. You only need
+  21:40to run one, and if you run more than
+  21:42one, you may have some problems. So try not
+  21:45to do that.
+  21:46And we, you know, we&#39;re working to get this,
+  21:48this easier to use. And you also need only
+  21:52one game master. But if you have multiplethe,
+  21:55the client will show all the different ones,so
+  21:57you don&#39;t have, if you don&#39;t, if your friends
+  21:59don&#39;t like you very much, maybe they&#39;ll createyour
+  22:1own- their own, and then they can leave you
+  22:3alone. And, you know, that&#39;ll be sad.
+  22:5Also, if the game master crashes, the, thegame
+  22:9is stranded. We had it working for awhileand
+  22:11then we broke it. So, you&#39;ll have to just
+  22:13restart the client.
+  22:17So, Pirate Game. It is for one to four
+  22:21players. So you can, in fact, play the game
+  22:23all by yourself. It&#39;s totally a feature andnot
+  22:26a bug. So the, the first step of course
+  22:29is to enter your name.
+  22:34Then you need to find your game. So this
+  22:35is where the game masters are found by the
+  22:38Rinda services discovery. And you will seeany of
+  22:40the games that are visible to, to Rinda at
+  22:43that point. So if you&#39;re on the conferencewifi
+  22:45that might be a lot. If you&#39;re on a
+  22:46personal access point, that would probablybe only one.
+  22:50And you can always hit the rescan button,which
+  22:52will, you know, scan the network again incase
+  22:55another game master has popped up. So it doesn&#39;t
+  22:57really matter in what order these apps arelaunched.
+  23:2So one issue that, or, basically not, a feature
+  23:5that hasn&#39;t been developed yet, which is,if the
+  23:7join fails - so if you try and join
+  23:9a game that already has four players, or a
+  23:11game that&#39;s already started, you will notrecieve a
+  23:13very good error message, and instead willenter an
+  23:16empty disconnected pirate hub all alone, withno one
+  23:20to chat to.
+  23:21E.H.: And no grawk.
+  23:22D.S.: And no grawk.
+  23:24And so if you do successfully connect, you&#39;llbe
+  23:27taken to the Pirate Pub. And so you can
+  23:29see there that, that, if you&#39;re registeredor not.
+  23:34If you&#39;re unregistered with the game master,it will
+  23:36say not registered and have a little registerbutton.
+  23:40And here, in the Pirate Pub, you can chat
+  23:41with all of your fellow Pirates and discussfun
+  23:45things.
+  23:45And yes, you do have to click the send
+  23:48button. Really difficult. All of us are usedto
+  23:50hitting enter and having it work, but havenot
+  23:53figured out how to hook up the key bindings
+  23:54for that correctly, if there even are any.So
+  23:57if anyone knows, let me know.
+  24:2So at this moment, the game master also needs
+  24:4to trigger each stage. In the future, we would
+  24:8like to switch over to the sort of space
+  24:11team model, where each, each player gets toindicate
+  24:14whether they&#39;re ready to proceed or not. butthat
+  24:16just hasn&#39;t happened quite yet.
+  24:20So for, then, as you enter each stage, you
+  24:23need to work together to keep the ship afloat,
+  24:24man the ship, keep a-heading in the rightdirection,
+  24:27and beware of bad weather.
+  24:30So this is a quick little demo.
+  24:35E.H.: So, we got the chat here. Why is
+  24:40the rum gone?
+  24:42And then over, I&#39;m over clicking the startbutton.
+  24:45So here&#39;s a stage. So you gotta like, here&#39;s
+  24:47your action. Walk towards the crow&#39;s nest.You gotta
+  24:50find the button. It&#39;s really hard cause itis
+  24:52windy on this screen. So the buttons are really
+  24:54flying around.
+  24:59It&#39;s random. We&#39;re sorry. Yeah. I clickedthe wrong
+  25:3button there cause it&#39;s hard. And then whenyou&#39;re
+  25:7all done clicking the musket buttons, it&#39;lltake you
+  25:11back to the pirate pub here in a second.
+  25:16So you can ask why the rum is gone
+  25:18again.
+  25:19D.S.: It is a little bit more exciting when
+  25:23you&#39;re playing with more than one person,honest. There&#39;s
+  25:27very little shouting when you&#39;re playing byyourself.
+  25:31E.H.: So, security. DRB doesn&#39;t give securitya very
+  25:35high priority. It&#39;s more focused on ease ofuse
+  25:38and transparency. There are some securityfeatures, though. So
+  25:42the, the biggest problem is, DRb gives youfull
+  25:47access to the remote machine. Anything youcan do,
+  25:50the server can do for itself, you can do
+  25:52on the server. So that means if you can
+  25:54system_rm, rf, on the server, you can do it
+  25:59locally.
+  26:0Yeah, so, also like, instance_eval and allthose things,
+  26:4they&#39;re all, you know, very dangerous methods.So, I&#39;ve
+  26:7also, so using, you know, you&#39;ve got to be
+  26:8careful about that. Who you use DRb serviceswith.
+  26:12And I&#39;ve written a proof of concept of how
+  26:14to infect another DRb machine with code froma
+  26:18local machine called the drb dash worm. It&#39;sa
+  26:22gem you can see there. It doesn&#39;t do anything
+  26:24dangerous now, and I don&#39;t expect it to do
+  26:27anything dangerous, but you know, this isjust so
+  26:29you can look and see what kind of stuff
+  26:31that you can do.
+  26:34So at the message level, DRb has two methods
+  26:37of security. So you can add methods to this
+  26:40insecure method array, but it&#39;s gonna be verydifficult
+  26:45for you to weed out all of the not
+  26:47dangerous methods, because it&#39;s an opt-out,not an opt-in
+  26:50to good methods.
+  26:52You can also set the safe level for the
+  26:55thread that the DRb server evaluates the methodsin.
+  27:0However, that relies on tainting, and notevery object
+  27:4gets tainted properly when it&#39;s sent over,so it&#39;s
+  27:7possible that you can get a non-tainted stringwith
+  27:10user-local content in it, even under a highersafe
+  27:12level where things like eval would be disabled.
+  27:19So if you don&#39;t need network access for your
+  27:22server, you can run DRb over a unix socket.
+  27:24And so that&#39;s just restricted to the one host,
+  27:26and you can use filesystem permissions tocontrol your
+  27:30access. And since you have no network access,you
+  27:32don&#39;t have to worry about other people beingable
+  27:34to inject new content, or, inject bad methods.
+  27:38If you&#39;re running on a network, you can use
+  27:41an access control list. It&#39;s like, all ofthe
+  27:43other access control lists allow or deny byIP
+  27:46address or IP address range. But this canbe
+  27:49difficult to manage, like if you&#39;re in a cloud
+  27:52computing environment then you&#39;re Ips aregonna be changing
+  27:54all the time. And there&#39;s not really any data
+  27:57privacy, so if you have something secret thatyou
+  27:58want to send, you probably don&#39;t want to use
+  28:0this.
+  28:2And there&#39;s also DRb over SSL using x509 certificates
+  28:6where you have full privacy, but it&#39;s alsoyou
+  28:8have to do certificate management the sameway you
+  28:11have to deal with updating your ACLs.
+  28:16You can also use chroot, either through thesystem
+  28:19call or if you can set up a sandbox
+  28:21using the shell, so that way the program can&#39;t
+  28:23break out of it and write bad files. So
+  28:26if somebody goes and attacks your process,that means
+  28:29they can only consume CPU or create a bunch
+  28:31of processes. They can&#39;t do other bad things.Or
+  28:34at least not file-system level bad things.
+  28:37Unfortunately, JRuby does not support chroot,which Shoes requires,
+  28:41so this is not super useful for the Pirate
+  28:44Game. And in general, the best practices arealways
+  28:49be sure you&#39;re talking to trusted peers. Makesure
+  28:53that, you know, all the hosts that you&#39;regonna
+  28:54communicate with don&#39;t have other processesthat other users
+  28:57control, so they can get you and elevate their
+  29:0privileges. Limit the accessibility usingUnix sockets if you
+  29:3don&#39;t need network. Use ACLs or SSL insteadof
+  29:7just straight-up TTP sockets.
+  29:9And, and of course, always run on a private
+  29:12network, if you&#39;re not very trusting.
+  29:16So there&#39;s also a tool that I wrote to
+  29:19help you debug, or monitor, or understandhow your
+  29:24programs using DRb are not working calledDRb dump
+  29:27and it works a lot like tcpdump. It monitors
+  29:30message sends and message latency and howmany allocations
+  29:33it takes for messages to send and it also
+  29:35sends you a log of all the messages that
+  29:37are scrolling by.
+  29:38It&#39;s not, it doesn&#39;t have everything, it doesn&#39;timplement
+  29:41everything. It doesn&#39;t understand out-of-orderTCP or mDNS except,
+  29:47that&#39;s gonna be fixed in Ruby 2 point 1.
+  29:50And there&#39;s also no filtering yet, and I think
+  29:52IPv6 for it is currently broken.
+  29:57So you can run it as root like this,
+  29:59drbdump and it&#39;ll just be like tcpdump, it&#39;llshow
+  30:2you all the messages going by. You can say,
+  30:5give me a summary of these ten thousand messages
+  30:7so it&#39;ll just record, won&#39;t print anythingat the
+  30:10end and it&#39;ll dump the statistics and then,by
+  30:11default it listens on your default interfaceand the
+  30:14loopback interface, so you can just restrictthe loopback
+  30:17if you don&#39;t care about outside of the network
+  30:19stuff.
+  30:22And these slides were supposed to be skippedbut
+  30:25I&#39;ll run through them, so, this is, this is
+  30:27the output of a message send. You&#39;ve got the
+  30:29time stamp there at the top, the message sending
+  30:33address. This arrow says it&#39;s going out, it&#39;smessage
+  30:37send.
+  30:38The message receipt address and the messagename and
+  30:42the arguments are last. For message receipt,you&#39;ve got
+  30:46the timestamp again. And this is the messagesender,
+  30:50unlike TCPdump, where usually the -- thisis who
+  30:53sent the message, but it&#39;s flipped from tcpdump,so
+  30:55the person who sent it is always going to
+  30:57be on the left, and of course the arrow
+  30:59goes the other way. Who the reciept is coming
+  31:1from and the status and the response object--
+  31:5in this case it&#39;s just a true cause we
+  31:6asked for respondto.
+  31:9And for an exception you&#39;ve got a broken arrow
+  31:10and it says exception with an error message.And
+  31:14these are all easy to match, so you can
+  31:15just line them up and kind of see what&#39;s
+  31:17going on, so the ports are lined up on
+  31:19each side, so you can tell that the messages
+  31:21are from different connections.
+  31:22And then it also connects, collects statisticsoutput, so
+  31:28you can see how many messages were sent and
+  31:30packets and so forth, and how many allocationswere
+  31:33required to send that message. And then alsothe
+  31:36latencies per peer and per message.
+  31:39And the basic ones are just, just packetsand
+  31:43messages and results and exceptions. And they&#39;vegot min,
+  31:47max, average, and standard deviation for both,and -
+  31:52So we use this in DRbdump to fix, or
+  31:54use this with Pirate Game to fix some problems
+  31:57like, a bunch of message spam, and then it&#39;s
+  32:0like kind of reappeared again, so when you&#39;reon
+  32:1the game you&#39;ll be able to see how it&#39;s
+  32:4just kind of spitting out tons of messagesthat
+  32:6you shouldn&#39;t need to do.
+  32:7You can also use it to find hanging calls
+  32:9if you&#39;re like, OK, I went and sent this
+  32:10message and nothing&#39;s happening. What, wheredid it get
+  32:15to? And also it&#39;ll verify that it&#39;s workinghow
+  32:17you expect.
+  32:18D.S.: So, future. Do you want to pitch in?
+  32:23There&#39;s a lot of additional development thatcould be
+  32:25added to Pirate Game to make it more fun,
+  32:28more full-featured, you know. We wanted totry to
+  32:31implement something like the asteroid or wormholegroup activities
+  32:35that Space Team provides. Something like mayberaiding a
+  32:37ship or surviving a hurricane.
+  32:40It would also be fun to add some extra
+  32:41special controls, instead of just having buttonseverywhere. Kind
+  32:44of like being able to steer the ship with
+  32:46a wheel or other things like that.
+  32:48Also I thought it&#39;d be fun to be able
+  32:51to build in some character generation, likein Space
+  32:54Team, they make like an automatic little alienman
+  32:56for you. You can make an automatical pirate,with
+  33:0randomly selected beard, parrot, eye patch,maybe different hair.
+  33:4There&#39;s also a lot of infrastructure improvementthat could
+  33:6be added to the game. It would be nice
+  33:9to completely eliminate the need for an externalgame
+  33:13master app to integrate that directly intothe Pirate
+  33:16Game itself so you can launch that internally.
+  33:20Of course, always, better error handling,and I&#39;d also
+  33:24like to make it so that it&#39;s easy to
+  33:26restart a game. At this point, after the game
+  33:27is ended or, you have to restart all of
+  33:31the applications to play a second game.
+  33:35So play, contribute -- hopefully you enjoyedit. And
+  33:38we&#39;re gonna try and run a live demo. We&#39;ll
+  33:41see how well that works.
+  33:48So I am running the ring server -- oh,
+  33:51not, OK.
+  33:53Mirror. It&#39;s mirrors and displays.
+  33:59Ah, I know, everything&#39;s so small.
+  34:12OK. OK. So this tab&#39;s running a ring server.
+  34:14And we&#39;re running drbdump in the backgroundas well,
+  34:18so you can see a lot of the DRb
+  34:20messages flying by already.
+  34:24So run the game master, run the Pirate Game.
+  34:35Started the game. This screen is the foggyscreen.
+  34:50This is actually another interesting thingabout Shoes, is
+  34:54that the, you cannot actually overlay anythingdirectly over
+  34:57the input elements. So you can see that the
+  35:0launch button here is still crystal clear,which doesn&#39;t
+  35:3really make the foggy actually that much harderthan
+  35:6the regular thing but, whatever.
+  35:9OK, so, here we got, so, Eric&#39;s already joined.
+  35:18Here I&#39;m on the choose game screen. I can
+  35:21see my demo. So I can join. Anyone else
+  35:29want to join?
+  35:33Can&#39;t get on the network? So-
+  35:36E.H.: We&#39;re using a private network, so, soyou
+  35:37guys can&#39;t access it.
+  35:37D.S.: Ah yeah. OK. So, like I said, the
+  35:38game master, you hit the start button. It&#39;sgo
+  35:41time.
+  35:43Vandalize the treasure.
+  35:44R.H.: Find the rum!
+  35:45D.S.: Find the rum! Compass!
+  35:47E.H.: Attack the compass.
+  35:49D.S.: More compass!
+  35:50E.H.: Compensate the ocean!
+  35:51D.S.: Steal the gun powder.
+  35:53R.H.: Yarr!
+  35:55E.H.: Assault the chest!
+  35:59R.H.: Walk the compass!
+  36:3D.S.: Rum! Compass!
+  36:6R.H.: Raid the, raid the poop deck. Yarr!
+  36:11D.S.: Who has the poop deck?
+  36:14E.H.: Attack the chest.
+  36:16R.H.: You&#39;re not raiding it! She raid, you&#39;reOK.
+  36:19E.H.: Abandon the gun powder!
+  36:21D.S.: Explore the pistol.
+  36:22OK.
+  36:23E.H.: Yes, success!
+  36:24D.S.: And so at the end, on the game
+  36:26master you can see some statistics, so itstill
+  36:29displays the four players that have joined.This was
+  36:32stage one -- it was a success. We completed
+  36:35eleven total actions, and this is the spitout
+  36:38by the DRb URI. And then this is the
+  36:43game run-down so far which, since we onlyplayed
+  36:45one stage, is exactly identical.
+  36:48And I think if we start but don&#39;t play,
+  36:51yeah it&#39;s going crazy back there. We don&#39;tplay
+  36:56and we let it fail then you&#39;ll see the
+  36:58end screen. And so here, you can also see
+  37:2on the game master as, as it&#39;s running the
+  37:6live actions, so we&#39;re on stage two. No actions
+  37:9have been performed. We have the time left.
+  37:13And this is, it&#39;s windy. So that&#39;s what windy
+  37:17looks like. It&#39;s a little bit harder. It&#39;sactually
+  37:22surprisingly more difficult.
+  37:24So here&#39;s a little, so here you can see
+  37:26drbdump. So this is the information that&#39;skind of
+  37:30flowing through. You can see that it&#39;s, thegame
+  37:34master is recording back the, the end of game
+  37:37stats, because we failed the game. And herewe
+  37:41get a little bit of information feedback.I want
+  37:43to make this a lot better as well so
+  37:45that I know that out of the total actions,
+  37:47I, my contribution was six of them.
+  37:49So yeah, there&#39;s lots of room for improvementthere.
+  37:52So anyway.
+  37:54Demo successful. Please get everything installed.Try and play
+  37:58it -- in the hallway, around. It&#39;s quite fun.
+  38:1And, yeah, let me know what you think. Contribute.
+  38:3I hope you enjoyed it.

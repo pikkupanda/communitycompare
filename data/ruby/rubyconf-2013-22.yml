@@ -1,0 +1,969 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=4TAwkq0aQdE
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16CHARLES NUTTER: So we&#39;re gonna get right intoit.
+  0:18I talk a little bit about the future of JRuby.
+  0:20We&#39;ve got a little short intro of what itis.
+  0:22But, like Tom said, we&#39;ve got a lot of slidesso we&#39;re gonna get right into it.
+  0:26So first of all, basically, what is JRuby?How
+  0:29many people have used JRuby for something?Awesome. How
+  0:33many people have something in production rightnow with
+  0:36JRuby? All right.
+  0:37So like, three-quarters and about a half ofthe
+  0:39room. That&#39;s cool. We expected that most ofyou
+  0:41coming to this would probably be more on the
+  0:43JRuby side of things.
+  0:44So JRuby of course is Ruby on the JVM,
+  0:47and this means a lot of things to a
+  0:48lot of people. A lot of them aren&#39;t good
+  0:51things, unfortunately. You get stuff likethis and, and,
+  0:55you know, people - it&#39;s all about applets,and
+  0:58the JVM sucks, and people, people actuallygo to
+  1:1our code base and look for stuff like that.
+  1:3But, I mean, the bottom line, the bottom line
+  1:10we always try to get across is really that
+  1:12JRuby is just Ruby. It&#39;s a Ruby implementation.It
+  1:15happens to be written partially in Java. Ithappens
+  1:18to run on the JVM. But it&#39;s just a
+  1:20Ruby implementation.
+  1:21So basics about JRuby, before we get intotalking
+  1:24about futures, where we&#39;re going with it.It, right
+  1:27now it&#39;s compatible with Ruby 1.8.7, and 1.9.3.This
+  1:30is gonna change in the future, as we&#39;ll talk
+  1:32about.
+  1:33Mostly written in Java. More and more codebeing
+  1:36written in Ruby. But, even the Java code we
+  1:38have is pretty clean. We&#39;ve got a pretty standard
+  1:41coding conventions that we like our committersand contributors
+  1:44to follow.
+  1:46And the coolest part about JRuby, and thereason
+  1:48that most people come to JRuby is becausethe
+  1:50entire world of the JVM is available to you.
+  1:53The GCs that we&#39;ve got available, all thedifferent
+  1:56platforms. The GIT runtime. And then of courseall
+  1:59of the libraries and languages that are onthe
+  2:1JVM.
+  2:2So it&#39;s, it&#39;s a Ruby on top of this
+  2:4platform that brings a lot more than justRuby
+  2:6to the table.
+  2:7TOM ENEBO: OK. I&#39;m gonna talk a little bit
+  2:10about JRuby. How we version and branch andhow
+  2:13we&#39;ve evolved our development a little bit.When we
+  2:17do a significant release of JRuby, we do all
+  2:20of our development on Master. Once we hitthat
+  2:231.6.0, as you know, any project that hits1.6.0
+  2:27isn&#39;t, like, quite ready to be used yet.
+  2:30So, we usually do one or more point release
+  2:32until we feel confident, and then we createa
+  2:34maintenance branch. In the case of 1.6, wedid
+  2:39it after 1.6.1, JRuby 1.6 was gonna be the
+  2:42great 1.9 release for JRuby, and it wasn&#39;t.
+  2:48Most of the 1.9 stuff was there, except for
+  2:52encoding, which was a-
+  2:54C.N.: Turned out to be kind of important.
+  2:56T.E.: A tremendous amount of work. And sotime
+  3:1marches on. A year later we put out a
+  3:3preview release on 1.7. We&#39;re plugging awayon Master,
+  3:6working on the next great thing.
+  3:8Oh, another five months, 1.7.0 comes out.So for
+  3:11a year and a half, we&#39;re on this dual-branch
+  3:13development mode, and what ended up happeningis, we
+  3:17had so much fun in master that not a
+  3:20lot of stuff made it to 1.6, and the
+  3:22branches kept getting further apart. And wedid merge
+  3:27stuff when people asked for it, but this was
+  3:29not something that we wanted to repeat.
+  3:31C.N.: Right. We really want to keep our releases
+  3:32short and closer together. And, and keep fixesgoing
+  3:36to the right places. To the, to the releases
+  3:38people are using.
+  3:39T.E.: So when we started working on 1.7, you&#39;ll
+  3:43see that we didn&#39;t actually create a maintenancebranch
+  3:45until after 1.7.5. This was us-
+  3:49C.N.: Right, keep it real.
+  3:53T.E.: Yeah, I mean. It&#39;s discipline and pain.I
+  3:56was trying to think of the right word to
+  3:57represent pain.
+  3:58C.N.: Rather than going off on, on a completely
+  4:1new version of JRuby, we forced ourselvesto do
+  4:4a lot of incremental releases for 1.7, tokeep
+  4:6improving it.
+  4:7T.E.: And we knew that we&#39;re gonna be working
+  4:8on a major release. So we wanted to make
+  4:10sure that things are really solid by the time
+  4:12we started doing that.
+  4:13And in fact we almost did this at 1.7.3,
+  4:16then realized that we were still missing encodingwork
+  4:19on zlib. And coding&#39;s really hard.
+  4:25So the other things that we&#39;re gonna try to
+  4:26do to try to make this dual-branch developmentwork
+  4:28better, is we&#39;re gonna make sure that we put
+  4:30out a release at least every three weeks.
+  4:34This is to keep us honest. If we go
+  4:36and put out a release in three weeks and
+  4:37it only has one fix in it, then we&#39;re
+  4:39not really doing our job, so. This&#39;ll keepus
+  4:42honest.
+  4:43And the other big change is that anythingthat
+  4:45involves compatibility, we&#39;re gonna applyto 1.7 first. And
+  4:49we&#39;re constantly merging back to Master. Things&#39;llbe golden.
+  4:52I think we&#39;ve finally found our sweet spothere.
+  4:58So let&#39;s talk about the next major release.
+  5:1One big change, Charlie will show some statsin
+  5:3a little bit, but we&#39;re only gonna supportRuby
+  5:52 point 1. It&#39;s coming out sometime next year.
+  5:8It should line up good with MRI.
+  5:11This is gonna be awesome. Supporting multiplemodes of
+  5:13Ruby at the same time is really painful.
+  5:17We&#39;re probably gonna be Java 7 and higher.If
+  5:19there&#39;s any people that use Java 6, and you&#39;re
+  5:22not gonna be able to migrate by next year,
+  5:25just talk to us. We want to hear who
+  5:26those people are and what your stories are.
+  5:28We want to be modular, both at a packaging
+  5:31level - cause platforms like Android, theywant to
+  5:35have as small a jar as possible, and also
+  5:37at the source level, because things like Googleapp
+  5:40engine, they don&#39;t support sockets. So theyshouldn&#39;t have
+  5:43to compile against that.
+  5:48Look at this picture. And now look at this
+  5:50next slide.
+  5:53We&#39;re gonna be breaking lots of APIs. Thisis
+  5:55the first time that we&#39;ve actually decidedto break
+  5:58a lot of APIs. It&#39;s been ten years, or
+  6:0maybe more than ten years. So we&#39;re goingto
+  6:4just clean up all the crap that we&#39;ve hated
+  6:6for ten years, and we&#39;re gonna have a lot
+  6:8of fun doing it.
+  6:9C.N.: This mostly affects, like, JRuby Java-basedextensions. Obviously
+  6:14the Ruby compatibility won&#39;t hurt at all,but libraries
+  6:17that are written in Java for JRuby may have
+  6:19to make some changes.
+  6:20T.E.: And we have a plan for reducing the
+  6:22pain with regards to embedding, and I&#39;ll talkabout
+  6:24that a little bit later. And we&#39;re also gonna
+  6:27have a brand new runtime, which we&#39;ll talkabout
+  6:29later.
+  6:31So I haven&#39;t said what the major version number
+  6:33is yet. The natural one would have been 1
+  6:36point 8, but JRuby 1 point 8, which supports
+  6:39Ruby 2 point 1, would have been kind of
+  6:41weird. 1 point 9, 2 point 0, same thing.
+  6:442 point 1? That one actually does kind of
+  6:46make sense, cause we will support 2 point1,
+  6:49but then we&#39;d release a 2 point 2 before
+  6:52MRI did, and that would be weird. So.
+  6:56We should have did this for our version number
+  6:57- we should have went from 1.7 to 8,
+  7:0like Java. But we&#39;re weird like that. We,well,
+  7:5we&#39;ll see.
+  7:7We could have picked X and went to ten
+  7:9like Apple.
+  7:12We kept joking. Ah, we&#39;ll just call it nine
+  7:14thousand.
+  7:22I hope people can hear this.
+  7:24-VIDEO-
+  7:25Character: What does the scouter say abouthis power
+  7:27level?
+  7:28OTHER: It&#39;s over nine thousand!!!
+  7:30Character: What, nine thousand? There is noway that
+  7:33can be right!
+  7:37T.E.: OK, and if you couldn&#39;t hear that, he
+  7:40said it&#39;s over nine thousand.
+  7:44But our next version is actually JRuby 9000.
+  7:53And for those people who don&#39;t like it, it&#39;s
+  7:55just a number. Get over it.
+  7:58C.N.: Now that - the work on JRuby 9000&#39;s
+  8:2actually already started. It&#39;s been goingfaster than we
+  8:5expected. This is just some, some simple statscomparing
+  8:8the JRuby 1.7 line with Master. And we&#39;restripping
+  8:12out a ton of code by removing 1.8 support,
+  8:15removing, not having two or three copies ofstandard
+  8:18library.
+  8:20Getting the whole of JRuby much smaller. Probablythe
+  8:23best one here is the, the complete jar, which
+  8:25is JRuby plus the entire standard libraryall in
+  8:28one file, is already down by about four meg,
+  8:31so we&#39;re, we&#39;re getting better and betterat shrinking
+  8:33down the runtime.
+  8:34We&#39;ll talk a little bit about what we&#39;re doing
+  8:37to improve the ecosystem going forward. Probablythe most
+  8:40difficult part of developing JRuby, and we&#39;redefinitely spent
+  8:43the most amount of time, is simply on compatibility.
+  8:46We&#39;re constantly chasing a moving target - MRI,which
+  8:50has, at various times, had very fast developmentprogress,
+  8:54added large features.
+  8:55And so we&#39;ve always kind of been trying to
+  8:57catch up. What we&#39;re hoping is that with JRuby
+  9:09000, we&#39;ll be able to match directly up with
+  9:3the 2 point 1 compatibility, hopefully rightaround when
+  9:6they do 2 point 1 release of MRI.
+  9:9We&#39;ll have all the features implemented. Andthen we&#39;ll
+  9:11be at our leisure to release or continue working
+  9:13on performance runtime stuff. But hopefullynow, being able
+  9:16to stay in lock step with MRI and the
+  9:19features that they add.
+  9:20So the things that we know are still missing.
+  9:22From 1 point 9, spawn plus all of the
+  9:25different file opening options and redirectsand other things.
+  9:28There&#39;s a lot of those pieces missing. Largelymissing
+  9:31because the JVMs own process management APIsdon&#39;t support
+  9:34most of them. It&#39;s very difficult to do them.
+  9:37We&#39;ll probably have to do a native call-outto
+  9:38do these in full, have full support for them.
+  9:41We do have full transcoding support now, andit
+  9:44does work well. We fixed a ton of issues
+  9:46and did a complete rewrite of IO transcodingand
+  9:49coding stuff for 1.7.5 that seems to be doing
+  9:52well. We haven&#39;t gotten any real major issueswith
+  9:55it.
+  9:55But we&#39;re using all the JVMs character-basedUTF16 transcoders,
+  10:0so everything has to go to UTF16 and then
+  10:2back out to the target encoding. That&#39;s overheadwe&#39;d
+  10:5like to eliminate by porting over the samebyte
+  10:7array based transcoding support that MRI has.
+  10:10And that&#39;s probably gonna come up soon.
+  10:122 point 1 stuff that we know we&#39;re missing.
+  10:15Prepend. We don&#39;t have it in there yet. Shouldn&#39;t
+  10:17be too difficult. Refinements are going tobe officially
+  10:20a feature in 2.1. I&#39;ve worked pretty closelywith
+  10:23a lot of the MRI folks to try and
+  10:25strip down the feature a little bit, makeit
+  10:27not as invasive, not as damaging to performance.And
+  10:30I think we&#39;re, we&#39;re confident now that wecan
+  10:32implement it in JRuby without a major impact.
+  10:35But it&#39;s not there yet. We&#39;ll have that hopefully
+  10:37by the time MRI 2 point 1 comes out.
+  10:39And then there&#39;s enumerator enhancements thatare not quite
+  10:42there yet. Size is there, lazy stuff - size
+  10:45isn&#39;t there, lazy is. Little bits and piecesfrom
+  10:472 point 1 that we, we still need to
+  10:50implement.
+  10:50We&#39;re always trying to work on improving the,the
+  10:53platform in general. Not just for JRuby either.For
+  10:57example, lots of gems for thread safety - I&#39;ll
+  10:58talk about later. Gems, like FFI, for callingout
+  11:2to native libraries. Database access, imagestuff. All this
+  11:5thing- all these things to fill in the blanks
+  11:8for JRuby users.
+  11:9We&#39;re constantly working with gem authorsto improve performance
+  11:13of their libraries on JRuby and performancein general,
+  11:16in a lot of cases. Fixed threading problems.More
+  11:19and more Ruby gem authors and library authorshave
+  11:23started to pay attention to threading, testingstuff on
+  11:25JRuby, testing in concurrent situations. Sowe&#39;re looking pretty
+  11:28good in that area, too.
+  11:30Probably the biggest thing is trying to getmore
+  11:33Rubyists testing their stuff on JRuby. Travisis a
+  11:37nice, easy way to do it, otherwise, an RVM
+  11:39set-up, getting something local that you cantest on,
+  11:41to help improve the whole platform.
+  11:44We&#39;re also going to continue trying to improvehow
+  11:47closely we work with MRI. I&#39;ve been activeon
+  11:49a lot of issues. All of JRuby team members
+  11:52have been active on issues in the Ruby bug
+  11:54tracker, especially feature-related futuresfor Ruby that are going
+  11:58to affect JRuby.
+  11:59Trying to do more on that. Especially sinceJRuby&#39;s
+  12:2kind of leaned away on concurrency and parallelexecution
+  12:5of Ruby code, trying to push that forwardand,
+  12:8and take the lead on figuring out how that&#39;s
+  12:10supposed to look.
+  12:11I&#39;m actually a committer on MRI, and I&#39;vefixed
+  12:13a few things. Hopefully doing more of thatin
+  12:15the future, try and clean up standard library.Get
+  12:17some threading utilities in there, get somecleanup done.
+  12:21And, and just in general trying to help improve
+  12:23the process of evolving Ruby based on howwe
+  12:25do JRuby development.
+  12:27So let&#39;s talk a little bit about performancethat
+  12:30we&#39;re gonna work on in the future. So there&#39;s
+  12:32a lot that we can do to continue making
+  12:34JRuby faster, make Ruby in general faster.
+  12:38The challenges are, we&#39;ve got lots and lotsof
+  12:40dynamic calls, very dynamic object structures,lots of indirection
+  12:44around. The structure of the objects isn&#39;teven fixed
+  12:47at startup time. It&#39;s defined as instancevariables up
+  12:50here. So there&#39;s more and more we need to
+  12:52do.
+  12:54The first step of what we do as far
+  12:55as performance is basically just compilingthings down to
+  12:58byte code. The JVM likes byte code, obviously,and
+  13:1that&#39;s what it optimizes. So that&#39;s the simplefirst
+  13:4step.
+  13:5What we can do more of here is generating
+  13:8real classes for the Ruby classes that youcreate,
+  13:11so the JVM sees a normal Java class object.
+  13:15Generating instance variable tables that aredirectly in the
+  13:18object rather than ass a tag-a-long data structure.Shrinking
+  13:21everything down, reducing the amount of indirectionthat we
+  13:23have.
+  13:25We&#39;ve also been hitting invoke dynamic prettyhard. Invoke
+  13:27dynamic is a feature added to Java 7, that
+  13:31basically makes it possible for dynamic languagesto plug
+  13:34directly into the JVM and optimize, like,any statically
+  13:37typed language.
+  13:38It has a byte code, of course, that represents
+  13:42a dynamic call, and then a series of handles
+  13:46and, and manipulators, and argument modifiersto basically describe
+  13:50how to do the dynamic call in a way
+  13:52the JVM can optimize straight through.
+  13:54Now does this actually work? Does this actuallyoptimize
+  13:56well?
+  13:57Well, this is one of the bench marks I&#39;ve
+  14:0been showing. It&#39;s, the red-black tree C-extension,and the
+  14:3Java extension, compared to pure Ruby version.
+  14:7So if we look at Ruby 1.9 and 2.0
+  14:9with the pure Ruby version, Ruby 2 does a
+  14:12ton of stuff to improve performance. Someof these
+  14:14are inspired by what we&#39;ve done in JRuby,reducing
+  14:17call overhead and so on, but there&#39;s definitelya
+  14:20good improvement in 2.0 and 2.1 as far as
+  14:22straight-line performance of Ruby code.
+  14:25Maglov and MacRuby, I don&#39;t know if anybody&#39;susing
+  14:27those lately. They, they do better. They haveactually
+  14:31git optimizations that they do, and then areable
+  14:33to be about twice as fast as Ruby 2.0
+  14:35just by doing some fairly simply gitting.
+  14:38Rubinius has more of an optimizing git, andso
+  14:41it, running Ruby code, it actually startsto get
+  14:43comparable to the CRuby versions running withthe C
+  14:47extension.
+  14:47The overhead of the Ruby code that wraps the
+  14:49C extension, and the call-outs to the C extension
+  14:52start to become more overhead for MRI here.And
+  14:56now these are the cool ones actually.
+  14:59So this is JRuby on invoke dynamic on Java
+  15:27 or 8, with the pure Ruby version in
+  15:5the gray here. And it&#39;s actually, you know,not
+  15:8quite twice as fast as Ruby 2.0 with the
+  15:10C extension. So we&#39;re actually able to runthe
+  15:12Ruby version of the red-black tree extension,or red/black
+  15:16tree library, almost as fast, a lot fasterin
+  15:19some cases, as the C extension.
+  15:21And then of course JRuby in the Java extension.
+  15:23Since it all just looks like Java, regardlessof
+  15:25whether you&#39;re calling into a Java libraryor calling
+  15:27from Ruby code, the JVM is able to do
+  15:29a significant optimization on that.
+  15:32Now, this is great, and invoke dynamic definitelyworks,
+  15:35as far as the performance you can get out
+  15:37of it. But there is a caveat here.
+  15:40So invoke dynamic, when it first came outin
+  15:42Java 7, was very slow. It got fast in
+  15:45the first, the, the second update to Java7,
+  15:48but that was also broken. There was some severe
+  15:50issues that, when you deployed in productionit wouldn&#39;t
+  15:53run properly.
+  15:547, update 40, rewrote it, and it is now
+  15:58100% compatible, 100% no bugs with it. Butit&#39;s
+  16:2very slow to warm up, and it uses significantly
+  16:4more memory than the original implementationdid.
+  16:8So it&#39;s probably going to settle more on Java
+  16:108. We have had a few users using Java
+  16:138 with invoke dynamic, not reporting any ofthe
+  16:15issues that we had during the Java 7 time
+  16:17frame.
+  16:18So if you&#39;re interested in getting the bestperformance
+  16:19out of it, the Java 8 preview builds would
+  16:21be a good way to test it out.
+  16:23Now, because of all these issues we continueto
+  16:25look at other options. One of them that came
+  16:27up recently is a couple non-JVM git projectsout
+  16:31of Oracle, call- there&#39;s one called Graal,which is
+  16:34basically an API directly to the git in the
+  16:38JVM, and Truffle, which allows you to takelanguages
+  16:41AST, abstract syntax tree, and, and basicallyconvert it
+  16:45directly into Graal calls, and optimize itdown.
+  16:47Now the early numbers on this have lookedgood.
+  16:51Oracle did spend about six months doing aproof
+  16:53of concept Ruby implementation on top of Truffle.That&#39;s
+  16:56about five or six times faster than JRuby,but
+  17:0the problem here is that they&#39;ve only gotabout
+  17:2half of the, in this case, Ruby spec passing,
+  17:6and there&#39;s a lot more that needs to be
+  17:7done. There&#39;s probably two or three yearsworth of
+  17:9work to get that going.
+  17:11What we&#39;re hoping is that maybe we&#39;ll havesome
+  17:12time to explore building a Truffle of Graalbased
+  17:15backend in JRuby itself.
+  17:17T.E.: And, and once you add some of the
+  17:18extra vagries of what Ruby does, that performanceis
+  17:22probably going to drop.
+  17:23C.N.: Yeah, exactly. There&#39;s a lot of otherstuff
+  17:24that they have to put in there. And, and
+  17:26these libraries are a big part of performance,too.
+  17:29So.
+  17:30And, I&#39;ll hand it over here to talk a
+  17:32little bit more about the new IR-based compilerthat
+  17:34we&#39;re also working on.
+  17:36T.E.: Yeah, so, IR stands for internal representation,which
+  17:41is probably not the most inventive name thatwe
+  17:43could have come up with. But it&#39;s our new
+  17:46runtime. Subramanya Swarovski created thebulk of IR up
+  17:53to this point. He&#39;s the guy who got a
+  17:56PhD in writing a Java optimizing compiler.
+  18:1And he basically created an architecture that&#39;svery similar
+  18:4to a compiler architecture, if you read likethe
+  18:7Dragon book, or took a course at university.
+  18:12And we really wanted to create a new runtime
+  18:14because we were fed-up with trying to do these
+  18:17optimizations directly from AST. We also wantedsomething that
+  18:23we weren&#39;t going to want to rewrite five years
+  18:25from now. So we wanted it to be easy
+  18:27to go and plug in to optimizations and have
+  18:29a lot of growth.
+  18:33So here&#39;s what IR sort of looks like at
+  18:35the top, for JRuby 1.7 and below we&#39;ll, will
+  18:39lex and parse Ruby code and generate an abstract
+  18:42syntax tree, and then will either interpretthat until
+  18:46it gets warm, and then we&#39;ll translate itto
+  18:48Java byte code as part of a git, but
+  18:52in the new IR landscape for 9k, we&#39;ll perform
+  18:56some semantic analysis and translate thatsyntax tree into
+  19:0a set of instructions and operands that representRuby
+  19:4semantics, instead of just syntax.
+  19:7We&#39;ll create some supplementary data centers,like a control
+  19:9flow graph. After that, we can run a series
+  19:13of optimizations on that, create some moredata structures,
+  19:17change some of these existing ones, and thenhopefully
+  19:21we&#39;ll build a maintain a very thin layer for
+  19:24an interpreter. Pretty simple byte code generationlayer, and
+  19:29we&#39;ll be able to expand it out later on
+  19:30to things like Dalvik.
+  19:31C.N.: Ideally trying to do as many optimizationsas
+  19:32possible, before we even get to the pointof
+  19:35generating byte code.
+  19:38T.E.: So here&#39;s our first look at what the
+  19:41instructions are. I&#39;ll just go down a fewof
+  19:45these.
+  19:45At the very top, we make sure that there&#39;s
+  19:47two required arguments with check_arity. Thenext three instructions
+  19:51we assign the parameters, a, b, but then we
+  19:54also assign the closure, in case someone actuallysupplied
+  19:58a block to it.
+  20:0Down at line six you can see c equals
+  20:2one, looks like the left side, and lines eight
+  20:6and nine represent d equals a plus c. This
+  20:9one doesn&#39;t quite read as nice, but it&#39;s still
+  20:13pretty simple.
+  20:17We can do all the optimizations that you would
+  20:20expect if you took a compiler&#39;s course. Ifwe
+  20:22find code that we can remove that won&#39;t effect
+  20:25how the program runs, we can just eliminateit.
+  20:28If we, if we see a constant value that
+  20:32we know doesn&#39;t change, we can just propagatethat
+  20:34to where it&#39;s used and get rid of the,
+  20:36the dereferencing from the variable.
+  20:40We can inline methods and blocks that we&#39;renot
+  20:42actually using a lot yet.
+  20:43C.N.: We do have some early inlines for it
+  20:46though, so it is possible we have managedto
+  20:48make it work.
+  20:49T.E.: Oh it, it totally works. It&#39;s just figuring
+  20:51out when to do it is, is a much
+  20:52harder problem than we realized.
+  20:57So here, if we run a couple passes, you
+  20:59can see that we got rid of about half
+  21:1the lines of code. You can see we didn&#39;t
+  21:3use closure, so we just eliminated that, samewith
+  21:5the variable b. On line six equals one, we
+  21:11know that it never changes, so we propagatethe
+  21:14value one down to the plus call, so now
+  21:18we&#39;re doing a plus one instead of a plus
+  21:20c.
+  21:20And, in general, we&#39;re reducing overhead.We have things
+  21:26like block that is given, littered throughour code
+  21:30base. This is a check that&#39;s really fast.But
+  21:35it&#39;s not free. If you compare that to the
+  21:37dead code elimination aspect of receivingthis block as
+  21:43an instruction, if we can eliminate it, thenwe&#39;re
+  21:45doing absolutely no work, and no work&#39;s betterthan
+  21:48some work.
+  21:48C.N.: And then as we&#39;re able to do some
+  21:49more inlining, a lot of these same optimizationswill
+  21:52propagate through multiple methods. Like ifit turns out
+  21:55that a plus one, a was also a fixnum,
+  21:59while maybe we inline it and just turns in
+  22:0to it at that point.
+  22:2So there&#39;s a lot of stuff that we can
+  22:4do to, to optimize through code once we get
+  22:6the inlining working.
+  22:7T.E.: And you can just keep reapplying someof
+  22:8the same optimizations after that inliningand just-
+  22:11C.N.: Right.
+  22:11T.E.: -keeps boiling down.
+  22:12C.N.: That&#39;s the black magic of compiler optimization.When
+  22:14do you stop?
+  22:16All right, so concurrency-wise, most folksknow that this
+  22:19is the, the situation in general. Ruby 1.8was
+  22:23green-threaded, Ruby 1.9 plus all have actualnative threads
+  22:27but don&#39;t allow parallel execution becauseof the global
+  22:29lock.
+  22:30Whereas on JRuby, because it&#39;s on the JVM,the
+  22:32JVM&#39;s had real parallel threads for a longtime,
+  22:35we do actually have real threads, you canactually
+  22:37saturate an entire machine with just one JRubyprocess.
+  22:41And where this really comes into play is the
+  22:43cost of deploying wide applications for alot of
+  22:47users. You look at a ten-way concurrent inMRI,
+  22:51each process is maybe a hundred, two hundredmegabytes.
+  22:54If it&#39;s two hundred megabytes, that&#39;s twogigabytes of
+  22:57memory that you need to allocate. And that&#39;snot
+  22:58a, that&#39;s not a trivial instance. It&#39;s nota
+  23:0huge on.
+  23:1But then, what if we need to scale this
+  23:3thing up? And what if we need to handle
+  23:4a hundred concurrent users? Well, then weneed to
+  23:7have a hundred-way concurrency in MRI, whichmeans a
+  23:9hundred processes. Now we&#39;re getting intotwenty gig. This
+  23:12is getting into the very high, very expensiveend
+  23:14of, for example EC2 instances.
+  23:17We recently had someone make a migration toJRuby
+  23:20and save something like fifteen thousand dollarsa month
+  23:23by moving from a whole set of extra larges,
+  23:26down to like, five mediums.
+  23:28And so there are real, tangible benefits tomaking
+  23:31a move to JRuby and, and getting threadingworking
+  23:34well for your application.
+  23:36Look at how it is in JRuby. One instance,
+  23:38it&#39;s going to be a little bit more, a
+  23:39little bit larger as a base cost, but you
+  23:41can handle ten instances, ten concurrent,you can handle
+  23:44a hundred concurrent. You can handle whateverthe machine&#39;s
+  23:46capable of handling, pretty much with oneprocess. Maybe
+  23:49you have one for fall back, but it&#39;s, it&#39;s
+  23:51a tremendous difference as far as scaling.
+  23:55But there&#39;s challenges here, too, and thisis where
+  23:56a lot of the future work needs to come
+  23:58in. The Ruby world and the Ruby librariesout
+  24:0there are still kind of growing into concurrency,growing
+  24:3into parallelism. And there hasn&#39;t been abig emphasis
+  24:5on threading or concurrent execution in theRuby world.
+  24:9And so there&#39;s more that we need to do.
+  24:10We need tools to make it easier. We need
+  24:12a lot, we need to help make these libraries
+  24:13thread safe.
+  24:15These are some of the key unsafe operationsthat
+  24:17you&#39;re gonna see in, in libraries that aren&#39;tthread
+  24:20safe. Concurrent read and write on, on datastructures,
+  24:24like array, hash - those are not guaranteedto
+  24:26be thread safe. So if you&#39;re not doing mutexing
+  24:28around those they can be a problem.
+  24:30A lot of people don&#39;t realize that, that calls
+  24:32like this are not done automatically in anyimplementation.
+  24:37There&#39;s a possibility of a thread jumpingin there
+  24:40and doing the same increment at the same time.
+  24:42You get different results out of it.
+  24:43In this one, if my cache really, really needs
+  24:46to be allocated only once, this is not a
+  24:49safe way to do it, because it&#39;s very possible
+  24:51that you may allocate two of them if two
+  24:52threads get to that code at the same time.
+  24:55Thread pooling&#39;s tough, we need better librariesto do
+  24:58that. Ideally some things that start to getinto
+  25:1Ruby core. And then just coordinating betweenthreads. Better
+  25:3ways of communicating and synchronizing threadstogether.
+  25:6So a few gems that we, we, we like,
+  25:9some of these we maintain, some are from friends
+  25:11of ours. The thread_safe gem provides concurrency-safehash and
+  25:15array. It also provides, I&#39;m not showing here,a
+  25:18cache class, which is very, it&#39;s hash-like,but it
+  25:22uses some of the techniques that the, theJava
+  25:25concurrency engineers use for concurrent hashmap to do
+  25:28fast multi-threaded hash map implementation.
+  25:30But otherwise pretty simple. You constructit, you use
+  25:33it like a normal hash almost. And it works
+  25:35pretty much the same way.
+  25:39Hamster is a set of persistent collectionsfor Ruby.
+  25:42The difference with persistent collectionsis that you never
+  25:45mutate it in place. Every mutation operationgives you
+  25:48a new reference, which is that old collectionwith
+  25:52this change applied to it.
+  25:54So the object you have in hand is always
+  25:55basically read-only, and you know that noother mutations
+  25:59happening in the system will impact your readsof
+  26:2it.
+  26:2So it&#39;s a hundred percent safe as far as
+  26:3concurrency goes, and the nice thing aboutit is
+  26:6it avoids any sort of locking or magic tricks
+  26:8under the cover. You just getting a new view
+  26:11of this data structure that everyone stillhas their
+  26:14old view of.
+  26:14I won&#39;t walk through the whole example herebut,
+  26:17it&#39;s, it&#39;s fairly simple to use. Every othermutation,
+  26:20you just assign the result and then you&#39;vegot
+  26:23your new collection as a result.
+  26:25So for those atomic updates, or equals, plusequals
+  26:28and so on, there&#39;s the atomic gem. Atomicgem
+  26:31basically gives you a wrapped value that youcan
+  26:34do atomic updates to. Increment it atomically,perform some
+  26:38Ruby action atomically, and will only happenif nobody
+  26:41else jumps in. So, so you&#39;ll get the atomic
+  26:44right. Other threads will have to retry again.But
+  26:47it guarantees that no one&#39;s gonna step oneach
+  26:49other.
+  26:49This is a simple example. We create an atomic
+  26:52object at the top, which is just a fixnum
+  26:55zero. We can get the value out, we can
+  26:57swap it for another value. And then the more
+  26:59interesting one&#39;s doing compare and swap,if the existing
+  27:2value is two, put three in there. And then
+  27:6the second line, since we know it&#39;s not two
+  27:7anymore, that&#39;s not gonna happen. This ishow we
+  27:9keep threads from stepping on each other&#39;supdates.
+  27:12You can try to make an update, only if
+  27:14it&#39;s the same state you expect. Down here,doing
+  27:17more advanced atomic updates. Update witha block will
+  27:21only make that change if no other thread jumps
+  27:23in there at the same time.
+  27:25And if the, if you need the, if another
+  27:27thread jumps in, it&#39;ll try and make the change.
+  27:30It&#39;ll eith- in this case, it&#39;ll redo thatblock
+  27:33and down here it&#39;ll raise an error. You can
+  27:34decide whether you want to try to continuedoing
+  27:36this update.
+  27:40So the bottom line for these libraries isthat
+  27:42concurrency really can work in Ruby, and there&#39;sa
+  27:45lot of people doing highly concurrent applicationson JRuby
+  27:47right now. But we need the right kind of
+  27:49tools and the right patterns to do it.
+  27:52Immutability really helps. Having some ofthese sort of
+  27:54data structures helps. And testing on JRubyis really
+  27:58the only way to know if your library is
+  28:0gonna be thread safe. We&#39;ve got the most extensive
+  28:3threading support, and we&#39;ve had it for thelongest,
+  28:4so it&#39;s just best if you test it on
+  28:7JRuby to make sure.
+  28:7T.E.: OK, I mentioned earlier that I wantedto
+  28:10talk about improving embedding, especiallysince we&#39;re moving to
+  28:14a new major version that&#39;s gonna break APIs.
+  28:19First thing is, public is similar to publicin
+  28:21Ruby in that once something&#39;s marked public,anything can
+  28:24call it. We have a huge code base and
+  28:28we need to mark a bunch of things public.
+  28:30Unfortunately, because it&#39;s public, then anynative extension can
+  28:34call it as well.
+  28:35And I don&#39;t blame people for doing it. They&#39;re
+  28:37calling these methods cause they have to.And they
+  28:40probably represent gaps in our embedding API.But we
+  28:44need to actually signal our intent that wethink
+  28:47that these are blessed APIs you can use, versus
+  28:50we don&#39;t want you to use them.
+  28:52So we&#39;re gonna also provide a tool, and let&#39;s
+  28:55look at the solution - or part of the
+  28:57solution.
+  28:57C.N.: This is actually a problem that MRIis
+  28:59faced with the C extension API. Without hidingsome
+  29:2of it, everything becomes the public API,and that&#39;s
+  29:4a big reason why C extensions are hard or
+  29:9impossible to support other implementations.
+  29:9T.E.: Well, C doesn&#39;t have visibility at all,so
+  29:11we get a little bit more protection, but not,
+  29:14not a lot. So I&#39;m not gonna teach people
+  29:17how to go and write annotations in Java. This
+  29:19is RubyConf. But this is really great. I&#39;mjust
+  29:23gonna talk about annotations a little bit.
+  29:26This is metadata that you can attach to first
+  29:28class concepts in the language. So in thiscase
+  29:32we&#39;re creating an annotation called extensionthat we can
+  29:36attach to methods. So we&#39;ll just put, addextension
+  29:39in front of our method declaration and, andthen
+  29:45we specify that it has a runtime binding,which
+  29:49means in your live-running Java program youcould actually
+  29:52ask that Java method at runtime, are you an
+  29:54extension method?
+  29:55So this metadata concept is, is really cool.In
+  30:0usage, in our source we&#39;ll just mark the methods
+  30:3that we have as extensions. And then, in our
+  30:6native extensions we can use those and thenrun
+  30:10a tool. We haven&#39;t actually wrote the tool,but
+  30:14it&#39;ll be integrated into JRuby lint. It&#39;llexamine your
+  30:18jar and it&#39;ll give you a report of things
+  30:20that you are using that aren&#39;t blessed.
+  30:23C.N.: Right. This is part of the transition.We
+  30:25know we&#39;re gonna break some of those externalAPIs,
+  30:26but we know the ones we&#39;re going to bless
+  30:29as official, and can give reports to any library
+  30:32that&#39;s out there using the bad APIs, whatthey&#39;re
+  30:35using now and what they need to change to.
+  30:37T.E.: We kind of get a double benefit as
+  30:39well, because we can actually write a documentationgenerator
+  30:43and we can actually generate an embeddingdocument from
+  30:46these annotations.
+  30:48And the reason why I spent a little extra
+  30:49time on this was because, wouldn&#39;t it be really
+  30:51great if in Ruby 3 we actually added a
+  30:54metadata facility so that we could go andattach
+  30:56stuff to methods? There&#39;s just so many usesfor
+  30:59this, it&#39;d be really nice to consider addingsomething
+  31:2similar to Java annotations.
+  31:6We&#39;re gonna go and cover some projects associatedwith
+  31:9Google Summer of Code. JRuby actually hadits own
+  31:12organization for this and, well, examplesare probably the
+  31:17best way to show.
+  31:19C.N.: We&#39;re, we have some Google Summer ofCode
+  31:21people here. There&#39;s one in front - OK. I
+  31:23think some of the other ones that might, there&#39;s,
+  31:25there&#39;s one other that&#39;s here, I think. Ihaven&#39;t
+  31:27seen him around yet but, we had about, we
+  31:29had ten people this year. How many did we
+  31:30have last year?
+  31:31T.E.: It was more.
+  31:33C.N.: It was more, I think it was like-
+  31:34T.E.: It was like fourteen.
+  31:35C.N.: Thirteen? Thirteen students last year.Ten students this
+  31:37year. So we&#39;re really trying to help get more
+  31:39students into JRuby and into Ruby in general.
+  31:43T.E.: The first one is actually from lastyear.
+  31:48But it kind of fits into the talk about
+  31:49opt IR. We realized we had a problem with
+  31:53IR, and we sort of still have that problem.
+  31:57This diagram totally shows it. We&#39;re doingmore work.
+  32:4If you think about JRuby, the one thing that
+  32:6we&#39;re known for that we don&#39;t want to be
+  32:7known for is our startup time.
+  32:9C.N.: It sucks.
+  32:11T.E.: So our startup time&#39;s getting-
+  32:13C.N.: Want a little more overhead?
+  32:14T.E.: Yeah. Let&#39;s add more overhead.
+  32:16But we realized this, in, well before 2012,and
+  32:20we had Aliaksei make a, work on a persistence
+  32:24project, basically similar to just a compiler.You just
+  32:27save your persistent data and then you readit
+  32:30in, instead of having to recompile.
+  32:32So, if the file&#39;s up-to-date, and it&#39;s beensaved,
+  32:37you just read that and save having to compile.
+  32:41And ultimately, we have a break-even point.We have
+  32:44to build and read that off a disk faster
+  32:45than we can compile. And this is kind of
+  32:48a lie. We actually have to be faster than
+  32:501.7 today, or people are gonna go, why did
+  32:53you slow JRuby down even more for startup?
+  32:59Unfortunately for this project, it ended uptaking longer
+  33:2to read the data in than it took to
+  33:3actually compile it. But it basically boileddown to,
+  33:8we were saving way too much data. Size really
+  33:11does matter for, for read speed.
+  33:14Also, we realized that a majority of the stuff
+  33:17that we were actually reading in, we neveractually
+  33:19used. So we want to be more lazy. I&#39;m
+  33:24not gonna talk about interning. I was, butwe&#39;ll
+  33:27cut down.
+  33:28So we&#39;re gonna use a binary format. And the
+  33:32most important part is that we&#39;re gonna doincrementally
+  33:36loading to be lazy, and this diagram willshow
+  33:39you why. If you look at all the basic
+  33:42operations you would do on a day-to-day basis,you&#39;ll
+  33:44notice this really strange ratio. It&#39;s aneighty-twenty ratio.
+  33:48Eighty percent of the code that you actuallyload
+  33:50when you startup, each of these activitiesis never
+  33:54actually called. Now maybe for a longer runningapplication
+  33:58it does get called. But it seems like for
+  34:0startup and, and common activities, the eighty-twentyrule applies.
+  34:5Which is really, really weird.
+  34:6C.N.: Yeah, it&#39;s weird that that ratio appliedalmost
+  34:8across the board.
+  34:9T.E.: So if we define the methods but we
+  34:11don&#39;t actually parse any of the bodies, thenwe&#39;re
+  34:13obviously going to be doing a lot less parsing.
+  34:18RSense was updated. Eric West is here. Standup
+  34:26quick. I have to embarrass him a little bit.
+  34:36If you haven&#39;t seen RSense, it&#39;s a librarythat
+  34:41you can go and install, and put in to
+  34:43your editors, like VI or eMacs, and it can
+  34:47do simple things like code completion. Butit actually
+  34:52makes smart choices, because it actually isa full-type
+  34:56inference engine.
+  34:58In this case, this is a pretty simple form
+  35:0of type inference, but it can figure out a
+  35:3surprising amount of stuff. So it, it&#39;s somethingworth
+  35:8looking into. But before I talk about howto
+  35:12do that, let&#39;s describe the project.
+  35:17The person who originally wrote it, wroteagainst JRuby,
+  35:19and he wrote it against JRuby 1 point 3.
+  35:22At some point after JRuby 1 point 3, we
+  35:25ripped a bunch of stuff that he needed out
+  35:26of it and put it into its own library,
+  35:30and then, like all great opensource projects,it went
+  35:33into decay.
+  35:35But one of the downsides is you could still
+  35:37use it today, but it would only support 1.8
+  35:40syntax, which is a problem. And so Eric wanted
+  35:43to fix that.
+  35:44A second goal we had was that, if there
+  35:47was any really interesting functionality thatwas in, our
+  35:52sense that would be useful for the JRuby parser
+  35:54project itself, that he would go in and move
+  35:57that in. Or implement it differently, butmove it
+  36:2in.
+  36:3So he did that. And it&#39;s good to go
+  36:6except RSense hasn&#39;t been released. So wehave to
+  36:9talk to Matzuyama&#39;s son and figure out howto
+  36:12get this released as a new gem.
+  36:14Eric added this really cool tree differencingsupport, so
+  36:19you can compare two different sub-trees anddo all
+  36:22sorts of things with it. And one thing that
+  36:25he did with it concretely is he made a
+  36:27gem called smart_diff, so if you go and take
+  36:32a diff between two files, you&#39;ll get an HTML
+  36:36file that looks like this. YOu&#39;ll see theblue
+  36:39and grey highlighting back and forth.
+  36:43Smart_diff is actually able to tell that Ijust
+  36:45switched the order of these two files. Andthen
+  36:49you would see the typical green and red output
+  36:51for things that are added or deleted. It&#39;s,it&#39;s,
+  36:55it&#39;s pretty cool.
+  36:56So you can, you can use this just gem
+  36:59install.
+  37:0C.N.: It&#39;s just built on top of RSense. It
+  37:3was a lot, obviously a lot more stuff we
+  37:4could do with this.
+  37:4T.E.: Oh, this is actually just built on JRuby
+  37:7parser.
+  37:7C.N.: Oh it&#39;s just built on the parser.
+  37:11T.E.: Yeah.
+  37:12jruby_visualizer is by Maximilian Konzack.He&#39;s not here today.
+  37:17We need to have better tools to go and
+  37:21analyze stuff at the IR level. We have a
+  37:24lot of compiler passes running and, in particular,eventually
+  37:30we want to get this tool to the point
+  37:31where you can go and run your applicationand
+  37:35it&#39;ll generate an event stream. You can savethat
+  37:37event stream, give it to us, and we can
+  37:39look at all the changes that are happeningin
+  37:41the IR and figure out what went wrong.
+  37:43C.N.: Right. See why it&#39;s not optimizing whatit
+  37:44should be.
+  37:46T.E.: It&#39;s a GUI based application. It&#39;s certainlywritten
+  37:48on top of the JRubyFX gem, which is something
+  37:51that, myself, Eric, and Max, worked alongwith mostly
+  37:57byte IT 101.
+  37:58I don&#39;t, I can&#39;t pronounce his last name,so
+  38:0I&#39;m just gonna use his handle. But it&#39;s an
+  38:3awesome GUI toolkit on JRubyFX. Use it.
+  38:8OK. So here&#39;s just a couple of screen shots.
+  38:12If you go and click on the AST in
+  38:14the left, it&#39;ll just scroll to wherever onthe
+  38:17right and show you what code that is. So
+  38:19there&#39;s a little bit of trace ability introduced.At
+  38:22any point - I don&#39;t expect you to read
+  38:24that - but it&#39;s more IR output. Actually that&#39;s
+  38:27bigger than I thought.
+  38:32It&#39;ll actually ask for the compiler passesexecuted, and
+  38:36you can step through those and then pop up
+  38:39the IR view to see what&#39;s changed. We actually
+  38:41want this to be a more smart diff format
+  38:44to actually get better information how it&#39;schanged, but
+  38:47it&#39;s a Google Summer of Code project. A guy
+  38:50can only do so much.
+  38:52And lastly you can go and look through the
+  38:54control flow graph. And we want to go in
+  38:56and add more windows for more stuff. So.
+  39:0MK.
+  39:1C.N.: Another project we had this summer,Chamila worked
+  39:6on DTrace Support for us. So Ruby 2 point
+  39:91 added DTrace probes. I think that was, Erin
+  39:12Patterson added that.
+  39:14We wanted to add the same thing, and Chamila
+  39:17came along and decided that that was the project
+  39:18that he&#39;d like to do for Google Summer of
+  39:20Code. It turns out OpenJDK does have DTracesupport
+  39:23in it, so we could just build on top
+  39:26of those existing APIs.
+  39:29Now what we have right now, it&#39;s about 90%
+  39:31complete. And it passes a lot of MRIs tests
+  39:34for the, the functionality that we&#39;ve implemented.But the
+  39:37thing we found out during the process is that,
+  39:39unfortunately the DTrace support in OpenJDKonly exists on
+  39:42Solaris right now.
+  39:44So, we&#39;re looking at other options, pullingthe DTrace
+  39:47support over to the BSDs, like OS ten where
+  39:50we have DTrace. Pulling over the same APIswhere
+  39:53we have Linux equivalents of DTrace. Or possiblecalling
+  39:56out to a, an external library.
+  39:58But we do have the code available. We&#39;re gonna
+  40:0try to get it merged in at least for
+  40:2the Solaris platforms and see what we cando
+  40:4for others.
+  40:6Shoes. Shoes4 was another project that camealong this
+  40:10summer. We&#39;ve also did some work last summertoo,
+  40:13Tobias worked on this one. So Shoes is basically
+  40:17why the lucky stiff&#39;s GUI environment. It&#39;svery clean,
+  40:20very simple to use. He wanted to come up
+  40:22with something that would be really trivialand fun
+  40:24to build complex GUI applications with.
+  40:28Shoes4 actually made the decision, last yearsome time
+  40:31I think, to move to a JRuby-only backend.There&#39;s
+  40:34a lot of reasons for this. Most of them,
+  40:36portability, not having to build the librariesover and
+  40:39over again, and having a consistent experienceacross all
+  40:41platforms. Building it on top of GTK or Win32
+  40:46or whatever else never worked great acrossplatforms. Things
+  40:49always developed a little bit different andit was
+  40:51very difficult to ship applications, sinceeverybody needed to
+  40:55install those extra libraries and build themfor that
+  40:57platform.
+  40:58In the other room, in one of the salons,
+  41:1there&#39;s actually a talk on an applicationthat uses
+  41:5DRb and Shoes4 to do a Space Team-like pirate
+  41:10game. And that&#39;s Davy, Eric, and Ryan aretalking
+  41:14about that in the other room. And since they
+  41:16couldn&#39;t be here and we couldn&#39;t be there,I
+  41:18thought we&#39;d get a video from them to show
+  41:20this application running.
+  41:22And so this is just all, this is written
+  41:24all in Ruby code, using Shoes, which is backed
+  41:27by SWT, one of the JVM GUI libraries. Anybody
+  41:31play - any Space Team players here? Not too
+  41:34many.
+  41:35The goal, basically, is you have two or three
+  41:37or four people, and it shouts out commandsto
+  41:40you, and you have to do them quickly. Or
+  41:42yell it out to your friends so that they&#39;ll
+  41:44do the commands.
+  41:45So, there you go. So that was, that&#39;s fun,
+  41:49and it&#39;s cool that, that it&#39;s actually beingused
+  41:50now.
+  41:51Some more Google Summer of Code stuff we don&#39;t
+  41:54have time to cover - more work on Ruboto,
+  41:57which is JRuby on Android, trying to stripdown
+  41:59the runtime, improve performance, make iteasier to build
+  42:2Android applications entirely in Ruby. AsakawaRyu did that.
+  42:7Shoes4 HacketyHack support. Faraaz did that.We don&#39;t, we
+  42:12mostly let the Shoes guy mentor that, so we
+  42:14didn&#39;t track that very much.
+  42:15For the second year in a row we had
+  42:17two students working on Krypt. Krypt is anew
+  42:20encryption, encoding library for Ruby, intendedto, hopefully, replace
+  42:27OpenSSL at some point. But, implemented inRuby, where
+  42:31it can be native where possible, and supportingall
+  42:35the implementations at the same time. So we&#39;vealways
+  42:37got a good solid encryption library.
+  42:40And we&#39;re very happy that we&#39;re able to support
+  42:41that every year in Google Summer of Code.
+  42:43And we also had a student explore JRuby on
+  42:45embedded devices like raspberry pies and stufflike that.
+  42:48He basically came up with a bunch of different
+  42:50matrices of which libraries, which JRuby,which JRuby versions
+  42:54work on which platforms with which embeddedJVMs. And
+  42:58we&#39;ve got all that information available on,in the
+  43:1JRuby organization on GitHub.
+  43:3So. Wrapping things up. Emphasizing that JRubyis just
+  43:7Ruby - it just happens to be on the
+  43:8JVM. We&#39;re working with the MRI and the community
+  43:12a lot more, more and more in the future.
+  43:14If anybody has gems or libraries you&#39;re releasing,please,
+  43:17please turn on JRuby and Travis. If it&#39;s not
+  43:20passing, let us know and we&#39;ll help you figure
+  43:22out why.
+  43:23And, you know, if you&#39;re not trying JRubyright
+  43:26now, give it a shot. Let us know how
+  43:27it goes for you and let us know what
+  43:29we can improve. So thanks.

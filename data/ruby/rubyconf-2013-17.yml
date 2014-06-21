@@ -1,0 +1,659 @@
+---
+conference: RubyConf
+year: 2013
+source: https://www.youtube.com/watch?v=ppf8m-3uXvU
+automatic: false
+duration: 0
+speaker: ''
+title: ''
+text: |
+  0:16MATTHEW KIRK: Hi. My name is Matt Kirk. Hello!
+  0:21Hi everybody. My name is Matt Kirk. And I
+  0:26want to know, who remembers email before Gmail?All
+  0:31right. Now who remembers the massive amountof spam
+  0:36that we used to get every single day in
+  0:38our inbox? Still do.
+  0:41I know that when I switched from having an
+  0:45excite account to having Gmail, it was likeentering
+  0:48the garden of Eden of all inboxes, becauseI
+  0:50no longer had to spend my time deleting all
+  0:53of those ridiculous adds for pharmaceuticalsand solicitations for
+  1:0Nigerian money.
+  1:2I could focus on sending emails to peoplethat
+  1:6were important, and I no longer had to spend
+  1:8my time actually filtering out spam myself.Now, who
+  1:13remembers mix tapes? All right. My kind ofaudience.
+  1:19I know that when I was a kid, I
+  1:21used to listen to a couple radio stationsup
+  1:24in Seattle, where I&#39;m from. And my favoriteradio
+  1:27stations, I&#39;d always have a cassette ready,because there
+  1:31might be that song that I really want on
+  1:34a tape. And, of course, as soon as it
+  1:37got to that song, it would play the intro
+  1:39and then I&#39;d hit record as fast as I
+  1:41can, and about twelve hours later I&#39;d havethis
+  1:44mediocre mix tape. That was pretty good butit
+  1:48wasn&#39;t really that great.
+  1:50No longer do I have to do that. Now
+  1:52I can just load up my iPhone, type in
+  1:54favorite artist into Pandora and go for arun.
+  1:58It&#39;s amazing that I don&#39;t have to spend twelve
+  2:1hours making a playlist. I don&#39;t have to spend
+  2:4any of this time.
+  2:6Now, Pandora and Gmail, or spam filteringgetting better.
+  2:11They both have one thing in common, and that
+  2:14is they&#39;re both using data to solve a problem
+  2:17to make our lives much easier.
+  2:21And today I am here to issue every single
+  2:23one of you a challenge, and that is to
+  2:26use data to solve problems. Somewhere in thisaudience,
+  2:31there is somebody who will make the next Pandora,
+  2:33or will make a spam filter that somewhat works.
+  2:39I think that this community is extremely smart,and
+  2:42can do it. Can really utilize data, becausethere
+  2:46is a massive opportunity in front of us right
+  2:49now. We can get data everywhere from temperaturesto
+  2:52Kim Kardashian&#39;s Tweets to everything in between.We have
+  2:56data. We have data&#39;s being created from Rails,you
+  3:1name it.
+  3:2But, of course, this is a RubyConf, and Ruby
+  3:7really isn&#39;t the big data language. A lotof
+  3:11people, unfortunately, think that, when Italked about machine
+  3:15learning, big data, data science, whateveryou want to
+  3:18call it, we&#39;re talking about Java and Pythonand
+  3:22R and Julia and Clojure and MatLab and the
+  3:24list goes on.
+  3:25But Ruby doesn&#39;t do that. Ruby has tools too.
+  3:31We have tools. Whether it be JRuby tying into
+  3:35Mahout, or using some of the C libraries in
+  3:37MRI. We have Ruby tools. We have tools as
+  3:42well. We can approach machine learning problems,data problems,
+  3:46like everybody else.
+  3:51But unfortunately, data science, big data,machine learning, optimization,
+  3:57bio-informatics, you name it, is a big freakingmess.
+  4:1It is a confusing ball of mud in everybody&#39;s
+  4:4mind because nobody really knows what evento call
+  4:8this form of study. If you were to go
+  4:11and find an academic paper and start readingthrough
+  4:15it, most likely by the end of it, you
+  4:17would be more confused than when you startedreading
+  4:20it.
+  4:23It&#39;s like this poor little guy who doesn&#39;thave
+  4:24a freaking clue what&#39;s going on. Data science?That&#39;s
+  4:30a form of science. Hasn&#39;t had Newton or Einstein
+  4:34to come and unify everything in this eleganttheory.
+  4:37It is an extremely nascent field, wherebyit&#39;s extremely
+  4:41immature and confusing.
+  4:45On top of that, Ruby was not ever created
+  4:47to be about complex mathematics, linear algebraor anything
+  4:51like that. Matz, the creator of Ruby, createdthe
+  4:55language for everybody here, including me.He made it
+  4:59for our joy, happiness, to make us happier,so
+  5:3that we didn&#39;t have to worry about boilerplate.
+  5:5And I&#39;m sure a lot of you can attest
+  5:7that mathematics was not created for our happiness.
+  5:13But that can actually be a strong point in
+  5:17Ruby as well. Ruby was made for our happiness.
+  5:21It&#39;s expressive, it&#39;s easy to read. When youwrite
+  5:24Ruby in the right way, it&#39;s almost like writing
+  5:27pseudo-code. So if we&#39;re able to solve thesedata-type
+  5:32problems in Ruby, we could share it with other
+  5:36people and teach more how to approach theseproblems.
+  5:43Today, I&#39;m going to teach you how to approach
+  5:48one simple problem. By the end of this, you
+  5:52won&#39;t know nearly enough, when it comes tomachine
+  5:55learning. You will not come out of here with
+  5:57a Ph.D. in advanced mathematics. But, I hopeto
+  6:2encourage you to search and to learn moreabout
+  6:5this field, because it is extremely usefulfor what
+  6:8we do.
+  6:10Today we&#39;re gonna go through what feed forwardneural
+  6:14networks are. We&#39;re going to have one example,which
+  6:17is classifying strings to languages. We&#39;regoing to do
+  6:21it in a test-driven fashion, which is kindof
+  6:25a different way of thinking about it. Andthen
+  6:27at the very end, just to prove that I&#39;m
+  6:29not making things up, we&#39;ll actually havea demonstration.
+  6:35So who knows what a neural network is?
+  6:38OK. Who knows how they work?
+  6:42All right.
+  6:46Neural networks, to me, is the best exampleof
+  6:49machine learning, because it&#39;s kind of a magicalsledgehammer,
+  6:52whereby we can hammer in functional relationshipsof previous
+  6:57data. It works really well, if we have data
+  7:1that we can model, and we think that there&#39;s
+  7:4a functional relationship there. But, forthe most part,
+  7:7it is kind of a confusing algorithm, and,I
+  7:13hope, by the end of this section, you&#39;ll at
+  7:14least have a better idea of how they&#39;re built.
+  7:17Definitely won&#39;t be very deep, but hopefullyyou&#39;ll just
+  7:20know a little bit more about how these neural
+  7:23networks actually work.
+  7:24In the graphical format, it looks somethinglike this,
+  7:28for the most part. Neural networks are brokendown
+  7:32into four pieces. There&#39;s three layers, andthen neurons.
+  7:38So, the layers, going through them one byone,
+  7:43we have an input layer. Input layer is actually
+  7:46probably one of the easiest things to understand.Really,
+  7:49it is just what we&#39;re inputting into thisparticular
+  7:52model that we want to model a functional relationship.
+  7:58Now the thing here to stress is that, for
+  8:0the most part, when we&#39;re talking about neuralnetworks,
+  8:2we&#39;re talking about data between zero andone. So
+  8:8that can be anything normalized between zeroand one.
+  8:13So input is simple. It&#39;s just what you&#39;reinputting
+  8:17into this particular model.
+  8:19Now that&#39;s not where most people get trippedup.
+  8:22Instead they get tripped up on this idea of
+  8:24the hidden layer. And this is where I got
+  8:27really confused when I first learned abouta neural
+  8:30network.
+  8:32I understand that input and output is inputand
+  8:35output. But the hidden layer is like thisprivate
+  8:39method that we have no control over and can&#39;t
+  8:42really observe. The hidden layer is just anadded
+  8:48complexity to the model, so that we can model
+  8:51even more complex functions.
+  8:54Unfortunately, we can&#39;t really observe what&#39;sgoing on in
+  8:58there, because it is really just like a private
+  9:1method of this function. It&#39;s out of our scope,
+  9:4and for the most part, we just treat it
+  9:6like a black box.
+  9:7I&#39;ll get back to how these things actuallyget
+  9:11computed a little bit later, but let&#39;s firsttalk
+  9:14about neurons.
+  9:17How many neurons actually should go into thisis
+  9:20a very open question. When you look at this
+  9:25particular graph, we know that we&#39;re inputtinga certain
+  9:29amount of data, and we want to output a
+  9:31certain amount of data. But when it comesto
+  9:33the hidden neurons, how many neurons do youwant
+  9:37in that layer?
+  9:39Now you could put as many or as little
+  9:42as you want in there. It&#39;s up to you.
+  9:46But there&#39;s a heuristic which is to use two-thirds
+  9:48times the input layer plus the output count.That&#39;s
+  9:52just a good way to start.
+  9:53It doesn&#39;t really matter. The only thing tostress
+  9:56here is that these neural networks, in a feedforward
+  10:0context, which is what we&#39;re talking about,more or
+  10:3less, does a really good job of aggregatingdata
+  10:5together. So as you can see, it goes from
+  10:7three to two to one.
+  10:11Lastly, we have the output layer, which isjust
+  10:15where the data comes out of this massive function.
+  10:23Let&#39;s talk about the neurons.
+  10:25Neurons, as you know, are in every singleone
+  10:28of us, in our brain. We have a neural
+  10:31network of sort. And it takes input, a bunch
+  10:35of input, and then it sends outputs to other
+  10:38neurons, which then sends more output to otherneurons.
+  10:41When we&#39;re talking about an artificial context,though, it&#39;s
+  10:45a very specific idea, which is, we&#39;re takingtwo
+  10:48inputs, in this case x1 and x2, and then
+  10:52we&#39;re weighting them together. The idea hereis that
+  10:58we really only want one output in this neuron.
+  11:3And we just want it to be weighted based
+  11:7off of minimizing the error of the entirenetwork.
+  11:12On top of that, we also want it to
+  11:14be between zero and one. Now, this is really
+  11:19confusing, so let me explain it in a different
+  11:21way.
+  11:22How many of you have ever run into digital
+  11:24logic before? All right, so most everybodyhere probably
+  11:29knows what digital logic is, because you useands
+  11:32and ors in Ruby code all the time. Digital
+  11:35logic is where, basically, you say zero isfalse
+  11:40and one is true. So when you have something
+  11:42like the and gate, the only time it will
+  11:45be one is if they&#39;re both one. So it&#39;s
+  11:48true and true equals true.
+  11:51Simple enough.
+  11:53This neuron, like a digital logic gate, ismore
+  11:58like fuzzy logic. So instead of being zeroor
+  12:2one, it&#39;s really just kind of a range between
+  12:6zero and one. So, for instance, instead ofbeing
+  12:11true, it could be seventy-five percent true.
+  12:14Now this is a really powerful idea, becauseinstead
+  12:19of having to make sure that everything istrue
+  12:21or false, we can have an inclination towardsan
+  12:24answer, and that&#39;s what really makes neuralnetworks powerful.
+  12:28We get close to a solution, but we don&#39;t
+  12:30actually find the exact solution.
+  12:34And originally when neural networks were firstcome up
+  12:37with, that&#39;s what they were doing, is lookingat
+  12:39something called threshold logic, which isaround this idea
+  12:43of taking a lot of input and determining whether
+  12:46things were true or false.
+  12:48Now, if you noticed back on this slide, I
+  12:51had this random function that wraps everything.This f.
+  12:56There&#39;s a special name for that, and whatit&#39;s
+  12:58called is the activation function. Now I&#39;msure everybody
+  13:3up here knows these, right.
+  13:6Obviously not. OK. So, activation functionserves one purpose
+  13:12and that is to normalize everything betweenzero and
+  13:15one. So if, for instance, the weighted sumoutputs
+  13:19ninety-five, then it would be towards one,but it
+  13:23wouldn&#39;t actually be one.
+  13:26Activation functions take many different forms.Sigmoidal and Elliot
+  13:31is really just the learning curve. So, ifyou
+  13:34have learned something, most likely, you knowabout the
+  13:36learning curve, where you struggle for awhile,it goes
+  13:40up really fast, and then you kind of plateau
+  13:43at the top. So that&#39;s Sigmoid and Elliot.
+  13:47Second, we have Gaussian, which really isjust a
+  13:51fancy term for the bell curve, which lookslike
+  13:53a big hump in the - or like a
+  13:55hill. Linear - line. Threshold is just yesor
+  13:59no. And cosine is, obviously, cosine and sine.
+  14:5The really important thing here is that, sincewe&#39;re
+  14:7looking for a fuzzy logic answer, we needto
+  14:11make sure that everything is normalized betweenzero and
+  14:16one.
+  14:17Now, I don&#39;t think that you&#39;re gonna be able
+  14:19to see this, because I pulled this somewhereoff
+  14:22of Google images and it&#39;s hard to see, but
+  14:25I will be posting all of this, resources at
+  14:28the end so you can check it out. This
+  14:29is just a graph of all of the activation
+  14:31function so that you can see it.
+  14:35Now, the last thing we need to talk about
+  14:39in terms of feed forward neural networks isthis
+  14:42idea of a training algorithm, and that&#39;s wheremachine
+  14:45learning really comes into play. Now if youthink
+  14:48about it, looking back on the neuron slide,there
+  14:51was this weighted sum. But how exactly doesit
+  14:55weight?
+  14:55It could be completely arbitrary. Should itbe fifty-fifty
+  15:0or seventy-five twenty-five? It&#39;s a completelyarbitrary idea. And
+  15:6what the training algorithm does, effectively,is illustrate it
+  15:10in this little slide that I put together,including
+  15:12the little AOL guy.
+  15:16So imagine that you&#39;re the AOL guy standingat
+  15:19the top of a mountain, and for some reason,
+  15:23it&#39;s super dark outside, it&#39;s foggy, you havea
+  15:26tree in front of you with the club on
+  15:27the top. And you want to get to the
+  15:30bottom of the valley where your base campis.
+  15:34Now intuitively, in terms of how I would do
+  15:38it, I would say, OK, it&#39;s really freakingdark,
+  15:40but, it looks like the hill is going down
+  15:42that direction, and I start walking that directionuntil
+  15:46I notice the hill start goes back up.
+  15:48Now, then I would say, OK, I need to
+  15:51backtrack and maybe I&#39;ll try a different direction.And
+  15:55that&#39;s effectively what these training algorithmsdo. They&#39;re just
+  15:59trying to find the minimum error. So they&#39;retrying
+  16:2to find the set of weights that minimizesthe
+  16:6error of the entire model.
+  16:8And they do that step-wise. So they look for
+  16:12the steepest descent. So we&#39;re looking forhow to
+  16:16get down to the bottom of the valley. This
+  16:21is just the tip of the iceberg when it
+  16:22comes to neural networks, and to be honest,it&#39;s
+  16:26a lot to take in in a very short
+  16:27period of time, so I recommend everybody lookmore
+  16:31into this, into neural networks.
+  16:34There&#39;s all kinds of variants, including cyclical,RBF neural
+  16:40networks. The list goes on and on. But hopefully
+  16:43this explains enough so that we can approacha
+  16:46problem of some use.
+  16:51Who&#39;s seen this before? Anybody know whatit is?
+  16:56Wow, you guys are really loud.
+  17:1OK, thank you. Google translate. So if you&#39;rea,
+  17:6if you&#39;re a student of a foreign language,most
+  17:8likely you&#39;ve gone to Google translate orany of
+  17:11the other ones. But one day, I was kind
+  17:14of surprised by being able to type in a
+  17:17word, and it would say, would you like to
+  17:19translate this from German or, whatever you&#39;retrying to
+  17:22translate - Finnish, whatever.
+  17:24And when I looked at it, I&#39;m saying, wow,
+  17:27Google is really smart. They must know thingsthat
+  17:29I don&#39;t know, because they can read my mind.
+  17:33And I thought to myself, OK, how would you
+  17:35actually approach building something likethis?
+  17:39Now, the programmer in me would say, OK, this
+  17:43is just a simple dictionary lookup, for themost
+  17:46part. We could probably get every word inthe
+  17:49entire world, put it into this enormous hash,and
+  17:53then look things up one by one.
+  17:56Until I thought about it for a second. I&#39;m
+  17:57saying, OK, there&#39;s probably twelve thousandwords, more or
+  18:0less, for each language, across maybe a fewhundred
+  18:5languages. That would get pretty big prettyfast, and,
+  18:8for the most part, I don&#39;t care if it&#39;s
+  18:10perfect or not.
+  18:12On top of that, if you&#39;re into German, they
+  18:15have really big, complex, compound words thatprobably wouldn&#39;t
+  18:20be found by the particular implementation.So we really
+  18:26need to take a different pers- different approach.
+  18:32That approach of solving specifically somethinglike this, where
+  18:37we want to classify English, German, Polish,Swedish, Finnish,
+  18:43Norwegian. Now, I just picked these languagesout of
+  18:46hat because that&#39;s what I want to specify.I
+  18:49think it would be great if we could actually
+  18:52make a Scandinavian German language classifier,because they kind
+  18:56of look similar sometimes.
+  19:2The way that I would do this is I&#39;d
+  19:3probably pull some data down first. And, allpolitics
+  19:9and religion aside, probably one of the mosttranslated
+  19:12books in the world would be the Bible, so
+  19:15I just figured I would go out and find
+  19:17a bunch of text from the Bible in many
+  19:20different languages, pull that down, and ifwe have
+  19:23the data, we can do something with it, right?
+  19:29Well, this is where things get a little bit
+  19:32more complicated, because, language, as manyof you know,
+  19:38can be extracted in many different ways. Now,a
+  19:42computer really doesn&#39;t care about what thelanguage looks
+  19:45like. They care about how you&#39;re modelingthat language.
+  19:49And if we have all of this text from
+  19:51the Bible in many different languages, wecould extract
+  19:54it in many different ways. We could pull out
+  19:57stems, words, character counts, or we coulddo frequency
+  20:3of characters.
+  20:5And this is where something struck me rightaway,
+  20:8because I remember, from grammar or something,that e
+  20:14was the most frequent letter in the Englishlanguage.
+  20:17So I said, OK, that would be great if
+  20:19I could just pull out the frequencies of these
+  20:21letters and somehow model that into a classifier.
+  20:27Doing a little bit more research, I decidedto
+  20:31graph this out, and what this is is showing
+  20:34the character distribution alphabetized forthese six different languages.
+  20:40So, as you can see, Finnish has a lot
+  20:44of a&#39;s in it. English has a lot of
+  20:47e&#39;s. So I&#39;m just pulling that out of my
+  20:50head, but.
+  20:51As you can see though, there&#39;s something here.There
+  20:53is somewhat of a relationship and there&#39;ssomewhat of
+  20:57a characteristic to each one of these languages.And
+  21:1that was really intriguing to me, and exciting,because
+  21:3if there&#39;s something, then we could probablyuse a
+  21:7neural net, right.
+  21:11Now, taking a step back, who remembers thescientific
+  21:17method from seventh grade science class? Allright. I
+  21:23remember in seventh grade I learned the scientificmethod,
+  21:26and it was hypothesize, test that hypothesis,and based
+  21:29off of that answer, you feed that into a
+  21:31new hypothesis, which then you do the samething
+  21:33over and over again until finally you havea
+  21:37theory of sorts.
+  21:41I&#39;ve always thought that test-driven developmentis just a
+  21:43subset of the scientific method. You writea test,
+  21:47you test it, you make, you see what comes
+  21:51out of that, and based off of that feedback
+  21:52loop over time you get to a theoreticallysound
+  21:57code base, so to speak.
+  21:59Now wouldn&#39;t it be great if we could actually
+  22:2approach this particular problem of mappingstrings to language
+  22:7in a test-driven fashion so that we&#39;re actuallywriting
+  22:10down our assumptions first, and then runningthe test
+  22:14so that we can use that feedback to actually
+  22:16tune something like a neural network, or anything.
+  22:21And so I&#39;m going to explain to you how
+  22:25I go about doing that. And it&#39;s a little
+  22:28bit different than probably what you&#39;re usedto. I
+  22:30think a lot of us are used to this
+  22:31idea of unit testing, whereby you make surethat
+  22:34a class returns the same string every singletime.
+  22:39Instead, this is a little bit more fuzzy,but
+  22:42it&#39;s still writing down your assumptions incode.
+  22:47Now the first thing, it&#39;s really importantwhen testing
+  22:50something like this, is making sure that integrationpoints
+  22:53are well-tested. So if any of you have ever
+  22:56read working effectively with like, you&#39;llsee code most
+  22:59likely, you&#39;ve heard of seam testing, whichis making
+  23:2sure that the seams between one piece of code
+  23:5and something that&#39;s more or less out of your
+  23:7control, is well-tested.
+  23:10Now, machine learning algorithms are prettymuch out of
+  23:13our control. We don&#39;t have any real powerover
+  23:17what goes on inside of the training algorithm,because
+  23:20that&#39;s just an algorithm that somebody elsehas built
+  23:23before us. So what we have power over, though,
+  23:27is what we give to the neural network.
+  23:30And so in this case, I&#39;m using really generic
+  23:33terms for my classes, which is a bad thing,
+  23:36but I just made a language class, which takes
+  23:41in a bunch of text and a language. And
+  23:46I wanted to test these three things, whichis
+  23:48making sure that it has the proper characters.I
+  23:52used keys because I think of everything asa
+  23:54hash, but, making sure that it has the proper
+  23:56keys for everything.
+  23:59On top of that, I also wanted to ensure
+  24:2that the data itself summed up to one. So
+  24:4I was wanting to make sure that it&#39;s a
+  24:6percentage of total, as opposed to just anywherebetween
+  24:10zero and one, because that&#39;s how I wantedto
+  24:13model it.
+  24:15On top of that, I wanted to make sure
+  24:17that we had a unique character set. So this
+  24:19comes in a little bit more important whenI
+  24:22explain the code, but, it&#39;s important thatwe don&#39;t
+  24:27care about sensitivity and cases. We justwant everything
+  24:31to be - yeah.
+  24:32QUESTION: (indecipherable -- 00:24:36)
+  24:36M.K.: Sure.
+  24:38So the vectors in this particular context,assuming that
+  24:42you have a bunch of - so I&#39;ve downloaded
+  24:47a bunch of Bible data, so to speak, and
+  24:51in that, there&#39;s a bunch of versus, whichare
+  24:53sentences and paragraphs. The vector is reallyjust a
+  24:57frequency distribution of each sentence.
+  25:2So each sentence, going through one by one,I
+  25:5wanted to make sure that the data was well-defined
+  25:8for that particular sentence. Does that makesense? Great.
+  25:17Now, we can test what data goes in and
+  25:21make sure that our data is always well-formed,but
+  25:24really the most important test when we&#39;retesting things
+  25:27is how it performs. And for that, we have
+  25:31something called cross-validation.
+  25:34Now if any of you who have ever looked
+  25:35into neural nets, you&#39;ve probably heard of,learned that
+  25:41there is an error rate inside of the neural
+  25:43net. So there&#39;s this basic idea that thisneural
+  25:46net has an error rate of five percent or
+  25:48whatever.
+  25:50Now, we could rely on that. But I feel
+  25:55that it&#39;s actually more powerful to splityour data
+  25:58into two pieces. One of them being a training
+  26:1piece and the other one being a validationpiece.
+  26:4And the real important distinction there isthat, with
+  26:8the validation piece, we can validate againstnew data
+  26:11as it comes in, to make sure that our
+  26:13model is still performing as we expect itto.
+  26:17So, cross-validation is really just this genericterm of
+  26:21splitting your data into multiple pieces andmodeling it
+  26:25against the train, the trained model. Andthe last
+  26:29thing that we really need to test is Ockham&#39;s
+  26:32Razor.
+  26:33And this sounds completely out of context,but hang
+  26:38with me for a second. Neural networks takesteps.
+  26:43So each training algorithm is an iteration,over and
+  26:47over and over again. If those iterations goon
+  26:51for millions of billions of times, most likelywhat
+  26:56we&#39;re trying to model is not working verywell.
+  27:1So the thing to think about here is that
+  27:2Ockham&#39;s Razors is all about simplicity beingthe best
+  27:6answer if you can find the simple answer.So
+  27:10with neural nets, we want to make sure that
+  27:12our model doesn&#39;t take a really long timeto
+  27:15train, because if it does, most likely it&#39;snot
+  27:19seeing the patterns, or there is no patternto
+  27:22begin with.
+  27:24So while you can&#39;t explicitly test for this,this
+  27:26is something to keep in the back of your
+  27:27mind as kind of a cognitive test, I suppose.
+  27:32You will know when your neural network allof
+  27:35a sudden doesn&#39;t work because it takes allof,
+  27:40a really long time to run.
+  27:45That&#39;s a lot to take in.
+  27:47And I&#39;m really excited that all of you are
+  27:51sticking with me on this, because neural networkscan
+  27:54be a lot in the very beginning. But I
+  27:58think this will be actually a lot more exciting,
+  28:0because I personally learn in terms of application.And
+  28:6at the end of this talk, I&#39;m going to
+  28:7post a link, which you guys can go and
+  28:12get all of the resources to this.
+  28:13I recommend that you download the GitHub repository,you
+  28:17play around with it and actually learn howit,
+  28:20how it works, because really we all learnthrough
+  28:23application.
+  28:26So let&#39;s go through this one by one.
+  28:29I&#39;m going to start this test because it takes
+  28:31twenty seconds or so and I don&#39;t want to
+  28:33sit here waiting for it to run. So this
+  28:36is just running my, my unit test that, or
+  28:39not really unit tests, but my test suite that
+  28:41I&#39;ve defined up on the previous slides.
+  28:44And let&#39;s load this up so that you can
+  28:47see that I have two tests in here. One
+  28:50of them being a language test, which is just
+  28:53the seam test, and the other one being the
+  28:56cross-validation test. Now when I was personallywriting the
+  29:0language test, I was getting a little annoyedbecause
+  29:3I&#39;m thinking, wow, this is a lot of boilerplate.
+  29:5This is kind of silly that I&#39;m making sure
+  29:8that what I&#39;m writing is correct until I found
+  29:12a really nasty bug that tripped me up for
+  29:15a little bit of time. And that was, UTF8
+  29:19characters in Ruby is really hard to workwith.
+  29:24Splitting on spaces or downcasing things thathave umlauts
+  29:29over them is a tricky prospect, and I was
+  29:32finding things like, oh, space is a characterthat
+  29:36we want to model in our model, which is
+  29:38not true. That happened to just be the UTF8
+  29:42character of space.
+  29:45So after writing these tests, I came in here
+  29:49and I explicitly put this translate - caneverybody
+  29:53see this, by the way? Should I make it
+  29:55a little bi- OK, great.
+  29:58So I had to explicitly translate some of these
+  30:0special characters like a circle, which isSwedish, and
+  30:2the German characters, which is really enlightening,especially since
+  30:9I was- I wanted to make sure that my
+  30:10data was well-formed, and the test actuallytold me
+  30:13right away that something was wrong.
+  30:16As opposed to learning about it after I&#39;veput
+  30:19all the effort into training the neural network.
+  30:23So that&#39;s the seam test in a nutshell.
+  30:27Cross-validation is actually mostly just settingup the two
+  30:30different neural nets, which one of them isthe
+  30:33Matthew verses from the book and the ax verses.
+  30:38And down here I&#39;m going through each language,English,
+  30:41German, Finnish, Norwegian, Polish, Swedish.And testing to make
+  30:44sure that it has an error rate of strictly
+  30:46less than five percent.
+  30:49I just arbitrarily picked five percent becausefive out
+  30:53of a hundred times of errors is OK with
+  30:56me. I don&#39;t really care that much.
+  30:59This test really just trains a network andvalidates
+  31:3against known quantities. Now let&#39;s go backand take
+  31:8a look and see if this still runs.
+  31:11As you can see here, there&#39;s a bunch of
+  31:13output, and this is from the gem that I
+  31:15was using called RubyFan. It was just a artificial
+  31:19network gem off the shelf. I didn&#39;t reallydo
+  31:23anything with it. This is a bunch of output
+  31:25from that. It actually runs and it&#39;s correct.
+  31:31Now the thing that&#39;s interesting here, though,is that
+  31:33when we build neural networks, a lot of the
+  31:36times there&#39;s things that you can tweak. Youcan
+  31:39try new things, and in this case, I did.
+  31:42So this network class, you can try to set
+  31:46error rates at many different levels, andsince I
+  31:49had an automated test, I could explicitlytest to
+  31:52make sure that it was strictly less than five
+  31:54percent. So I found that point zero zero five
+  31:59worked. So I just went with that.
+  32:2On top of that, I decided to use the
+  32:4fancier activation function, the Elliot functionjust because I
+  32:7felt like it. The important thing here torealize
+  32:9though is that I can change or experimentwith
+  32:12many different things and if I try somethingthat
+  32:16breaks the entire thing, I will know it breaks.
+  32:19And that&#39;s huge.
+  32:21Now, of course, we&#39;re not gonna go throughevery
+  32:24line of code one by one, so I wanted
+  32:27to show you what this looks like in a
+  32:29little Sinatra app, where you can basicallycome in
+  32:33here and type in random words.
+  32:41Or we can - I don&#39;t know Swedish, so
+  32:44I don&#39;t know what this says, but. Mileagemay
+  32:50very.
+  32:51It, it will show up as red if it&#39;s
+  32:54mis-classified. And I&#39;ve been playing withthis for awhile
+  32:56and it, it does mis-classify once in awhile.This
+  33:1is Polish now. Oh boy, that&#39;s long. Norwegian.OK.
+  33:8I don&#39;t see mis-classification.
+  33:11Well, you get the picture. And for a little
+  33:16bit of fun I wanted to throw in just
+  33:17one little thing, and that is I really like
+  33:19the Swedish chef because he&#39;s hilarious onthe Muppets
+  33:22and I was wondering what language he spoke.
+  33:25So, well, OK. So &quot;No masken?&quot; is Swedish.This,
+  33:31I don&#39;t even know what this says. Jaaa!! This
+  33:37is Polish obviously. No match. It says, okeedokee
+  33:46is Norwegian.
+  33:48Now, one thing to realize here though is that
+  33:52it does break down with smaller sample-sizes.So if
+  33:57you put in something like blam it will be
+  34:1Swedish, or l-a-m-o is Finnish supposedly.
+  34:7Now the thing to realize is that we are
+  34:9kind of looking at the average, so it will
+  34:12generally get better as you add more charactersto
+  34:15it, but that is OK with me because, for
+  34:19the most part, that is how these classifierswork.
+  34:21So the more data that you give to it
+  34:22the better it becomes.
+  34:24But as you can see just using some of
+  34:26these random - it&#39;s, it does really extremelywell
+  34:32just based off of character frequencies.
+  34:39OK.
+  34:43So there is the link that I recommend everybody
+  34:45go to. It&#39;s modulus seven dot com slash rubyconf.
+  34:49There&#39;s a bunch of different links on there.Some
+  34:52free data resources. There&#39;s a, there&#39;s actuallya really
+  34:58good paper on there if you have an afternoon
+  35:0and you really want to delve into something,there&#39;s
+  35:2a paper written by Scott Falman, who, by the
+  35:5way, invented the emoticon.
+  35:10He also came up with the quick prop algorithm,
+  35:13which you saw earlier, and it&#39;s a really well-written
+  35:17piece that will explain some of the more deep
+  35:20mathematics behind feed forward neural networks.
+  35:23Also, to plug myself a little bit, there is
+  35:26a link up there to sign up for a
+  35:29email list. I&#39;m writing a book about test-drivenmachine
+  35:34learning. It&#39;s called Thoughtful Machine Learning.It will be
+  35:37out in 2014. So if you want more information,
+  35:41it would be great if you signed up so
+  35:43that I can send you emails. That&#39;s hopefullynot
+  35:46spam.
+  35:47I promise it won&#39;t be spam.
+  35:51Also, you can Tweet at me. You can come
+  35:53up and talk to me as much as you
+  35:55like. I will be here until tomorrow.
+  35:59But I want to leave you with this notion
+  36:0that this is not the beginning. I firmly believe
+  36:6that in this community we have an amazingamount
+  36:9of talent and people who will be able to
+  36:11make the next Pandora or the next Gmail. And
+  36:14I personally believe that the way that we&#39;regoing
+  36:17to be able to do that is through utilizing
+  36:19data.
+  36:19Because data really is the next frontier whenit
+  36:23comes to programming. And as you can see,just
+  36:26using a neural network to map really, just,simple
+  36:30text to languages is really powerful. It&#39;salso extremely
+  36:34fast. If you noticed, I was just typing things
+  36:37in and it was making a request every single
+  36:40time. It&#39;s extremely fast.
+  36:43So learning these techniques will make everybodyhere better.
+  36:47So I really challenge you to go out there,
+  36:49learn more about data analysis, and just learnmore.
+  36:54Thank you.
