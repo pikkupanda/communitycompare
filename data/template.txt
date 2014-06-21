@@ -1,0 +1,8 @@
+conference: 
+title: 
+speaker: 
+year: 
+source: 
+automatic: 
+duration: 
+---
