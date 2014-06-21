@@ -1,5 +1,6 @@
 require 'yaml'
 require 'stopwords'
+require 'table_print'
 
 # Takes: "My name is Andy.""
 # Return: ["My", "name", "is", "Andy"]
@@ -27,11 +28,27 @@ def promille(word, tokens)
   tokens.count(word).to_f / tokens.length * 1000
 end
 
-Dir.glob("./data/ruby/*.yml") do |file|
-  talk = YAML.load_file(file)
-  tokens = remove_stopwords(tokenize(sanitize(talk['text'])))
-  print talk['speaker']
-  print "\t\t"
-  print promille("fun", tokens)
-  print "\n"
+# takes a word and returns array with hashes with the counts
+# @word String
+def word_count(word)
+  talks = []
+  
+  Dir.glob("./data/*/*.yml") do |file|
+    talk = {}
+    talk[:community] = file.split('/')[-2]
+    
+    data = YAML.load_file(file)
+    tokens = remove_stopwords(tokenize(sanitize(data['text'])))
+    
+    talk[:speaker] = data['speaker']
+    talk[:count] = promille(word, tokens)
+    
+    talks.push talk
+  end
+  
+  talks
 end
+
+tp word_count("ruby")
+
+

@@ -2,9 +2,11 @@ GEM
   remote: https://rubygems.org/
   specs:
     stopwords-filter (0.3.0)
+    table_print (1.5.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   stopwords-filter
+  table_print
