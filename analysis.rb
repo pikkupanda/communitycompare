@@ -49,4 +49,28 @@ def word_count(word)
   talks
 end
 
-tp word_count("fun")
+if ARGV.length == 0 then ARGV[0] = 'fun' end
+
+ARGV.each { |word|
+    puts "------------ analizing word: #{word.upcase} -----------------"
+    data = word_count(word)
+
+    data_community = {}
+    data_com_count = {}
+
+    data.each { |row|
+      if not data_community[row[:community]] then data_community[row[:community]] = 0 end
+      if not data_com_count[row[:community]] then data_com_count[row[:community]] = 0 end
+      data_community[row[:community]] += row[:count] 
+      data_com_count[row[:community]] += 1
+    }
+
+    puts 'means --------------------'
+    data_community.each { |community, count|
+      data_community[community] = count.to_f/data_com_count[community]
+      puts community + " : " + data_community[community].to_s
+    }
+    puts '--------------------------'
+
+    tp data
+}
