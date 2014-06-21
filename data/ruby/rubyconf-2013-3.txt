@@ -1,0 +1,416 @@
+conference: RubyConf
+title: Under the Influence
+speaker: Zachary Scott
+year: 2013
+source: https://www.youtube.com/watch?v=Ahx4fbLtBNQ
+automatic: false
+duration: 1607
+---
+0:17ZACHARY SCOTT: So I'm Zach.
+0:19Nice to meet you all.
+0:27Title of the talk's Under the Influence, and I'm
+0:32gonna talk about a few Ruby languages and I'll
+0:38tell you what they are in a second.
+0:41And how they're related to Ruby, and a little
+0:45bit about them. We're gonna look at some code.
+0:49That's my plan.
+0:52My hopes for you at the end of this
+0:53talk are you'll get some sort of level of
+0:57familiarity with these languages, and that's always good. I
+1:03hope you feel inspired to try out these things
+1:06and experiment with new stuff. Try something new that
+1:11you've never tried before. Try something old.
+1:17But encourage you to do something.
+1:23A lot of these talks, even at this conference
+1:26and a lot of conferences in general, are based
+1:29on, like, getting something done or how, like, how
+1:34to do something better, how to get better at
+1:36something. Or, you know, we're very focused on, like,
+1:40performance and speed, efficiency.
+1:46And I don't really want to talk about that
+1:48stuff. I want to talk about something fun and
+1:50something I thought was interesting, and I hope you
+1:53find interesting, so.
+1:57I'm also not an expert. I'm standing up here,
+2:00but I have no, like, I just learned these
+2:01languages in, like, two weeks to prepare this talk.
+2:05So if you have any questions at the end,
+2:11please just hold them, and then you can ask
+2:13me on Twitter or, you know, just come up
+2:17to me, say hi, and you know, we can
+2:19talk about these things. I'm really interested in them,
+2:21too. You probably know way more than I do.
+2:23But for some reason I'm here.
+2:27And I chose, I chose to do this because
+2:29a lot of, a lot of times people give,
+2:31like, the same talk over and over again, and
+2:35I really want to just do something new that
+2:37I've never done before. Challenge myself. Make something that
+2:42represents something that I'm really interested in but have
+2:45never tried.
+2:49And the languages I'll announce in a second, I
+2:54chose them because they either inspired parts of Ruby
+2:58language - the design of Ruby - or were
+3:01inspired by Ruby directly.
+3:05So you have old and - I thought it
+3:09was really interesting when I was looking up some
+3:11of the documentation for one of these languages. They
+3:14said, consider very carefully before using this code for
+3:18anything mission-critical.
+3:26That's kind of a point.
+3:29So on with it.
+3:31The first language is Dylan. And it was designed
+3:35by Apple in the like the mid-90s, and CMU
+3:39is Carnegie Mellon University, they produce like a Unix
+3:44implementation of the language, which I used in learning
+3:48this. I just downloaded like the compiler and just
+3:51like used it on my Mac. It's pretty easy
+3:53to get started. There's a lot of great documentation.
+3:55I submitted a few patches in learning the, in
+3:57learning the language to like, help fix the documentation.
+4:00So always find it's really good to like mix
+4:03some opensource in with learning something. And it's always
+4:06good to do that, like give back what you
+4:08gain.
+4:10The other one is Perl. Probably not something you,
+4:15most people don't know, but I see a lot
+4:17of new faces here, and a lot of new
+4:19Rubyists, and people new to the community. So I
+4:22think Perl might be a little shocking to some
+4:23people, how similar it is. So I chose that.
+4:27I'm also using, like, some weird features of Perl
+4:31that really only exist, like, recently, so it doesn't
+4:35really apply that great, but it's there. SO I
+4:39used it.
+4:39Another one is Slash. Slash was developed recently, in
+4:44the last few years, by a Ruby committer named
+4:46Charlie Sumnerville. And he is, like, less than twenty
+4:53years old, and created his own language. I thought
+4:56that was really great. Really inspiring.
+4:59So I want to talk about it, I wanted
+5:00to learn it, I wanted to figure it out.
+5:02And so I chose that one.
+5:07So the first part, basically the plan is, look
+5:13at some Ruby code, and then look at like,
+5:15the equivalent Ruby code in these other languages, and
+5:19hopefully figure it out.
+5:23So this is some Ruby code, right. We start
+5:25out very simply with variables, right. So my cat
+5:30is Ginger. That's his name. You should know this
+5:37by now.
+5:39And the Dylan equivalent looks something like this. So
+5:43you define a variable, and they use, like, lisp
+5:47style variable declarations. Or any symbol, really, is has
+5:51dashes instead of underscores. I think you can use
+5:54underscores. It didn't really work. But - so that's
+5:59Dylan.
+5:59You have types. Dylan has types. You can define
+6:04your own types. They're not really statically-typed. It's more
+6:08like a dynamic language, hence Dylan.
+6:13And then you have the Perl version. So my
+6:17creates a local variable, and the dollar sign indicates
+6:23that it's a scalar, and we're gonna assign a
+6:27string to it.
+6:28That just basically means it's a, it's a reference
+6:32to that thing. So we can, we can use
+6:35it within the scope of our, our file or
+6:38library or whatever.
+6:42And then here's slash. Slash is like bits of
+6:48PHP mixed in with Ruby and Perl. So you
+6:52have like this open thing. But you don't close
+6:55it.
+6:56Like what is that?
+7:02And then this is very similar to Ruby, so
+7:04there's a, there's a native string class that you
+7:06can initialize a new object.
+7:11More on types. So this is some Ruby. You
+7:16have integers and you have an array. In about
+7:20April, Ginger will be three years old. So his
+7:24favorite spot is in my office, upside down on
+7:27the papertray. That's just where he likes to hang
+7:31out. I don't know.
+7:33The Dylan equivalent is this. So you have a
+7:38number, is an integer. You have different types of
+7:40numbers like Ruby, like where you'd have like a
+7:41bignum, something like that. But I just stick to
+7:44numbers, cause they're really easy.
+7:46And a hash is basically a table, so it's
+7:47just a hash table. So they just call it
+7:49a table.
+7:50And vectors a type of array. They have different
+7:53sequences, so you can have like different types with
+8:02arrays. Associative arrays, things like that. And vector is
+8:04like the basic - it's almost like a list,
+8:06right, in lisp. So you just have, like, elements
+8:10in this thing.
+8:13And this is basically their symbol. So you don't
+8:17have string keys, you have symbol keys, and that's
+8:20how you define a symbol.
+8:23Perl looks something like this. It's very similar to
+8:25Ruby. We have a list, and this is a
+8:28hash is denoted by the hash rocket things, and
+8:31these bare words. Which, you could have string keys,
+8:34or you could just use, like, those get in
+8:36turned in symbols, I think, somehow.
+8:39Oh, and the percentage sign is like a hash,
+8:42and the at sign is like an array, basically.
+8:47This is slash. It's basically identical to the Ruby
+8:52version, right. They're the same - just different colors.
+9:01That's how, that's how vhim interprets, so I use
+9:05a really - when I was writing this code,
+9:07I used a very high-level, like complicated development environment
+9:13called colored pencils.
+9:19They worked really well.
+9:23So methods are a big part of Ruby, and
+9:26a big part of organizing your code, right. So
+9:30when Ginger turns three - I also love that
+9:33I forgot the N on this. But Ruby has
+9:36Ns.
+9:41And his mom and dad are Greta and Walter,
+9:43who my mom bred, bred them. And I got
+9:47like, the last cat. So he's like the golden
+9:50child, basically.
+9:54And the, the Perl, the Dylan equivalent, you define
+10:01methods - Dylan also has functions. The interesting part
+10:05is right here, where you have your arguments, you
+10:08specify the type that they are. And that is
+10:11basically how Dylan figures out, like, it's method dispatch.
+10:15How it decides what object this method is attached
+10:19So it doesn't actually have singleton methods, like I
+10:23defined, but it has something similar.
+10:27And this is, like, the return. So since I'm
+10:30just formatting a string and printing that, then there
+10:35is no return. It's a void.
+10:46I'm really thirsty. Give me a moment. It's dry
+11:02in Miami. It's juice. Strong juice.
+11:12What were we talking about? Perl. This is Perl,
+11:18right? Yeah. So calling a method, like join, you
+11:27can actually, in some cases, like Ruby, you can
+11:31omit the paranthesis. Which is cool.
+11:35Sometimes you can't. I haven't quite figured out when
+11:37and where and why. When I do I'll let
+11:41you know. Maybe you know - you can tell
+11:43me after.
+11:44Oh yeah, there's this - there's this thing, which
+11:49Matz also brought into Ruby. Which I have no
+11:51idea what it means. It's there. You use it
+11:56- I don't know. Look at the documentation. It's
+11:58there, and it's basically like, what, what you passed
+12:01in. You don't have arguments. You just like, use
+12:03this thing or you shift off the arguments. It's
+12:08magic.
+12:10Slash is cool. It's very similar to Ruby, right.
+12:12You can't omit paranthesis. You have to use them.
+12:16And you can call methods on an object, because
+12:21everything is basically an object.
+12:24There's some instances where they're not, but I haven't
+12:28quite figured that out.
+12:29The other really cool part about this is that's
+12:33a comment, and so is that.
+12:39But my syntax highlighter didn't understand it. It wasn't
+12:42good enough. It's too new. SO I had to,
+12:45I had to, I had to use different colors.
+12:49Same with, same thing with the intropolation. So years_old
+12:53is a variable that I intrapolate into that string,
+12:57and it's the same color. Usually we're used to
+12:58seeing different colors, but. I'm not that good yet.
+13:06Expressions. So in Ruby you have this, this is
+13:11probably the coolest thing about Ruby is you can
+13:13have post fix. Post fix expressions, right.
+13:17You can call even or odd come with the
+13:22native number in the number classes. And you can
+13:27do things like math. I'm pretty sure that's right,
+13:30although I probably got it wrong. I'm not, I
+13:35wouldn't be surprised.
+13:37That's Dylan. No post fix conditionals. They don't have
+13:42that. So you have to do something like if
+13:44and then and if. I talked to Matz about
+13:48this yesterday, and then he said, originally Ruby had
+13:52and if, but it didn't work when he tried
+13:56to implement post fix conditionals, so he got rid
+13:58of it. That's a little history lesson.
+14:01That's why I'm here.
+14:05The Perl version also - no post fix. And
+14:10no odd or even. You have to do this
+14:12thing, just like modules. And that's probably right. I
+14:17assume so. At least it worked when I tried
+14:19it.
+14:22Same thing. My syntax compilator thought my list was
+14:27a comment. So the rest of that line -
+14:33you get the idea.
+14:38So the next part. OK.
+14:43That was the basics. Hopefully you got a good
+14:45idea of what it's like to write those languages,
+14:49and what they're all about. I could probably have
+14:54explained it better, but there's always next time, right.
+14:58Next RubyConf.
+14:59Objects. Let's talk about objects. That's a lot of
+15:08code.
+15:10Where do I start?
+15:18My cat is Ginger. My cat's favorite toy is
+15:22a white mouse. He loves that thing - it
+15:24has, like, it rattles and he plays hockey with
+15:27it. Sometimes he plays with different toys, so I
+15:32can change that on him. I can give him
+15:34a tinfoil ball - he loves that too. It's
+15:36free. Well, close to free.
+15:38And he also has some really good friends in
+15:41the community. Gorby is one. He loves Gorby. Sea-Tac
+15:45is his favorite, cause she's just loud. Wabi and
+15:49Sabi, if you don't know them, they're like cows,
+15:51but cats at the same time. It's amazing.
+15:56Again with the cats. Very original.
+16:02This is the Dylan version. So when I define
+16:08a variable, and I want a method that has,
+16:13like a default keyword argument, you can see, on
+16:18like the third or fourth line, it says Key_toy
+16:21and then the string. And that, assign that to
+16:24the white mouse.
+16:25So you have keyword arguments. And you, and you
+16:30also have rest, which is like, splat, no, not
+16:34even splat. It's like something in Ruby that I
+16:38can't think of right now. But you can just
+16:44pass, and then you can just pass in whatever
+16:45arguments and whatever you throw at it, it just
+16:48joins them.
+16:50So that's pretty cool.
+16:55The Perl version. When you're using the at sign,
+17:02and like the magic underscore thing, you know, it
+17:06just says, you know, this is an array. Based
+17:10on what, what context you're using it in and
+17:14what symbol you use. So if I always use
+17:17a dollar sign, that wouldn't work, because it'll see
+17:21the array and Perl will think like, oh I
+17:24need to turn that into a string cause he's
+17:25using the dollar sign.
+17:28So if you use that, you know that. It's
+17:30gonna be an array.
+17:36The slash version - very similar to Ruby. This
+17:43is probably the neat part, where instead of, like,
+17:47rest you have elipses. And you can just assign
+17:52default, defaults in the parameters like you would in
+17:56Ruby.
+17:58The next thing is classes.
+18:01Once you have methods, you might want to abstract
+18:05that into a common thing, right. That's why we
+18:06have object-oriented programming.
+18:08It's a very common pattern that we use often.
+18:16So I can define a cat and I can
+18:18give that cat a name and a color, right.
+18:21We've seen this a hundred times in all of
+18:23our textbooks.
+18:24We never seen it this cool, right?
+18:29The Dylan version, you define a class, and it
+18:32inherits object. So everything in Dylan is basically inherits
+18:36from that. That's like basic object in Ruby has
+18:39no real methods. It's just like a, a way
+18:44to allocate a class.
+18:53When you want to create a new instance of
+18:55an object, you use make. You can also call,
+19:03I think you can call new directly, but make
+19:06specifies that you want this thing to be of
+19:09that type, and call the initializer. We'll get to
+19:13initializers in a moment, but. The barebones version is
+19:18that in Dylan.
+19:21I use Mooth and Perl. I think that's cheating.
+19:24If any of you know Perl, there is actual
+19:27ways to do object oriented programming in it. They're
+19:30kind of tacked on in like the mid '90s.
+19:34Someone, someone had a bright idea and they added
+19:38it. But I don't, I couldn't really figure out
+19:40how to use it. So I used Moose. And
+19:43that gives you like some really helpful things like
+19:45Has, and some other stuff.
+19:50You can get the meta class. And then you
+19:53can, you can print out the name of it.
+19:55I'm guessing, from what I've seen, that all objects
+19:59in Perl have a name thing that you can
+20:02call and it gives you like a string of
+20:03that thing, like a method or a variable, it'll
+20:05just give you back what you called it.
+20:08I might be wrong on that, but, from what
+20:11I was seeing.
+20:14The slash version is really interesting. They don't have
+20:18accessor methods. You have to define your getters and
+20:20setters on your own. So we have, you know,
+20:24we have a color getter, and we have the
+20:25color setter. You do have instance variables, but there
+20:29aren't accessors to them. And I can define to_s
+20:34and I can just print that object, and it
+20:37calls to_s on it in Slash.
+20:38I had to get on Dylan, Perl, Slash, for
+20:43one of my own - OK.
+20:45So you can do that, and you can, you
+20:47can just call class on it and it gives
+20:49you the name of the specific class.
+20:53Before the next part - this is, this is
+20:55critical. Now that you know all this code, you,
+21:01in order to understand the next part, you're gonna
+21:04have to watch this video.
+21:07And if you don't watch it you might miss
+21:12out on the point. So that's Gorby.
+21:17And he's just being Gorby, right. He really likes
+21:28this thing. Wait, it gets better.
+21:45The time zone one.
+21:58I love Gorby. I do. I just love cats
+22:05in general. Hold on, I wanna watch that again.
+22:16All right. So we have Gorby as the class.
+22:33And when you print Gorby, he just wants to
+22:35know one thing. Where the fuck did you put
+22:38that clock?
+22:49You notice I called super, and that called up
+22:52to the to_s method on the cat class, right.
+22:57In Dylan, these things keep tripping me up. Oh,
+23:03my god. You have next method, and what happens
+23:07is in the method dispatch of Dylan, it finds
+23:11these methods that could apply to a given object.
+23:17So it tells you the generic methods that you
+23:23could call on it, and it picks like the
+23:25most specific one to that object, right.
+23:27And it orders them. It says, all right, this
+23:30is the closest one. We're gonna call that one.
+23:32But you also have this one, this one, this
+23:34one, this one, in order.
+23:36And next method will call the next specific method
+23:40in that array. And so in this case, since
+23:46we define puts on the cat class, when we
+23:50redefine it, or we define it again on Gorby,
+23:55because Gorby is also a cat, that's the next
+24:01specific method. So you can call that next method.
+24:05And you can even go up further, on cat,
+24:06and you call next method, and that would call
+24:08the next one, and then the next one.
+24:10So it's sort of like super, but not quite.
+24:20In using this, I think you get super from
+24:22Moose. It might be in Perl itself, but you
+24:25can have Super, and you can override your method,
+24:29and just extend the cat class and implement your
+24:33own cats at your disposal. I do this every
+24:38day in my job. Always cats.
+24:45And this is what the Slash version would look
+24:48like. So you have an initializer using Init, and
+24:53that would be how you, when you call new,
+24:57that's basically what's called, is init. So same as
+25:00initializer in Ruby, and you can set the default
+25:03instance methods. I don't have to re-define the getters
+25:06and the setters. I just get them from cat,
+25:09when I extend cat, I get all that stuff
+25:10for free.
+25:13And then because Slash has no super, that I
+25:18know of, I just allocated a new cat and
+25:21then called to_s on it, which is basically like
+25:25the default, right. It'd be really nice if Slash
+25:28had super, but I don't think it does.
+25:31I think Charlie is here, so maybe, maybe you
+25:34could go find him and ask him.
+25:37So really interesting language, and it's very similar to
+25:40Ruby. And I really like it.
+25:50So let me get to that. That's, that's all
+25:54the code I have to show you. And I'm
+25:57not taking Q & A, sorry.
+26:04But feel free to Tweet at me or find
+26:06me after and ask questions. I don't want to
+26:08take up anymore time. I hope you really enjoyed
+26:10this talk and thanks so much for coming here
+26:14and sharing this experience with me. And I hope
+26:16you liked my talk. That's it.
