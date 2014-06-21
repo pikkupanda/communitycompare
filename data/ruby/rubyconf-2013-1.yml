@@ -1,0 +1,421 @@
+conference: RubyConf
+title: Living in the Fantasy Land 
+speaker: Matz
+year: 2013
+source: https://www.youtube.com/watch?v=4pObcegbMRE
+automatic: false
+duration: 1966
+text: |
+  0:16Thank you for coming
+  0:18and Ruby Conf is always great
+  0:23and a keynote make me depressed (laughs)
+  0:32You know I'm a programmer
+  0:33I'm a language designer
+  0:35so you know, my main tasks should be is designing language
+  0:42a great language
+  0:43I admit that I did great things
+  0:48you know
+  0:49that influenced
+  0:51so many people all around the world
+  0:54including you guys
+  0:55so I'm pretty happy with it
+  0:57but still
+  0:59you know
+  1:01I'm not really a great presenter
+  1:04nor
+  1:10I'm very
+  1:11I'm not really good at english
+  1:19that always makes me nervous
+  1:21anyway, today I'm going to talk about the fantasy land
+  1:26ok
+  1:29this way
+  1:30fantasy land
+  1:33that is a place being away from reality
+  1:37the where the unicorn lives
+  1:43in Japanese it is called
+  1:44genjitsu-tohi
+  1:46which is escaping from reality
+  1:49my dictionary says that is escapism
+  1:50is that correct word or something
+  1:53so for example
+  1:55so the starting cleanup right before the deadline
+  2:00is kinda like escapism
+  2:05starting debuging mruby right before the keynote
+  2:08is escapism
+  2:10that is what I did
+  2:12so today
+  2:14I'm going to talk about
+  2:16oh excuse me
+  2:19two fantasy lands
+  2:21the first one is kinda like a distopia
+  2:26in 1990
+  2:29I graduated from university
+  2:31I feel old
+  2:36I was hired by a software development company
+  2:39which does, which did some kind of enterprise software
+  2:43in that, that age
+  2:48the software development is totally different from now
+  2:52so we had some kind of three year project or something
+  2:58from the huge company or huge government department
+  3:04we had some kind of analysis for months or even years
+  3:09then we wrote some kind of very detailed documentation
+  3:13this abstract documentation
+  3:14the detailed documentation
+  3:16then we code
+  3:19which is the translation from natural language to computer language
+  3:26so the process was driven by waterfall process
+  3:30so the company's decision was very, very, very conservative
+  3:36so at that time I felt something was wrong
+  3:42but I couldn't explain why
+  3:43just because it was so natural
+  3:47everyone was doing it that way in software development
+  3:50back then
+  3:52so I couldn't explain why
+  3:56everyone was doing that
+  3:57it is quit difficult to tell what is wrong
+  4:01when everyone is doing bad things
+  4:04right
+  4:05so yea I couldn't imagine what was right and what was wrong
+  4:10so after more than 20 years of experience
+  4:14I was a pretty experienced programmer
+  4:15ah maybe
+  4:16now I understand, I now understand what was wrong
+  4:23we were wrong in software development
+  4:26that depends on some false assumptions
+  4:31we were depending on such false assumptions
+  4:37assumption number one
+  4:39we know what we make
+  4:42back then we believed we are knowing what we are going to make
+  4:49in reality we don't know what software is
+  4:54so software does not have any physical entity
+  4:59so it is not limited by physical law
+  5:03so it can be very, very easily complex
+  5:08so, for example, if I were a building architect
+  5:17so I design a building like this hotel
+  5:21so we need to think about, for example
+  5:25about weather, or the strengths of the concrete,
+  5:31or iron, or something, the building materials
+  5:37then the strength of the building itself can be
+  5:42calculated by physically, easily simulated
+  5:47but you know
+  5:50when we starting developing software it is easy, like
+  5:55"hello world"
+  5:57that's quite easy
+  5:57there is no room for bug
+  5:59but the software is getting bigger and bigger
+  6:03so it's quite difficult to understand say 10,000 lines of code
+  6:09but now days software is so huge
+  6:14like if I had a Prius here, it is an automobile,
+  6:24it has tons of lines of code, maybe hundreds of lines of code, tons of hundreds
+  6:30maybe millions of code
+  6:32so it's like, as a software developer, you can imagine how difficult to ensure no bugs
+  6:41in the millions of lines of code
+  6:44yeah
+  6:45I'm sure I cannot do that
+  6:46so, the software can be a most complex creation, maybe
+  6:54and no document but code can explain the details
+  6:59so the, we believe we knew what we were going to make
+  7:06but in reality, we didn't
+  7:09false assumption number two, which is
+  7:12we know what we want
+  7:16in reality, it's quite difficult to imagine
+  7:19you know, in a waterfall age I write a code (?? 00:07:27.16) with sophistication
+  7:27and I give that sophistication to our client
+  7:31then clients said, OK, then we started development
+  7:37a few weeks, few months, few years later
+  7:41the software was finished
+  7:43then I wrote
+  7:44if we wrote it to the client, then
+  7:49can you imagine what the client said?
+  7:53it's not what I wanted
+  7:54but, they said yes, this is OK
+  8:00but, afterwards, they said, this is not what I wanted
+  8:06even, I admit, I said OK
+  8:11but, you know, we couldn't imagine what the software appears in reality
+  8:19so, like a stupid boss says ?? (00:08:23.56) to the client
+  8:28yeah, I complained a lot
+  8:31I happened to complain so often, back then
+  8:34but one day, I asked my colleague to create some kind of software
+  8:43at that time I was so busy, so I
+  8:46I explained what I want to my colleague
+  8:49then he created the software, then back to me
+  8:52and I said, this is not what I wanted! (laughs)
+  8:57stupid me
+  9:01I said I don't know why we should make too maximize business value
+  9:06we couldn't, no, we couldn't understand what is gonna bring you success
+  9:15so we are stupid, too
+  9:20so, false assumption number three
+  9:23which is
+  9:24the situation will not be changed
+  9:27in reality, we don't know the future
+  9:33we're not prophets
+  9:36we have wrong forecasts
+  9:38so yeah, in this technology field, we have a lot of
+  9:46we're gonna have this technology, we're gonna have this, too
+  9:50we're gonna conquer the world, so
+  9:53most forecasts will be wrong
+  9:57so let's face it
+  9:58we don't know anything
+  9:5920 years ago
+  10:03we should have admitted our ignorance, but we couldn't
+  10:07so instead, we ignored our ignorance
+  10:11so, when we know little, we have very few choices, so
+  10:18choice number one is a conservative strategy
+  10:23learn from the past
+  10:23so, this is very good strategy
+  10:29and the politicians often take
+  10:32conservative
+  10:34but it is pretty good unless factors don't change
+  10:40unfortunately not in the IT industry, so
+  10:44we change a lot, the situation will change drastically, day by day
+  10:50so, in our industry it's kind of like the quote from Red Queen in Alice in Wonderland
+  11:02"Now, here, you see, it takes all the running you can do, to keep in the same place.
+  11:09If you want to get somewhere else, you must run at least twice as fast as that!"
+  11:16It's our situation, here
+  11:21probably, yeah
+  11:25it's our situation
+  11:26we have to run as fast as we can to be in the same place
+  11:32so, strategy number two is
+  11:36ostrich algorithm
+  11:37in the ostrich algorithm
+  11:43so when the sandstorm comes, ostrich dig in their head into sand
+  11:49and wait until the sandstorm ends
+  11:53so the, the ostrich strategy is ignore everything, and wait
+  11:58it is a good strategy
+  12:08only when situations will recover
+  12:11so sandstorms will end
+  12:13so, we will have the clear skies and we
+  12:21we can enjoy our climate again
+  12:26but, you know, in our industry
+  12:31that's not going to happen
+  12:32where the situation will change and change and change and not recover
+  12:36so we, we cannot go back to the main frames
+  12:42we can go back to the, you know, eighty, fifty years or something
+  12:47so we must keep forward, keep going forward
+  12:52so the ostrich algorithm is very good strategy in the past
+  12:59when the situation will recover
+  13:01so the, this strategy, this algorithm, is written in our instincts
+  13:06so we are so easy to choose that strategy
+  13:10but, otherwise, when the situation will not recover
+  13:19it's kind of like the living in the fantasy land
+  13:21so, going forward with false assumptions is kind of like living in the fantasy land
+  13:28so, ignoring reality
+  13:36we had two strategies
+  13:38conservative strategy and ostrich algorithm
+  13:42which strategy do we take?
+  13:45neither of them are good
+  13:4820 years ago
+  13:50our goal was to create the software, somehow
+  13:56having computerized system is the power
+  13:59it is so powerful, the computer itself is so powerful, comparing to the human creation
+  14:05??(00:14:05.13)
+  14:06so it has great power, so software development was pretty expensive back then
+  14:12the computers were expensive
+  14:14the network connection was expensive
+  14:16the failure never be allowed in that age
+  14:21so they needed to optimize, not to fail
+  14:26at the cost of satisfaction
+  14:28so I don't care you are satisfied our software or not
+  14:33but I can re-use some kind of the power of computers with that computerized system
+  14:42so everyone was dreaming
+  14:44we believed that the only way to create software
+  14:48we tried hard to believe that was the only way
+  14:52but 20 years later, now
+  14:54our goal is not really, not just create a software
+  15:00our goal is to create the great software
+  15:02you know, nowadays everyone has computer, everyone uses software
+  15:09so, mere possession is no longer the power
+  15:15everyone has computer, everyone has software
+  15:17so we're saved
+  15:19to differentiate, to have the power over others
+  15:24we need to create great software, we need great software
+  15:30we got to create great software, but how?
+  15:36of course we don't know
+  15:38we have made false assumptions
+  15:40admit our ignorance
+  15:42but, but there's good news, there's good news
+  15:46the computers are cheaper
+  15:49cloud computing is even cheaper
+  15:52a network connection is cheaper now
+  15:54and ubiquitous
+  15:55everyone has imagination
+  15:57even in this room
+  16:00software development is cheaper
+  16:01comparing to twenty-something years ago
+  16:04so, we can be more productive, more abstract
+  16:08and we now have better tools and a better language
+  16:12like Ruby
+  16:24and we have a lot of open source software
+  16:26so we can rely on that kind of software
+  16:29we can learn from that software
+  16:31so, old days, it is quite difficult to study from the real source source code ?? (00:16:41.91)
+  16:44if you would like to learn about the operating system
+  16:50so you cannot access to the source code of, say, Microsoft Windows
+  16:59or the ?? (00:17:00.68) or some other operating system
+  17:04you, you can access through Linux?? (00:17:08.34)
+  17:09or the very old version of Linux
+  17:12but not the real software
+  17:15but nowadays you can access the Linux
+  17:18a whole bunch of Linux code and you have tons of operating systems
+  17:23and that is used in reality
+  17:27and
+  17:29you can use some software in your system
+  17:33you can learn from that source code
+  17:37so it's much easier for us to learn and create the great software
+  17:46and we can now have the collaboration via internet
+  17:49it's, it's changed the game
+  17:55so, 20 years ago, soon after I graduated the university
+  18:00I was at the point I was working as a professional programmer in enterprise software
+  18:07I was prohibit to write email abroad, outside Japan
+  18:14only 20 years ago - not two hundred years ago
+  18:18so, yeah, I, when I was a university student
+  18:26I wrote some kind of software, free software
+  18:28it was distributed by, it was quite minor, you know client on top of ?? (00:18:32.73)
+  18:36and, I got to mail from some other guys, probably in the States
+  18:43I don't remember quite
+  18:46but
+  18:47I tried to reply, and soon after that I got error mail
+  18:52your company did not pay money to the internet connection
+  19:00international internet connection, I mean
+  19:04so, I forwarded that reply to my friend in the university
+  19:10the university pay that kind of bill so that he could receive the mail
+  19:19it was quite awkward corresponding, you know
+  19:23he wrote mail to me then I did not respond
+  19:26so that, the friend respond because of me or something like that
+  19:30but, you know, now we can connect to everyone all over the world
+  19:37so we can access through Japan, China, Moscow, everywhere
+  19:44so we can now collaborate over the internet
+  19:47so, that allows us to do some kind of social coding, so
+  19:55so, GitHub changed everything
+  19:59so these good things bring up the new fantasy land
+  20:07the new perspective
+  20:09so we can ignore gory detail of the hardware or the
+  20:17and the new operating system, for most of the cases
+  20:21we can stand on the shoulders of giants, so we can use the great huge software
+  20:28of the operating system, framework, language, the tools, editors
+  20:36so a lot of the things
+  20:37so we can do great things with very little effort, comparing to the past
+  20:45so we can do greater work than our real ability, real power
+  20:54so, I think the genius 20 years ago does not recur enough, is not strong enough
+  21:04they are almost fame ?? (00:21:05.97), the ability as a human, in genius
+  21:09but, now, we can rely, we can collaborate, we can collaborate over internet
+  21:16we can collaborate on top of open source software, free software, so
+  21:22we can do greater works than our past
+  21:26but that does not mean we are greater
+  21:30so the situation has changed
+  21:32we can have power, we can have more freedom
+  21:38we can have more joy in software
+  21:40so I remember that the, working on the enterprises software was not fun
+  21:48so, it's quite boring, so translating human sophistication
+  21:55in human language into the computer language was so boring
+  22:01you know, that sophistication once said that, OK, assign this value to this variable
+  22:07or something like that, so
+  22:10why these kind of genius don't write the code by themselves?
+  22:18it was quite boring when I was ?? (00:22:49.51)
+  22:22so now, we can do by ourselves, we can have joy in our programming
+  22:29it's kind of like engineers' heaven
+  22:31that's where we are, and that's why we are here
+  22:36but wait, it's still not real
+  22:44in reality is as conflict as past
+  22:49so, who maintains this fantasy land?
+  22:55in reality, we cannot just ignore mess, so we don't need
+  23:00something, so, we can ignore or just forget
+  23:08but something's got to maintain this kind of a mess
+  23:14so, it's, so somebody's got to work on that kind of mess
+  23:23garbage collectors
+  23:25no, that's not the garbage that you imagine
+  23:29for that kind of topic you can go to to the Koichi talk
+  23:37so, by the term garbage collector, I meant this (picture)
+  23:43and, we have to rely on this kind of people in our daily life
+  23:51even in our programming
+  23:55without them, we would become mess
+  24:00so welcome to the desert of reality
+  24:02we rely on garbage collectors
+  24:06so we'd better appreciate them
+  24:10we rely on a lot of garbage collectors who keep the fantasy land
+  24:19who created your favorite language?
+  24:22the garbage collector
+  24:25or, who created your favorite gems?
+  24:30gem creators, raise your hands
+  24:34you have to appreciate them (applause)
+  24:38thank you
+  24:43who created your favorite frameworks?
+  24:47who wrote your favorite books? book writers, raise your hand (applause)
+  24:57who created your opensource software, we have tons of open source software
+  25:05in and out our Ruby community
+  25:07so we have to appreciate them
+  25:09so appreciation and respect is the key, I believe
+  25:15the key to the open source community
+  25:19the key to the moving forward
+  25:22so open source community is kind of like a shark
+  25:24(laughs)
+  25:25we need to keep moving forward, or die
+  25:35(applause)
+  25:36so, we have to, and I would advise to you, keep moving forward
+  25:44so you have to run as fast as you can to stay in the same place
+  25:51and you have to run twice as fast as that to move forward
+  25:59so run fast, try often, fail early
+  26:04keep moving forward, yes, that is my message
+  26:08and in addition, appreciation is not enough
+  26:11so, we are not creative to the gem writers
+  26:18we are not creative to the language designer
+  26:22we are not creative to the open source software programmers
+  26:29so we became one
+  26:32so, take the red pill
+  26:41so, you can come join us
+  26:45if you are a programmer, that's fine, that's fine you're a programmer
+  26:49you take a great step to create something
+  26:54you know, the programmer is a creator
+  26:57so, you create software, then by your creation
+  27:05the world will be better, I hope, I really will hope
+  27:09the world will be better by your creation
+  27:12you programmers, you create soft ware, and you make the world better
+  27:18but, but you might still living in the fantasy land
+  27:27which is kept by the garbage collectors
+  27:31and if you're willing, I'm not forcing you
+  27:37if you're willing, you can be one of them
+  27:40you can be a garbage collector
+  27:44you don't want?
+  27:46but this garbage collector is much cleaner
+  27:49so, be a garbage collector, take part in keeping the fantasy land
+  27:56so this fantasy land, unlike the first one, which ignores everything
+  28:04so this fantasy land, we currently enjoy is our result of the effort of the long time
+  28:15maybe twenty, forty, fifty years of the great effort of the garbage collectors
+  28:20so, I, I invite you guys to take part in keeping the fantasy land
+  28:33and for example, so you can join the CRuby
+  28:38even in writing some reporting some issues the bug trackers or something like that
+  28:46so, once you know what we garbage collectors doing behind the CRuby
+  28:54you can take the, that session
+  29:04so, again, so I ask you to create a great fantasy land
+  29:18currently we enjoy, and it can be even greater with your effort
+  29:25so you can do as much, many things, so writing software on top of Ruby on Rails
+  29:30or the ?? (00:22:49.51) or something like that
+  29:32that will enrich the community and communicate with blogs, twitter and social net, social
+  29:41coding
+  29:41or even, participate in the community, like the GitHub is our friend
+  29:49you can do many things, submit bugs, write documents on the
+  29:55you know, have a presentation in the conference, you can
+  29:58or, write a small piece of software, write a part in the, submit a ?? (00:31:05.62)
+  30:05so, so many things you can do, but in any way create
+  30:11and try to keep a great fantasy land that we enjoy
+  30:16change the world
+  30:16so, I believe we've changed the world in better ways
+  30:24in the past, say, ten years, so
+  30:29a lot of people in this conference, in the past Ruby conferences
+  30:33so presented the great things, so now I expect even more great work will be introduced in
+  30:44this conference
+  30:48so do not be a just a listener
+  30:55do not be a passive receiver of information
+  31:01so you hear something in this conference, you learn something, take action
+  31:11change the world
+  31:12so, this is the key of the open source community
+  31:19this is the key of the Ruby community, so
+  31:25I know myself, I'm not a great programmer
+  31:29so, especially the Ruby commuters in the league knows I'm not a great programmer
+  31:40I create so many bugs
+  31:46but, but still, I could, I did great job that influenced the world
+  31:57and I respect myself by changing the world better
+  32:03so I believe you can do that too in someways
+  32:09so change the world
+  32:10thank you
+  32:11domo arigato

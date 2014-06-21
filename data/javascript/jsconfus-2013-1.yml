@@ -1,0 +1,551 @@
+conference: JSConfUS
+title: Lessons from the experimental edge of technology
+speaker: Remy Sharp
+year: 2013
+source: https://www.youtube.com/watch?v=f_9nDBtSInI
+automatic: true
+duration: 1882
+text: |
+  0:19so um yeah I'm here to talk about my
+  0:23my let the lessons I learn on the experiment lech and
+  0:26and it's mostly web RTC their I was in a project recently and
+  0:31learn a few things with web RTC I wanna share originally the talk I wanna give
+  0:36was about 10 assists and what technology
+  0:38but have of research to kind of put it all together probably something most
+  0:41talked about that start doing it
+  0:44some point but talk to me later on in the day so
+  0:47I'm this whole thing came together with their
+  0:52basically at gave who had some people
+  0:55approach developers and a basis said
+  0:59we want you to build an experiment wanna pay you some money to do it
+  1:03want to use COO technology and
+  1:06my web browsers we're gonna showed off a Google i/o you're interested
+  1:10sounds like mmm damn I where be paid
+  1:14hell yes sorry pretty easy at decision and and
+  1:17at that point it there was I respect it was just use whatever technology you you
+  1:21want to be with GL
+  1:22it could be and sis at 36 s
+  1:25and and I chose to use when RTC
+  1:29I'm I'm running the that the game in the back roads that mean idea of watching
+  1:32bill
+  1:33am one idea we had was to use T Mobile phones gonna light saber si easy
+  1:38orientation events and kinda the way they
+  1:40their web or you AP archive work out but the to find two collided in
+  1:45invisible light saber but in the end I like the idea of them
+  1:48actually putting someone's face inside of the
+  1:51a mobile phone in and having having people kinda
+  1:54for things out that face and is based off a firm
+  1:58II nothing remembers the the of the Facebook game where
+  2:02and for about 2008 principal game he said
+  2:05oxygen either in use for both chose face it's called Facebook
+  2:09so I kinda wrecks of the idea and
+  2:12and the idea is simply three balls each other's face
+  2:16first one to three wins and it uses
+  2:20well TC audio/video at Pita Pit data
+  2:23retention events a whole bunch of other pets have technology so surreal kind of
+  2:26them
+  2:27at just demo with basically and
+  2:30Hauge one big caveat: for this talk as well I'm not gonna be talking about
+  2:35call was like storm service I was just making Star Trek
+  2:39and time servers our turn the security protocols
+  2:44this is a this is from a web developers point of view a
+  2:48and is what we can do with those why did was burning building bricks how iconic
+  2:53couple things together without really
+  2:54fully understanding of the technology there and how I got away with a and
+  2:58and I I was watching my son and put some
+  3:02mean for your put some bricks into this that the space wall is gone
+  3:06and I realize that might myy developers
+  3:09pretty similar where a basic just take a piece technology a ram against the wall
+  3:13until it fits through I just keep turning in pushing eventually job search
+  3:17and bats
+  3:18basically my programming approach he's got it you know age twenty months
+  3:22and occasionally take a shape that doesn't quite fit the whole just push in
+  3:25if it's any website
+  3:27you know it works and sir it means the
+  3:31I will quite happily take where RTC and put into a project without
+  3:36needing to understand how its doing well as communication
+  3:40just another that actually works and at this is that
+  3:44this high-level version that talk by SME so
+  3:47that doesn't mean that retrospectively I want it back look at the technology in
+  3:51trying to understand it
+  3:52it's just this I knew that I Disney kinda shook up
+  3:55and want to come in at a high level basement so
+  4:00this there were two tranches of work in this project than
+  4:03that course the pain I guess is for the best way ever happening
+  4:07the real-time communications I think so
+  4:11web RTC which this talk we mostly a bow
+  4:15I'm and hope will have time to go to the graphic stuff
+  4:18a few few nice but graphics performance because the target platforms
+  4:22because it was the Google i/o is a you can't give a nexus for 17 hours left
+  4:25that
+  4:26here approx I found some interesting things in
+  4:29times for miss that I'm again because it was a
+  4:34it was damning where only had to at least work
+  4:37in II giggle crime for
+  4:41Android be to and this technologies under a
+  4:44you know Assange's fact that you have to physically go in and in neighboring this
+  4:47so it's great for me in terms of plot playground but
+  4:50obviously it's not going over works in every single browse this point I'm
+  4:54am BUP at the moment the game works on
+  4:58crime franjo repeater I D plans at support for I West's you know the old
+  5:03ok browser the older platform and
+  5:06and should work in Firefox but not test this iE you know if you do
+  5:10have a look at the links at the end and doesn't work for Fox is because
+  5:13I'm tested at all a plan see
+  5:17sucked when RTC
+  5:20this amazing technology is so I'm
+  5:24ESP too early to take another interesting right and
+  5:28this three main API's inside when RTC there's
+  5:31get media get use a media which is access to the
+  5:35and the webcam the microphone
+  5:38basic thing the flash head for yes I 10 years and
+  5:42I think well certainly get you to me was kind of start emerge
+  5:46last year its E its the API sky stable
+  5:50you can use in and a green browse it's a quite happily
+  5:54and I got some example code but the Rio that the wealthy seaside things over to
+  5:59other APIs which are the pic connection API
+  6:02which is want to go to stream from your machine we can send of
+  6:06to another user in the room sorry its it's literally pay sick pay which means
+  6:10they're known
+  6:11that you don't need to serve a flat days ago from one device to another
+  6:14site my laptop can stream video to you Michael fine
+  6:18inside this local network without going varsa
+  6:22and then the third API's days channel API which
+  6:25days the say it's basically sockets
+  6:29over that pits a pair and the interesting part is
+  6:32it's a it's ability to you you TP which is an appeal for
+  6:36game developers and I appreciate their game and I'm not games developer I'm I'm
+  6:41very much just hack and see what sticks
+  6:43and but I know that you DP's is supposed to be good for games
+  6:47am so that is landing in browsers now
+  6:55site like any at good or polluted developer
+  6:59I first time to just buy wristwatches so from forming
+  7:02to get a head start nice place I and this is an extensive
+  7:05and I expect more there are more jobs to apply grease out there now and this will
+  7:09grow
+  7:10I'm but is on the ones I came across an I knew that I wanted to do the project
+  7:14in Johnston told bomb so I wanted night at the back end
+  7:18I'm I found you know paired up Jess
+  7:21seem to already do day so this may not be accurate neck
+  7:25this may change orders may not be completely accurate because I was work
+  7:27under a deadline
+  7:28appear .gs seems to just two days if it does it very simply
+  7:31very easily I'm simple awesome a simple
+  7:35when RTC just did video and indeed I said I wanted both because I want yes
+  7:38and
+  7:39and messages saying I throwing the ball your face and that'll be the day spa
+  7:43I'm ezer easy RTC I didn't look at because I found the
+  7:47whether to seek a IR such as: was a nice
+  7:50anode library became a client-side library just gonna drop 10
+  7:54and the raid healing thing for me is there's a nice simple demo that was very
+  7:57very hackable
+  7:59I'm I got a prototype for this project operating in a couple hours
+  8:02hacking that mr. I will show you in a moment
+  8:06things extremely wary of is this is seek a new technology these are the versions
+  8:11over
+  8:11much as I was working with you know even 0.1 and
+  8:15this is a very that the libraries are
+  8:18evolving really quickly this point I'm so pretty sure I resign
+  8:22I deployed a month ago already our date now there's been fixes like to see fixes
+  8:27that
+  8:28like applying myself site
+  8:32that side this is my at this microsite and
+  8:36site this is literally an hour's worth packing I justify severing I did stuff
+  8:41my face on services screen casa modesto
+  8:43and via face come from a fine
+  8:47and the orientation events are being streamed from the fine
+  8:50directly into the desktop and just doing sis is worse I
+  8:53very simple and I would prefer concept like it though this game easily which
+  8:57was a.m.
+  8:59completely II underestimate him at work but
+  9:02it it was a nice a perfect person a concept and
+  9:06like I said the this was tax from the web RTC I O
+  9:10demo and at my sympathies lie breezes it kinda levels out all the
+  9:15different into our policy issues as
+  9:18like several versions a pic the payday to
+  9:21implementation as time went on and if you look at a car just got paid 800
+  9:26or payday Tue or Wed get payday sarin and so on
+  9:30and it does things like try to and sorrow between Fox's
+  9:34and video in crimes videos well for you see I have to do that
+  9:39yourself so that to replicate this this simply example is really only three
+  9:43steps
+  9:45first one is i'm craig room I'm for two people joining because I'm saying it's
+  9:49you play game
+  9:50I want some kind discover ability to say this is
+  9:53times the game at a pink ice ice a drama pink eyes went 2-for-4
+  9:56you join that will play against each other I'm you listen for my connections
+  10:01coming in
+  10:02and you would send your own video going up the Y and
+  10:05again this is for the library so this isn't all the way down to the raw job's
+  10:09going to show you something
+  10:10bit for pretty straightforward here I'm
+  10:13creating a a WebSockets a secure website K
+  10:16and giving it a pin number sorry the room number basically
+  10:20I'm sorry it has a connection wall size this limit event saying
+  10:23on connected in and and loss that's happening are then
+  10:28at an event listener to listen for when you stream comes in
+  10:32so I get to see two objects coming and more my support the actual
+  10:36video stream is that stream object and and
+  10:39the the web of the CIO likely has a helper called
+  10:42attached rain which give a stream given I development on the page
+  10:46just put the two together but it's as simple as doing video source equals
+  10:51Eurotop create you're a lot I
+  10:54I've got us live in the moment the show you how to do that by hand and because
+  10:58that we just put the effete together
+  11:01and enterprise IT capture the video from your
+  11:04your laptop or your final whatever device and send upstream as well
+  11:08and this is all talks way for me so I just a RTC
+  11:11great stream video yes or yes or no
+  11:15I'm and Inc the case in my game because I want the opponents play some game and
+  11:19not my own
+  11:20I just throw away the actual streaming to do anything with it and
+  11:22behind-the-scenes
+  11:23the library spicy scent up the pay to pay and connection and its streaming it
+  11:27to the other user
+  11:29that set so lessons from a here we're live Reza
+  11:33Civica when you fumbling your way through the actual card right there's
+  11:36not a lot there and I've got a pretty sight working I've got paid up it takes
+  11:39working already
+  11:41I'm but the lesson here is libraries also hideaway in all the technology in
+  11:45their box
+  11:46in my coat that I hadn't realized even existed in the first place
+  11:49and
+  11:53my experience that's the right way to approach life you don't understand
+  11:56technology taken like a result without
+  11:59their thing and then understand what's going on is kinda
+  12:02right long block west about using going beyond jQuery it's exactly how I was
+  12:06thought was a Korean work my way back to
+  12:08how all works and but the
+  12:12the ready the big thing for me was pit a sourcing have this impression ahead to
+  12:16peer to peer must be foster
+  12:18I if if we try to hear fired up and at
+  12:22the game running here what you want to connect to the game it would work out
+  12:25the rock
+  12:26whip on the same network savvy really quick but this game I wanted to work
+  12:30between
+  12:31you know the UK and US I want to be a play people over the
+  12:34open web and that's not particularly foster
+  12:38that still going a long way over the wire so
+  12:42because my game already has a style of a senior and I don't wanna be
+  12:45I'm not doing a Skype client or any send HD video down the wire it was in this
+  12:49massive video down why
+  12:51and so initially I don't think there's any way I've actually controlling how
+  12:57much data goes over the wire
+  12:58but you do have a way of saying here some options beyond
+  13:02just saying true I i want video you can say I want
+  13:05the max with a video to be and 160 Mike a site that the actual
+  13:10gonna let them know video goes down why less tasers
+  13:13if you need if you don't need much space is good right its last days on your
+  13:17and mobile devices less by some other wire for your mobile device to
+  13:22I'm process and I looks a
+  13:25on my android lock them out they say that crime in concert with gigs worth
+  13:28the days when I was testing
+  13:29sorry imagine games with a Taser on a anong cell
+  13:33network it's a an expensive
+  13:36and so this is kinda and a no good one but you know I sup what you need
+  13:42and in this I found a because I was eating in library
+  13:45this didn't work I was getting at these arguments saying only serve this
+  13:49160 video but inside the library realize the
+  13:52it was just looking for the presence of a a value on video and if I had object
+  13:56there too said
+  13:57yes Teresa said the whole thing so sending by default 640 by 480
+  14:01which isn't ready HD but it's a lot bigger than I needed but I can do it
+  14:05yet poor question fix it but only found out after I finish with the
+  14:08library
+  14:12you pretty spot already that it's not entirely client side as well
+  14:15I'm so you do need
+  14:18you don't absolutely need to serve you can do entirely
+  14:22and in the client's IP media no
+  14:25what the IP address of the person trying to connect say and typically wanna be a
+  14:29curse on a pin number or a collar to connect through right
+  14:32so the game is and Japan you have that discover but I C
+  14:36so you still need East only the server
+  14:39and and literally this is all the car to have my set aside
+  14:43I have not for the entire game for the web RTC paw
+  14:47bygone express server once thats crazes I just wrap it up with the well TC
+  14:52librarian the other liar is very similar just gonna wrap around your
+  14:55your webserver may do the work for you by
+  14:59in my live production car have no more than that to do with the
+  15:02web RTC stuff it's just that one line so just Hamza for me
+  15:06it create it handles creche enough rooms hand always
+  15:09and tryna work out the discover bill is the part and
+  15:12its it's all magic from my point of view and
+  15:16if I wanted sad for back support for by West for instance that didn't have
+  15:20the pic connection API I would use this socket see
+  15:24send messages up to its when someone to defy so that the face
+  15:27it would send up the WebSocket hey I was sent down to the connect to climb
+  15:31and I could at fullback support using this Web Sockets
+  15:36this is the interesting parts me the RTC taser channel
+  15:40there's no commissions for this he just creia pace the connection
+  15:43and at the moment there's a there's an options object that keep %ah Sen
+  15:47the says either live out the true or local folks will I would surely means
+  15:52you have a TCP connection
+  15:54at which is a accord suspect is default so if your pasta nobody
+  15:58you have a TCP connection reset reliable to force then
+  16:01a crazy DP connection okay and I didn't really comment inside a San Carlos
+  16:06that says that crime at the moment doesn't support
+  16:09TCP reliable connections but it's quite likely
+  16:12that fifty-some was watching this in the future I'm
+  16:16that that's not true anymore aspects as quite likely that the comments already
+  16:19outdated because is moving so quickly
+  16:24if E if you guys and gals are already using WebSockets hope you're doing this
+  16:28already actually test the WebSocket
+  16:29open before you start trying to send data over that WebSocket you have to do
+  16:33the same thing with the Thai
+  16:34at the latest the data channel I'm in this case
+  16:38i'm looking over my day channels and saying is the Ready state
+  16:41open and is the no use if it's not the net the game is ready in the first place
+  16:45right
+  16:47the weird thing is the Ready state such as string whereas I'm going to use the
+  16:50ready sets being mischievous
+  16:51is just polished back I'm and hopefully you doing this website
+  16:55anyway originally I wanted see stream the orientation events directly over the
+  17:01page a set
+  17:02API which would have I mean if you have a look says the orientation events just
+  17:06it just bomb parts the device for tastes pours out
+  17:10I'm and I was like wow that's a lot I said I'll throw
+  17:13this in ninety send every turn 50 milliseconds which is
+  17:16in the end is my point my those three states my game
+  17:20the user is standing out there either left or the right left the rock
+  17:24I'm so why don't you put the and meet the client's site so
+  17:28instead of sending updates on having the pair workout they tilted left to right
+  17:32just I by putting all the logic on the client side transcends little amount of
+  17:36data over the wires possible
+  17:38and in this case I say if the uses firing has tilted I was the right than a
+  17:41status change
+  17:42send that one message the pair case I you're still sending by serve
+  17:46over the the Internet I had this misconception the payday so would be so
+  17:51much faster and such
+  17:52a social estate if it's it's not it's just close that there's no
+  17:56there's that if we're in the same network been great but issues should be
+  18:00over the wire
+  18:02so just one explain the the mechanics this game before I kind of the
+  18:07at show you that the biggest well like I hate
+  18:10basically am before the game could start unit I need to open WebSocket the game
+  18:15discovery
+  18:16I'm connect to the video and audio stream once that was done our test if
+  18:19the
+  18:20at the pay is the pay connection was actually open I could talk to
+  18:24is in the race day if that's the case in a game is ready the plane could propose
+  18:28a chalice vice
+  18:29site my game was a multi-page
+  18:33website you be you you get this welcome pages had two bombs its gonna join a
+  18:38game
+  18:38all-star game if you ask start a game that it was
+  18:42automatically create your own for you give your pin number and you can tell
+  18:45your friend with a pin number is
+  18:46and your friend was say a cameo join a game I'm
+  18:50and parents the pen and when they hit refresh Owen hit submit
+  18:54it goes this waiting state and at the start time we've been waiting state
+  18:58hanging XHR on the set aside and when the service I it's
+  19:02I'm a state machine went from
+  19:05waiting to ready it would close the XHR quest
+  19:08which a court both pages to reload into the the
+  19:11play the game I once we're playing the game I then asked for the streams from
+  19:15both uses at the same time
+  19:17and try and connect them
+  19:20but that didn't work I what happened is
+  19:24I get to the game I see the video and instantly banish
+  19:31so a get sick or water work out what was actually going on
+  19:35I have analogy
+  19:39I misplaced my wife doesn't detect so Chicago to
+  19:43some hoping that you guys and girls gets well and if I don't just asking of
+  19:46course
+  19:47site this my analogy I wanna make a call to you
+  19:51okay I've got my paper cup fine I'll both ends of my
+  19:54my pickup the string in the pic above bomb and you have the same thing
+  19:59I pick up some up to it my hand you the other end
+  20:03and you do the same thing you put your bike up to up to you it and you have me
+  20:06the other end
+  20:07I'm II qet right I'll take that and I plucked my air intake uptake
+  20:11of DA the end those hoping for and you do the same things like fine of
+  20:16main put up to you it bring down the other end and with my standing there
+  20:19with dangling fines or not act you talk to each other
+  20:22we just saw this kind of long anything
+  20:25no one's talking to each other the point is it's happening at the same time and
+  20:29the
+  20:29the connections were kinda missing each other now I don't know
+  20:33because I haven't dug into this deep enough if this is a bug in
+  20:37the like real I was using weather is a bug in the workflow
+  20:41or what's more likely the it was a popular as him because the way I was
+  20:45developing
+  20:45and because the deadline I was against I need it's an easy life if you can I are
+  20:49so I need a solution to get around this problem with the to use is trying to
+  20:53connect the exact same time
+  20:56so I create a single page app and what that
+  20:59dates is I'm it
+  21:03as soon as you go to start the game it would immediately ask you for your
+  21:07your accordion video stream see so you're OK and you got a pin number they
+  21:11say your friend has my pin number
+  21:13and because that time delay between that place two points
+  21:16the stream is already open its or the streams already being fed is that room
+  21:21this imaginary room in the cloud or wherever is
+  21:24they enter the PIN number because it happens not the same time it was some
+  21:27delay
+  21:28the night you can connect the property and there's no by if you try to connect
+  21:31the same time
+  21:33it worked that was the important
+  21:39but there is some there is a point see a single page app
+  21:42if you have credit at that at
+  21:46when RTC stream or things like I'm full screen
+  21:49and as soon as a pager Fresh's back is broken so once
+  21:52if you if you app is in full screen mode when you hit refresh
+  21:55it drops out for screen so these things that uses Cup assistance takes in the in
+  22:00the browser
+  22:01you might need to actually make a single page at the cum loads in each one of
+  22:05these pages
+  22:06now I only I my app is still might
+  22:09site is still out the welcome page and then the rest is seeing page app
+  22:13which meant that I can just at four screen I add a full swing right the and
+  22:17I would like to have on the welcome screen guard for screen go to full
+  22:20screen
+  22:20and stop playing games because I have a fresh between welcome
+  22:24and join I can do that
+  22:27and also this could get annoying in your game I if you if you do
+  22:30refresh the game so once once the games I V hit reloading the stock n
+  22:36if you out SL the the desktop browsers 1 keep asking for Mitt prevention
+  22:41to access the the webcam
+  22:44on the mobile device this was surely when I start the project
+  22:47and was forced by the time I need the projects as not white it took a long
+  22:49time is pretty months with the death
+  22:51because is working better the stuff changed on the FIF 8
+  22:56I'm what happens on
+  22:59and my bonus because no visual cue that there's a video stream
+  23:03open on the phone they caught me always ask you for permission
+  23:07okay on a desktop you have a light generally the tell you
+  23:10webcams on on I'm a fine you have that and even better than I found the
+  23:14I'm when I had no constraint to my phone off or put in standby mode
+  23:18put it down walk away and forget that's back camera still on
+  23:22and feeding a stream to the remote peer so you're fine can be of
+  23:26and the camera was still be feeding they saw over the wire
+  23:30makes a fine really recall
+  23:35sigh I got bit I'm so about the graphics are things
+  23:38um and I'm not I'm a developer
+  23:41in terms if I i kno like black white and gray
+  23:45thats as far as my graphic skills go and I'm not a 3d
+  23:49programa and it kind of is a bit over mind fuck I'm
+  23:54someone turns out the Southwest me and I knew that I had a 3d scene
+  23:59I had to slow character in pakrats like their flight old school 80 strong style
+  24:03near Florin youth repose into the that this 3d space it hit my face in
+  24:08our original plan was to do this with songs like welcome to stay yes can on
+  24:11that make it smaller and
+  24:13be fine and I i sat down with them I all said lead lawyers speaking
+  24:18I thing on Friday towards the end if you just gonna give me some advice on the 3d
+  24:22stuff
+  24:22and out first thing he said is night that's gonna be shipped and
+  24:26probably not direct quote for and I need to use 30 chastity this work and I'm not
+  24:31familiar enough with real chance so I
+  24:33sat down with any chemical houses time in great this beautiful same or have the
+  24:37sky 3d
+  24:38at Florida caps is right place in all the perspective felt right as well like
+  24:42my characters anti-big
+  24:43for the the angle of the camera Sony look great
+  24:46so when away with that information and I'm my or some
+  24:5030 JS sane put on
+  24:53a I'm a fine and the frames per second down about seven frames per second
+  24:59everything was like a slow-motion
+  25:01bolstering through the air is horribly horribly slow
+  25:04I'm and if at this point I had two campuses on the screen and one video and
+  25:07everything was going to complete crap
+  25:09but even with one campus in 30 Jaz it just wasn't quick enough
+  25:14during the initial an initial tests and this is on a Nexus 4's losses kind of
+  25:19that
+  25:19inherit product so start looking at the city's three runners
+  25:24and but because I'm on an experimental browser that says Peter
+  25:29on it it's not you know it's not a perfect I'll be working browser
+  25:32I found the when my floor was in front of me completely
+  25:35your flat it was fine buses attempted it forward into a 3d space
+  25:39the Spanish and kinda problem
+  25:43a but then it turned out that there was the park the
+  25:46have been fixed over the weekend at the coming weekend I found the issue in
+  25:50just text and but I decided not to use 3d render because I
+  25:54I have a performance but the floor was missing so
+  25:58I'm I found the actually the problem was I was rendering too much for campus
+  26:03constantly on the screen I was doing I was doing my loop to
+  26:06redraw the entire thing which includes like a big background
+  26:09my character the ball and so-and-so I basie Kratie
+  26:13to views I'm one was for the static background that got rendered once
+  26:18or every now and then but needs to update background and once ever campus
+  26:21that is as little as possible
+  26:23spicy the ball to bounce down and three stores the face
+  26:26and I found the pink tube videos and
+  26:30a campus on a mobile phone is probably a pretty much with all the streams going
+  26:34on
+  26:34and when I had two videos the frame rates white right down
+  26:38read one %uh videos because at the local video and if for some reason
+  26:41nope just no good reason just to happen to be in the dome
+  26:44took out and my friend might rights went back up to
+  26:47I actually know about 50 frames per second on a
+  26:51Nexus forces she's pretty good at the Nexus 7 on the other hand is little bit
+  26:55at not us not strongly a
+  26:59that from a site and but I have a lot of this
+  27:03crank like hacking around with real Jasen and
+  27:06or they are real-time stuff going on the same time and my rendering
+  27:10and I would basically get this I just change something in
+  27:14ever can was gonna lie I just move on
+  27:18nice quite happy may have what I want to watch CSI I kept going
+  27:22am some useful raise useful tips like I have said she was too great
+  27:26matches to understand what's going to collide with something else the
+  27:29collision detection
+  27:30I had this debug views like to see where the ball was going in if the character
+  27:34attempts left
+  27:35occasionally that face thing which is going to launch off to the side in
+  27:38I can see how to plug a mic ice is nice have a deep love you for that
+  27:42three-part the game for the hardest part the entire game
+  27:46was taking my mark my face and making it here at the right height with
+  27:51in 3d space and Steven Wilson's is talking as well try to give me some help
+  27:56in
+  27:56in projecting 923 space there's a lot of ugly code that eventually did it and
+  28:01Marsabit was 7 some some connelly from
+  28:04esteem as well at 3d is not myspace I was good at that the real time stuff
+  28:10this is really just school I'm but I'm in just a minute
+  28:14and it take her life and it did end up to I'm
+  28:19being shown a good liar and as one of the experiments
+  28:22and but the the biggest lessons I go from this entire project
+  28:26they won code base they actually to Nairobi planning based
+  28:30I'm the that
+  28:34the time touch you welcome such in new technology
+  28:37at this point I'm there's not that much information out there was some good
+  28:40videos but very deep dive
+  28:42if at videos I'm I expect that to change with time
+  28:47and the Google engineers are actually really good for all this new technology
+  28:51want developers using the stuff and they will answer questions
+  28:54and give you a hand I was really surprised at how much help I got
+  28:57it wasn't you know they were right my card for me polygamy feedback and
+  29:00suggestions
+  29:01Pokemon help me with that the the same page app solution
+  29:05he was looking at any manager work out where is happening and
+  29:08and and back she said I need to move to single-page apertures
+  29:11a pain but you know I did it I'm
+  29:14the biggest thing was maybe the horse came for the car like
+  29:17and I think I focused in law on the technology and didn't really think too
+  29:21much about gays mechanic that the game
+  29:23mechanics I'm not hun Sen sure if it's a good game
+  29:27I could have quite easily test to the game without any the technology
+  29:31but I focused on that tack and I have a game is playable
+  29:34and its cold as a demo but whether it's light was
+  29:37addictive games I'm not too sure and
+  29:43I really would love to say whether RTC's really ready for prime time iced
+  29:47don't think it's quite there yet for developers
+  29:50Obama does say check the expiry date but that's going to change quickly
+  29:54and I'm I'm pretty sight in 12 months time we will be a place where we could
+  29:57quite happily use
+  29:59web RTC and big projects and I was seeing a lot more
+  30:02I'm confident we'll see a more places the resources will
+  30:06the be more tutorials spring costs more talks on
+  30:10I want to say and
+  30:14my boss looking pretty pretty good Microsoft support I have no clue what's
+  30:18going on that side on a warrant or policies going to look like
+  30:22I'm but it works
+  30:25so you know your ass I'm
+  30:29I want to help a high note so that's kind of at my the my way of saying we
+  30:33will see is actually pretty cool to play with
+  30:35but it's making a playground at the moment
+  30:38I'm there's Code Ann all the source codes online seeking can't help myself
+  30:43don't judge me too much and when you gonna light wall wall
+  30:46re what where the comments that kinda thing and
+  30:49their test that coming in and but its
+  30:52its online you can to play at I don't think I've got time for questions but
+  30:57you can kind of
+  30:58ask me anything later on I'm sure love affair my hand some point Alana
+  31:02I'm say without my times up in thanks listening
