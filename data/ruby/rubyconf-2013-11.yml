@@ -4,8 +4,8 @@ year: 2013
 source: https://www.youtube.com/watch?v=h9XzLJK3HVM
 automatic: false
 duration: 0
-speaker: ''
-title: ''
+speaker: Xavier Shay
+title: ' Profiling Ruby: Finding 10x Gains In RSpec and CRuby'
 text: |
   0:16XAVIER SHAY: Sorry. The lights stopped. Thankyou for your patience.
   0:19My name&#39;s Xavier. I currently work at Squareon

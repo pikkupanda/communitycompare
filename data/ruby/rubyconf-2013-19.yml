@@ -4,8 +4,8 @@ year: 2013
 source: https://www.youtube.com/watch?v=HTVoQ6_iVuc
 automatic: false
 duration: 0
-speaker: ''
-title: ''
+speaker: Stephen Henrie
+title: ' A Lightweight SOA Framework using Ruby, Apache Thrift and AMQP'
 text: |
   0:16STEPHEN HENRIE: Hi. So my name is StephenHenrie,
   0:18and I&#39;m the manager of application development

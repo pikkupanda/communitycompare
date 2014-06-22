@@ -4,8 +4,8 @@ year: 2013
 source: https://www.youtube.com/watch?v=qzNNH2mnp08
 automatic: false
 duration: 0
-speaker: ''
-title: ''
+speaker: Sam Rawlins
+title: ' New Ruby 2.1 Awesomeness: Fine-grained Object Allocation Tracing'
 text: |
   0:16SAM RAWLINS: Thanks everybody for stayingfor a late
   0:18afternoon talk. So I&#39;m gonna talk today onRuby 2 point 1,

@@ -9,7 +9,18 @@ playlist_id = "E7tQUdRKcyb5I7Bk1POYW4udtHMUMkK7"
 community = "ruby"
 conference = "RubyConf"
 year = 2013
+# media$title":{"$t":"Ruby Conf 2013 - Effective Debugging by Jonathan Wallace"
+def get_title(yt_title)
+  yt_title[16..-1].split(" by ")[0]
+end
 
+def get_speaker(yt_title, yt_desc)
+  if(yt_desc.start_with?("By")) then
+    yt_desc[3..-1].split("\n\n")[0]
+  else
+    yt_title.split(" by ").last
+  end
+end
 ####################
 
 playlist_url = "http://gdata.youtube.com/feeds/api/playlists/#{playlist_id}?alt=json"
@@ -26,8 +37,11 @@ playlist.each do |video|
   
   video_url = video['link'].find{|e| e['rel'] == 'related'}['href']
   video_id = video_url.split('/').last
+  video_title = video['title']['$t']
+  video_desc = video['content']['$t']
   
   puts "Download #{video_id}"
+  puts video_title
   
   caption_url = "http://www.youtube.com/api/timedtext?lang=en&v=#{video_id}"
   resp = Net::HTTP.get_response(URI.parse(caption_url))
@@ -40,8 +54,8 @@ playlist.each do |video|
   talk['source'] = "https://www.youtube.com/watch?v=#{video_id}"
   talk['automatic'] = false
   talk['duration'] = 0 # TODO
-  talk['speaker'] = "" # TODO
-  talk['title'] = "" # TODO
+  talk['speaker'] = get_speaker(video_title, video_desc)
+  talk['title'] = get_title(video_title) 
   
   talk['text'] = ""
   

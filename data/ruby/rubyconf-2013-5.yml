@@ -4,8 +4,8 @@ year: 2013
 source: https://www.youtube.com/watch?v=KRuIXiq3eMc
 automatic: false
 duration: 0
-speaker: ''
-title: ''
+speaker: Sandy Vanderbleek
+title: ' How To Roll Your Own Ops Framework In Ruby (If You Really Have To)'
 text: |
   0:16SANDY VANDERBLEEK: OK. So I&#39;m gonna talk
   0:18about how to write your own operations framework,

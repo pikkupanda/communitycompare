@@ -4,8 +4,8 @@ year: 2013
 source: https://www.youtube.com/watch?v=D9j_Mf91M0I
 automatic: false
 duration: 0
-speaker: ''
-title: ''
+speaker: Conrad Irwin
+title: ' REPL driven development with Pry'
 text: |
   0:16CONRAD IRWIN: I&#39;m Confrad.
   0:17I&#39;m one of the maintainers of Pry.

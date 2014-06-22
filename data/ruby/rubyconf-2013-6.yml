@@ -4,8 +4,9 @@ year: 2013
 source: https://www.youtube.com/watch?v=JfwS4ibJFDw
 automatic: false
 duration: 0
-speaker: ''
-title: ''
+speaker: Nell Shamrell
+title: ' Beneath The Surface: Harnessing the True Power of Regular Expressions in
+  Ruby'
 text: |
   0:16NELL SHAMRELL: My name is Nell, and I usedto be intimidated by regular expressions.
   0:20Has anyone else felt intimidated by regularexpressions? I

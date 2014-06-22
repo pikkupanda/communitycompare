@@ -4,8 +4,8 @@ year: 2013
 source: https://www.youtube.com/watch?v=BjGa3dWGXCs
 automatic: false
 duration: 0
-speaker: ''
-title: ''
+speaker: Andy Pliszka
+title: ' Extending CRuby with native Graph data type'
 text: |
   0:16ANDY PLISZKA: My name is Andy.
   0:17I work at Pivotal Labs in New York City.
