@@ -51,7 +51,7 @@ playlist.each do |video|
   lines = XmlSimple::xml_in(resp.body)['text']
   talk['conference'] = conference
   talk['year'] = year
-  talk['source'] = "https://www.youtube.com/watch?v=#{video_id}"
+  talk['source'] = video_id
   talk['automatic'] = false
   talk['duration'] = 0 # TODO
   talk['speaker'] = get_speaker(video_title, video_desc)
