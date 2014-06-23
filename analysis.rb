@@ -10,6 +10,18 @@ end
 
 def remove_stopwords(tokens)
   stopwords = Stopwords::Snowball::Filter.new "en"
+  # haha apparantly since .stopwords is only readable we cant
+  # "=" on it, but push still works.
+  stopwords.stopwords.push 'so'
+  stopwords.stopwords.push 'actually'
+  stopwords.stopwords.push 'really'
+  stopwords.stopwords.push 'can'
+  stopwords.stopwords.push 'just'
+  # this could be solved with sanitizing
+  stopwords.stopwords.push 'we&#39;re'
+  stopwords.stopwords.push 'don&#39;t'
+  stopwords.stopwords.push 'it&#39;s'
+  stopwords.stopwords.push 'that&#39;s'
   stopwords.filter(tokens)
 end
 
@@ -28,28 +40,41 @@ def promille(word, tokens)
   tokens.count(word).to_f / tokens.length * 1000
 end
 
+def most_often_word(tokens)
+  tokens_times = {}
+  tokens.each do |token|
+    if not tokens_times[token] then
+      tokens_times[token] = 0
+    end
+    tokens_times[token] += 1
+  end
+  ordered = tokens_times.sort_by {|_, value| -value }
+  ordered.first[0]
+end
+
 # takes a word and returns array with hashes with the counts
 # @word String
 def word_count(word)
   talks = []
-  
+
   Dir.glob("./data/*/*.yml") do |file|
     talk = {}
     talk[:community] = file.split('/')[-2]
-    
+
     data = YAML.load_file(file)
     tokens = remove_stopwords(tokenize(sanitize(data['text'])))
-    
+
     talk[:speaker] = data['speaker']
     talk[:count] = promille(word, tokens)
-    
+    talk[:url] = data['source']
+    talk["Most often word"] = most_often_word(tokens);
+
     talks.push talk
   end
-  
+
   talks
 end
 
-if ARGV.length == 0 then ARGV[0] = 'fun' end
 
 ARGV.each { |word|
     puts "------------ analizing word: #{word.upcase} -----------------"
@@ -119,9 +144,4 @@ ARGV.each { |word|
       end
       puts "-------------------------------"
     end
-    #todo: have an array with all the values from the two communities somehow seperated
-    # this is needed to calculate the varianz of each community
-    # this is fed into weigthed_standard_deviantion which returns the standard_deviation
-    # all this is fed into calculate_t
-    # the significance
 }
